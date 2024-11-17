@@ -205,7 +205,7 @@ def multiple_directory_flattener(
 )
 @click.option(
     "--log",
-    type=click.Choice(["INFO", "DEBUG", "ERROR"], case_sensitive=False),
+    type=click.Choice(["INFO", "DEBUG", "ERROR", "WARN"], case_sensitive=False),
     default="WARN",
     help="Log level (INFO, DEBUG, ERROR)",
 )
@@ -214,6 +214,9 @@ def main(input_path: str, output_path: str, file_extension: str, log: str) -> No
     if not isinstance(numeric_level, int):
         raise ValueError(f"Invalid log level: {numeric_level}")
     logging.basicConfig(format=LOGGING_FORMAT, level=numeric_level)
+
+    input_path = Path(input_path)
+    output_path = Path(output_path)
 
     multiple_directory_flattener(
         input_path=input_path, output_path=output_path, file_extension=file_extension
