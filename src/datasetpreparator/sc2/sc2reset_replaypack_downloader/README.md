@@ -9,6 +9,30 @@ Please keep in mind that the ```src/sc2reset_replaypack_downloader.py```  contai
 
 ```
 
+# Execute With Docker
+
+> [!NOTE]
+> There are two ways of executing this script with Docker. One is to use the main repository Dockerfile (available in `docker` directory) and the other is to use the Dockerfile contained in this directory.
+
+## Repository Docker Image
+
+Please refer to the main [README](../../README.md) for the instructions.
+
+## Script Docker Image
+
+Buil the docker image:
+```bash
+docker build --tag=datasetpreparator:sc2reset_replaypack_downloader .
+```
+
+Run the docker image (please replace `<paths>`):
+```bash
+docker run -v "<./input>:/app/input" \
+    datasetpreparator:sc2reset_replaypack_downloader \
+    python3 sc2reset_replaypack_downloader.py --input_dir /app/input
+```
+
+
 ## Citation
 
 SC2ReSet replaypack collection was formally introduced in:

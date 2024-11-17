@@ -22,3 +22,31 @@ options:
   --file_extension FILE_EXTENSION (default = .SC2Replay)
                         Please provide a file extension for files that will be moved and renamed.
 ```
+
+# Execute With Docker
+
+> [!NOTE]
+> There are two ways of executing this script with Docker. One is to use the main repository Dockerfile (available in `docker` directory) and the other is to use the Dockerfile contained in this directory.
+
+## Repository Docker Image
+
+Please refer to the main [README](../../README.md) for the instructions.
+
+## Script Docker Image
+
+Buil the docker image:
+```bash
+docker build --tag=datasetpreparator:directory_flattener .
+```
+
+Run the docker image (please replace `<paths>`):
+```bash
+docker run
+    -v "<./input>:/app/input" \
+    -v "<./output>:/app/output" \
+    datasetpreparator:file_packager \
+    python3 directory_flattener.py \
+    --input_dir /app/input \
+    --output_dir /app/output \
+    --file_extension .SC2Replay
+```
