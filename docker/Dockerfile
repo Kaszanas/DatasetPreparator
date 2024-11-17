@@ -3,7 +3,7 @@
 
 ARG PYTHON_VERSION=3.11
 
-FROM kaszanas/sc2infoextractorgo:latest as extractor
+FROM kaszanas/sc2infoextractorgo:latest AS extractor
 
 FROM python:${PYTHON_VERSION}-alpine
 
