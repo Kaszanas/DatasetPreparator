@@ -7,20 +7,21 @@ Utility script for entering each of the supplied replaypacks and flattening its 
 Please keep in mind that ```src/directory_flattener.py``` does not contain default flag values and can be customized with the following command line flags:
 
 ```
-usage: directory_flattener.py [-h] [--input_path INPUT_PATH] [--output_path OUTPUT_PATH]
-                              [--file_extension FILE_EXTENSION]
+Usage: directory_flattener.py [OPTIONS]
 
-Directory restructuring tool used in order to flatten the structure, map the old structure to a separate
-file, and for later processing with other tools. Created primarily to define StarCraft 2 (SC2) datasets.
+Directory restructuring tool used in order to flatten the structure, map the
+old structure to a separate file, and for later processing with other tools.
+Created primarily to define StarCraft 2 (SC2) datasets.
 
-options:
-  -h, --help            show this help message and exit
-  --input_path INPUT_PATH (default = ../../processing/directory_flattener/input)
-                        Please provide input path to the dataset that is going to be processed.
-  --output_path OUTPUT_PATH (default = ../../processing/directory_flattener/output)
-                        Please provide output path where sc2 map files will be downloaded.
-  --file_extension FILE_EXTENSION (default = .SC2Replay)
-                        Please provide a file extension for files that will be moved and renamed.
+Options:
+  --input_path DIRECTORY    Please provide input path to the dataset that is
+                            going to be processed.  [required]
+  --output_path DIRECTORY   Please provide output path where the tool will put
+                            files after processing.  [required]
+  --file_extension TEXT     Specify file extension for the files that will be
+                            put to the top level directory.  [required]
+  --log [INFO|DEBUG|ERROR]  Log level (INFO, DEBUG, ERROR)
+  --help                    Show this message and exit.
 ```
 
 # Execute With Docker
@@ -44,7 +45,7 @@ Run the docker image (please replace `<paths>`):
 docker run
     -v "<./input>:/app/input" \
     -v "<./output>:/app/output" \
-    datasetpreparator:file_packager \
+    datasetpreparator:directory_flattener \
     python3 directory_flattener.py \
     --input_dir /app/input \
     --output_dir /app/output \
