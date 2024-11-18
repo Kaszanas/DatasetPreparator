@@ -47,8 +47,6 @@ docker run \
 > [!NOTE]
 > Instructions below are for reproducing the result of the SC2EGSet dataset. If you wish to use the tools in this repository separately for your own dataset, please refer to the **[Table of Contents](#detailed-tools-description)**.
 
-To reproduce our experience with defining a dataset and to be able to compare your results with our work we describe how to perform the processing below.
-
 ### Using Docker
 
 We provide a release image containing all of the scripts. To see the usage of these scripts please refer to their respective ``README.md`` files as described in [Detailed Tools Description](#detailed-tools-description).
