@@ -4,11 +4,13 @@ from typing import Dict, List, Tuple
 import json
 import shutil
 import logging
+import hashlib
+
 
 import click
+from tqdm import tqdm
 
 from datasetpreparator.settings import LOGGING_FORMAT
-import hashlib
 
 
 def save_dir_mapping(output_path: str, dir_mapping: dict) -> None:
@@ -27,7 +29,6 @@ def save_dir_mapping(output_path: str, dir_mapping: dict) -> None:
         json.dump(dir_mapping, json_file)
 
 
-# REVIEW: This function takes too long. I should be hashing the filepath from the replapack directory:
 def calculate_file_hash(file_path: Path) -> str:
     """
     Calculates the file hash using the selected algorithm.
@@ -44,12 +45,11 @@ def calculate_file_hash(file_path: Path) -> str:
     """
 
     # Open the file, read it in binary mode and calculate the hash:
-    with open(file_path, "rb") as file:
-        file_hash = hashlib.md5()
-        while chunk := file.read(4096):
-            file_hash.update(chunk)
+    path_str = file_path.as_posix().encode("utf-8")
 
-    return file_hash.hexdigest()
+    path_hash = hashlib.md5(path_str).hexdigest()
+
+    return path_hash
 
 
 def directory_flatten(
@@ -77,9 +77,17 @@ def directory_flatten(
 
     # Walk over the directory
     dir_structure_mapping = {}
-    for file in list_of_files:
+    for file in tqdm(
+        list_of_files,
+        desc=f"Flattening directory {root_directory.name}",
+        unit="files",
+    ):
+        # Getting the ReplayPack/directory/structure/file.SC2Replay path,
+        # this is needed to calculate the hash of the filepath:
+        root_dir_name_and_file = root_directory.name / file.relative_to(root_directory)
+
         # Get unique filename:
-        unique_filename = calculate_file_hash(file)
+        unique_filename = calculate_file_hash(root_dir_name_and_file)
         original_extension = file.suffix
         new_path_and_filename = Path(dir_output_path, unique_filename).with_suffix(
             original_extension
@@ -98,8 +106,7 @@ def directory_flatten(
         logging.debug(f"File copied to {new_path_and_filename.as_posix()}")
 
         # Finding the relative path from the root directory to the file:
-        relative_file = os.path.relpath(current_file.as_posix(), root_directory)
-        dir_structure_mapping[new_path_and_filename.name] = relative_file
+        dir_structure_mapping[new_path_and_filename.name] = root_dir_name_and_file
 
     return dir_structure_mapping
 

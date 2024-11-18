@@ -1,6 +1,6 @@
 FROM python:latest
 
-RUN pip install click
+RUN pip install click tqdm
 
 WORKDIR /app
 
