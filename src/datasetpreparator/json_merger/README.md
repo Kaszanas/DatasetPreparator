@@ -1,6 +1,6 @@
-# File Renamer
+# JSON Merger
 
-Utility script that is merging two JSON files.
+Utility script that is merging two JSON files into an output JSON file.
 
 # CLI Usage
 

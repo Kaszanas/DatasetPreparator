@@ -1,10 +1,10 @@
-# File Packager
+# Directory Packager
 
-Utility script for compressing a directory into a `.zip` archive.
+Utility script for compressing a directory into a `.zip` archive. This script iterates over all of the directories in the input directory and compresses them into `.zip` archives.
 
 # CLI Usage
 
-Please keep in mind that the  ```src/file_packager.py``` contains default flag values and can be customized with the following command line flags:
+Please keep in mind that the  ```src/dir_packager.py``` contains default flag values and can be customized with the following command line flags:
 ```
 Usage: dir_packager.py [OPTIONS]
 
