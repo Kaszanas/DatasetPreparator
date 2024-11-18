@@ -4,35 +4,45 @@
 
 Tools in this repository were used to create the **[SC2ReSet: StarCraft II Esport Replaypack Set](https://doi.org/10.5281/zenodo.5575796)**, and finally **[SC2EGSet: StarCraft II Esport Game State Dataset](https://doi.org/10.5281/zenodo.5503997)**, citation information [Cite Us!](#cite-us).
 
+
 ## Installation
+
+> [!NOTE]
+> To run this project there are some prerequisites that you need to have installed on your system:
+> - Docker
+> - make
 
 Our prefered way of distributing the toolset is through DockerHub. We Use the Docker Image to provide a fully reproducible environment for our scripts.
 
-To build the image please run the following command:
+To pull the image from DockerHub, run the following command:
+
+```bash
+docker pull kaszanas/datasetpreparator:latest
+```
+
+If you wish to clone the repository and build the Docker image yourself, run the following command:
 
 ```bash
 make docker_build
 ```
 
-After building the image, please refer to the **[Command Line Arguments Usage](#command-line-arguments-usage)** section for the usage of the scripts.
+After building the image, please refer to the **[Command Line Arguments Usage](#command-line-arguments-usage)** section for the usage of the scripts and for a full description for each of the scripts refer to **[Detailed Tools Description](#detailed-tools-description)**.
 
-<!-- To install current version of the toolset as separate CLI tools run the following command:
-
-```
-pip install datasetpreparator[all]
-```
-
-After that each of the scripts should be available to call from the command line directly. -->
 
 ## Command Line Arguments Usage
 
 When using Docker, you will have to pass the arguments through the `docker run` command and mount the input/output directory. Below is an example of how to run the `directory_flattener` script using Docker. For ease of use we have prepared example directory structure in the `processing` directory. The command below uses that to issue a command to flatten the directory structure:
 
 ```bash
-docker run -v "./processing:/app/processing" datasetpreparator python3 directory_flattener.py --input_path /app/processing/directory_flattener/input --output_path /app/processing/directory_flattener/output
+docker run \
+  -v "./processing:/app/processing" \
+  datasetpreparator \
+  python3 ./src/datasetpreparator/directory_flattener/directory_flattener.py \
+  --input_path /app/processing/directory_flattener/input \
+  --output_path /app/processing/directory_flattener/output
 ```
 
-## SC2EGSet Dataset Preparation Steps
+## SC2EGSet Dataset Reproduction Steps
 
 > [!NOTE]
 > Instructions below are for reproducing the result of the SC2EGSet dataset. If you wish to use the tools in this repository separately for your own dataset, please refer to the **[Table of Contents](#detailed-tools-description)**.
@@ -41,13 +51,12 @@ To reproduce our experience with defining a dataset and to be able to compare yo
 
 ### Using Docker
 
-We provide a release image containing all of the scripts. To see the usage of these scripts please refer to their respective ``README.md`` files as described above.
+We provide a release image containing all of the scripts. To see the usage of these scripts please refer to their respective ``README.md`` files as described in [Detailed Tools Description](#detailed-tools-description).
 
 The following steps were used to prepare the SC2EGSet dataset:
-1. Build the docker image from: https://github.com/Kaszanas/SC2InfoExtractorGo
-2. Build the docker image for the DatasetPreparator using the provided ```makefile``` command: ```make docker_build```.
-3. Place the input replaypacks into `./processing/directory_flattener/` directory.
-4. Run the command ```make all``` to process the replaypacks and create the dataset. The output will be placed in `./processing/sc2_replaypack_processor/output` directory.
+1. Build the docker image for the DatasetPreparator using the provided ```makefile``` command: ```make docker_build```. This will load all of the dependencies such as the [SC2InfoExtractorGo](https://github.com/Kaszanas/SC2InfoExtractorGo).
+2. Place the input replaypacks into `./processing/directory_flattener/input` directory.
+3. Run the command ```make all``` to process the replaypacks and create the dataset. The output will be placed in `./processing/sc2egset_replaypack_processor/output` directory.
 
 
 ### Detailed Tools Description
