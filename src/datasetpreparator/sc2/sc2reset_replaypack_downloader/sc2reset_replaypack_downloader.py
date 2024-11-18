@@ -82,7 +82,11 @@ def sc2reset_replaypack_downloader(
 @click.option(
     "--download_path",
     type=click.Path(
-        exists=False, dir_okay=True, file_okay=False, resolve_path=True, path_type=Path
+        exists=False,
+        dir_okay=True,
+        file_okay=False,
+        resolve_path=True,
+        path_type=Path,
     ),
     required=True,
     help="Please provide a path to which the archives will be downloaded.",
@@ -90,7 +94,11 @@ def sc2reset_replaypack_downloader(
 @click.option(
     "--unpack_path",
     type=click.Path(
-        exists=False, dir_okay=True, file_okay=False, resolve_path=True, path_type=Path
+        exists=False,
+        dir_okay=True,
+        file_okay=False,
+        resolve_path=True,
+        path_type=Path,
     ),
     required=True,
     help="Please provide a path to which the archives will be unpacked.",

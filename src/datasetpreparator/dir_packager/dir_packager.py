@@ -72,7 +72,7 @@ def dir_packager(directory_path: Path) -> Path:
 )
 @click.option(
     "--log",
-    type=click.Choice(["INFO", "DEBUG", "ERROR"], case_sensitive=False),
+    type=click.Choice(["INFO", "DEBUG", "ERROR", "WARN"], case_sensitive=False),
     default="WARN",
     help="Log level (INFO, DEBUG, ERROR)",
 )

@@ -100,13 +100,25 @@ def sc2egset_replaypack_processor(
 )
 @click.option(
     "--input_path",
-    type=click.Path(exists=True, dir_okay=True, file_okay=False, resolve_path=True),
+    type=click.Path(
+        exists=True,
+        dir_okay=True,
+        file_okay=False,
+        resolve_path=True,
+        path_type=Path,
+    ),
     required=True,
     help="Please provide an output directory for the resulting files.",
 )
 @click.option(
     "--output_path",
-    type=click.Path(exists=True, dir_okay=True, file_okay=False, resolve_path=True),
+    type=click.Path(
+        exists=True,
+        dir_okay=True,
+        file_okay=False,
+        resolve_path=True,
+        path_type=Path,
+    ),
     required=True,
     help="Please provide output path where StarCraft 2 (SC2) map files will be downloaded.",
 )
@@ -126,7 +138,7 @@ def sc2egset_replaypack_processor(
 )
 @click.option(
     "--log",
-    type=click.Choice(["INFO", "DEBUG", "ERROR"], case_sensitive=False),
+    type=click.Choice(["INFO", "DEBUG", "ERROR", "WARN"], case_sensitive=False),
     default="WARN",
     help="Log level (INFO, DEBUG, ERROR)",
 )

@@ -202,13 +202,25 @@ def multiple_directory_flattener(
 )
 @click.option(
     "--input_path",
-    type=click.Path(exists=True, dir_okay=True, file_okay=False, resolve_path=True),
+    type=click.Path(
+        exists=True,
+        dir_okay=True,
+        file_okay=False,
+        resolve_path=True,
+        path_type=Path,
+    ),
     required=True,
     help="Please provide input path to the dataset that is going to be processed.",
 )
 @click.option(
     "--output_path",
-    type=click.Path(exists=True, dir_okay=True, file_okay=False, resolve_path=True),
+    type=click.Path(
+        exists=True,
+        dir_okay=True,
+        file_okay=False,
+        resolve_path=True,
+        path_type=Path,
+    ),
     required=True,
     help="Please provide output path where the tool will put files after processing.",
 )
@@ -225,14 +237,11 @@ def multiple_directory_flattener(
     default="WARN",
     help="Log level (INFO, DEBUG, ERROR)",
 )
-def main(input_path: str, output_path: str, file_extension: str, log: str) -> None:
+def main(input_path: Path, output_path: Path, file_extension: str, log: str) -> None:
     numeric_level = getattr(logging, log.upper(), None)
     if not isinstance(numeric_level, int):
         raise ValueError(f"Invalid log level: {numeric_level}")
     logging.basicConfig(format=LOGGING_FORMAT, level=numeric_level)
-
-    input_path = Path(input_path)
-    output_path = Path(output_path)
 
     multiple_directory_flattener(
         input_path=input_path, output_path=output_path, file_extension=file_extension

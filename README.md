@@ -55,7 +55,7 @@ We provide a release image containing all of the scripts. To see the usage of th
 The following steps were used to prepare the SC2EGSet dataset:
 1. Build the docker image for the DatasetPreparator using the provided ```makefile``` command: ```make docker_build```. This will load all of the dependencies such as the [SC2InfoExtractorGo](https://github.com/Kaszanas/SC2InfoExtractorGo).
 2. Place the input replaypacks into `./processing/directory_flattener/input` directory.
-3. Run the command ```make all``` to process the replaypacks and create the dataset. The output will be placed in `./processing/sc2egset_replaypack_processor/output` directory.
+3. Run the command ```make sc2reset_sc2egset``` to process the replaypacks and create the dataset. The output will be placed in `./processing/sc2egset_replaypack_processor/output` directory.
 
 
 ### Detailed Tools Description

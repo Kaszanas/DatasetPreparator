@@ -108,13 +108,25 @@ def sc2_map_downloader(input_path: Path, output_path: Path) -> Path:
 )
 @click.option(
     "--input_path",
-    type=click.Path(exists=True, dir_okay=True, file_okay=False, resolve_path=True),
+    type=click.Path(
+        exists=True,
+        dir_okay=True,
+        file_okay=False,
+        resolve_path=True,
+        path_type=Path,
+    ),
     required=True,
     help="Please provide input path to the dataset that is going to be processed.",
 )
 @click.option(
     "--output_path",
-    type=click.Path(exists=True, dir_okay=True, file_okay=False, resolve_path=True),
+    type=click.Path(
+        exists=True,
+        dir_okay=True,
+        file_okay=False,
+        resolve_path=True,
+        path_type=Path,
+    ),
     required=True,
     help="Please provide output path where StarCraft 2 (SC2) map files will be downloaded.",
 )

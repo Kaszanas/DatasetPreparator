@@ -9,7 +9,7 @@ TEST_COMMAND = "poetry run pytest --durations=100 --ignore-glob='test_*.py' test
 ###################
 #### PIPELINE #####
 ###################
-all: ## Runs the entire processing pipeline to recreate SC2ReSet and SC2EGSet or any other dataset using our standard tooling.
+sc2reset_sc2egset: ## Runs the entire processing pipeline to recreate SC2ReSet and SC2EGSet or any other dataset using our standard tooling.
 	@make flatten
 	@make process_replaypack
 	@make rename_files
