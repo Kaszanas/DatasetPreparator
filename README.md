@@ -32,23 +32,10 @@ When using Docker, you will have to pass the arguments through the `docker run` 
 docker run -v "./processing:/app/processing" datasetpreparator python3 directory_flattener.py --input_path /app/processing/directory_flattener/input --output_path /app/processing/directory_flattener/output
 ```
 
-### Table of Contents
-
-Each of the scripts has its usage described in their respective `README.md` files, you can find the table of contents below.
-
-#### CLI Usage Generic scripts
-1. [Directory Packager (dir_packager): README](src/dir_packager/README.md)
-2. [Directory Flattener (directory_flattener): README](src/directory_flattener/README.md)
-3. [File Renamer (file_renamer): README](src/file_renamer/README.md)
-4. [JSON Merger (json_merger): README](src/json_merger/README.md)
-5. [Processed Mapping Copier (processed_mapping_copier): README](src/processed_mapping_copier/README.md)
-
-#### CLI Usage StarCraft 2 Specific Scripts
-1. [SC2 Map Downloader (sc2_map_downloader): README](src/sc2/sc2_map_downloader/README.md)
-2. [SC2EGSet Replaypack Processor (sc2egset_replaypack_processor): README](src/sc2/sc2egset_replaypack_processor/README.md)
-3. [SC2ReSet Replaypack Downloader (sc2reset_replaypack_downloader): README](src/sc2/sc2reset_replaypack_downloader/README.md)
-
 ## SC2EGSet Dataset Preparation Steps
+
+> [!NOTE]
+> Instructions below are for reproducing the result of the SC2EGSet dataset. If you wish to use the tools in this repository separately for your own dataset, please refer to the **[Table of Contents](#detailed-tools-description)**.
 
 To reproduce our experience with defining a dataset and to be able to compare your results with our work we describe how to perform the processing below.
 
@@ -61,6 +48,24 @@ The following steps were used to prepare the SC2EGSet dataset:
 2. Build the docker image for the DatasetPreparator using the provided ```makefile``` command: ```make docker_build```.
 3. Place the input replaypacks into `./processing/directory_flattener/` directory.
 4. Run the command ```make all``` to process the replaypacks and create the dataset. The output will be placed in `./processing/sc2_replaypack_processor/output` directory.
+
+
+### Detailed Tools Description
+
+Each of the scripts has its usage described in their respective `README.md` files, you can find the table of contents below.
+
+#### CLI Usage Generic scripts
+1. [Directory Packager (dir_packager): README](src/datasetpreparator/dir_packager/README.md)
+2. [Directory Flattener (directory_flattener): README](src/datasetpreparator/directory_flattener/README.md)
+3. [File Renamer (file_renamer): README](src/datasetpreparator/file_renamer/README.md)
+4. [JSON Merger (json_merger): README](src/datasetpreparator/json_merger/README.md)
+5. [Processed Mapping Copier (processed_mapping_copier): README](src/datasetpreparator/processed_mapping_copier/README.md)
+
+#### CLI Usage StarCraft 2 Specific Scripts
+1. [SC2 Map Downloader (sc2_map_downloader): README](src/datasetpreparator/sc2/sc2_map_downloader/README.md)
+2. [SC2EGSet Replaypack Processor (sc2egset_replaypack_processor): README](src/datasetpreparator/sc2/sc2egset_replaypack_processor/README.md)
+3. [SC2ReSet Replaypack Downloader (sc2reset_replaypack_downloader): README](src/datasetpreparator/sc2/sc2reset_replaypack_downloader/README.md)
+
 
 <!-- ### Using Python
 

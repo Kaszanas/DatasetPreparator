@@ -27,6 +27,7 @@ def save_dir_mapping(output_path: str, dir_mapping: dict) -> None:
         json.dump(dir_mapping, json_file)
 
 
+# REVIEW: This function takes too long. I should be hashing the filepath from the replapack directory:
 def calculate_file_hash(file_path: Path) -> str:
     """
     Calculates the file hash using the selected algorithm.
@@ -158,14 +159,19 @@ def multiple_directory_flattener(
     for item in os.listdir(input_path):
         maybe_dir = Path(input_path, item).resolve()
         if not maybe_dir.is_dir():
+            logging.debug(f"Skipping {str(maybe_dir)}, not a directory.")
             continue
 
-        files_with_extension = list(maybe_dir.glob(f"*{file_extension}"))
+        files_with_extension = list(maybe_dir.glob(f"**/*{file_extension}"))
         if not files_with_extension:
+            logging.debug(
+                f"Skipping {str(maybe_dir)}, no files with selected extension."
+            )
             continue
 
         dir_output_path = Path(output_path, item).resolve()
         if not dir_output_path.exists():
+            logging.debug(f"Creating directory {str(dir_output_path)}, didn't exist.")
             dir_output_path.mkdir()
 
         dir_structure_mapping = directory_flatten(
@@ -174,7 +180,10 @@ def multiple_directory_flattener(
             dir_output_path=dir_output_path,
         )
 
-        save_dir_mapping(output_path=dir_output_path, dir_mapping=dir_structure_mapping)
+        save_dir_mapping(
+            output_path=dir_output_path,
+            dir_mapping=dir_structure_mapping,
+        )
 
         output_directories.append(dir_output_path)
 
