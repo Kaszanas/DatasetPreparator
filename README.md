@@ -2,8 +2,9 @@
 
 # DatasetPreparator
 
-Tools in this repository were used to create the **[SC2ReSet: StarCraft II Esport Replaypack Set](https://doi.org/10.5281/zenodo.5575796)**, and finally **[SC2EGSet: StarCraft II Esport Game State Dataset](https://doi.org/10.5281/zenodo.5503997)**, citation information [Cite Us!](#cite-us).
+This project contains various scripts that can assist in the process of preparing datasets. To have a broad overview of the tools please refer to the **[Detailed Tools Description](#detailed-tools-description)**.
 
+Tools in this repository were used to create the **[SC2ReSet: StarCraft II Esport Replaypack Set](https://doi.org/10.5281/zenodo.5575796)**, and finally **[SC2EGSet: StarCraft II Esport Game State Dataset](https://doi.org/10.5281/zenodo.5503997)**, citation information **[Cite Us!](#cite-us)**.
 
 ## Installation
 
@@ -45,7 +46,7 @@ docker run \
 ## SC2EGSet Dataset Reproduction Steps
 
 > [!NOTE]
-> Instructions below are for reproducing the result of the SC2EGSet dataset. If you wish to use the tools in this repository separately for your own dataset, please refer to the **[Table of Contents](#detailed-tools-description)**.
+> Instructions below are for reproducing the result of the SC2EGSet dataset. If you wish to use the tools in this repository separately for your own dataset, please refer to the **[Detailed Tools Description](#detailed-tools-description)**.
 
 ### Using Docker
 
@@ -59,16 +60,16 @@ The following steps were used to prepare the SC2EGSet dataset:
 
 ### Detailed Tools Description
 
-Each of the scripts has its usage described in their respective `README.md` files, you can find the table of contents below.
+Each of the scripts has its usage described in their respective `README.md` files, you can find the detailed description of the available tools below.
 
-#### CLI Usage Generic scripts
+#### CLI Usage; Generic scripts
 1. [Directory Packager (dir_packager): README](src/datasetpreparator/dir_packager/README.md)
 2. [Directory Flattener (directory_flattener): README](src/datasetpreparator/directory_flattener/README.md)
 3. [File Renamer (file_renamer): README](src/datasetpreparator/file_renamer/README.md)
 4. [JSON Merger (json_merger): README](src/datasetpreparator/json_merger/README.md)
 5. [Processed Mapping Copier (processed_mapping_copier): README](src/datasetpreparator/processed_mapping_copier/README.md)
 
-#### CLI Usage StarCraft 2 Specific Scripts
+#### CLI Usage; StarCraft 2 Specific Scripts
 1. [SC2 Map Downloader (sc2_map_downloader): README](src/datasetpreparator/sc2/sc2_map_downloader/README.md)
 2. [SC2EGSet Replaypack Processor (sc2egset_replaypack_processor): README](src/datasetpreparator/sc2/sc2egset_replaypack_processor/README.md)
 3. [SC2ReSet Replaypack Downloader (sc2reset_replaypack_downloader): README](src/datasetpreparator/sc2/sc2reset_replaypack_downloader/README.md)
