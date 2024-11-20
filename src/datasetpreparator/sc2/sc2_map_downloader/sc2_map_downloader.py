@@ -134,7 +134,7 @@ def sc2_map_downloader(input_path: Path, output_path: Path) -> Path:
     "--log",
     type=click.Choice(["INFO", "DEBUG", "ERROR", "WARN"], case_sensitive=False),
     default="WARN",
-    help="Log level (INFO, DEBUG, ERROR)",
+    help="Log level",
 )
 def main(input_path: Path, output_path: Path, log: str) -> None:
     input_path = Path(input_path).resolve()

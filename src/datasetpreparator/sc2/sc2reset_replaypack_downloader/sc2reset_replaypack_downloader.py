@@ -113,7 +113,7 @@ def sc2reset_replaypack_downloader(
     "--log",
     type=click.Choice(["INFO", "DEBUG", "ERROR", "WARN"], case_sensitive=False),
     default="WARN",
-    help="Log level (INFO, DEBUG, ERROR)",
+    help="Log level",
 )
 def main(download_path: Path, unpack_path: Path, n_workers: int, log: str):
     numeric_level = getattr(logging, log.upper(), None)

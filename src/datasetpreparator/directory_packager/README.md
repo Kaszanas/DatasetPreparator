@@ -8,16 +8,16 @@ Please keep in mind that the  ```src/dir_packager.py``` contains default flag va
 ```
 Usage: directory_packager.py [OPTIONS]
 
-Tool used for processing StarCraft 2 (SC2) datasets.
-with https://github.com/Kaszanas/SC2InfoExtractorGo
+Tool used for processing StarCraft 2 (SC2) datasets. with
+https://github.com/Kaszanas/SC2InfoExtractorGo
 
 Options:
-  --input_path DIRECTORY    Please provide input path to the directory
-                            containing the dataset that is going to be
-                            processed by packaging into .zip archives.
-                            [required]
-  --log [INFO|DEBUG|ERROR]  Log level (INFO, DEBUG, ERROR)
-  --help                    Show this message and exit.
+  --input_path DIRECTORY         Please provide input path to the directory
+                                 containing the dataset that is going to be
+                                 processed by packaging into .zip archives.
+                                 [required]
+  --log [INFO|DEBUG|ERROR|WARN]  Log level
+  --help                         Show this message and exit.
 ```
 
 # Execute With Docker

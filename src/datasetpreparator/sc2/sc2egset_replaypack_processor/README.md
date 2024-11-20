@@ -24,7 +24,7 @@ Options:
   --n_processes INTEGER           Please provide the number of processes to be
                                   spawned for the dataset processing.
                                   [required]
-  --log [INFO|DEBUG|ERROR]        Log level (INFO, DEBUG, ERROR)
+  --log [INFO|DEBUG|ERROR|WARN]   Log level
   --help                          Show this message and exit.
 ```
 

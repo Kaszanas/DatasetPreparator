@@ -121,7 +121,7 @@ def json_merger(
     "--log",
     type=click.Choice(["INFO", "DEBUG", "ERROR", "WARN"], case_sensitive=False),
     default="WARN",
-    help="Log level (INFO, DEBUG, ERROR)",
+    help="Log level",
 )
 def main(
     path_to_json_one: Path, path_to_json_two: Path, output_filepath: Path, log: str

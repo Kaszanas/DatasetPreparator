@@ -8,8 +8,7 @@ Please keep in mind that the ```src/sc2reset_replaypack_downloader.py```  contai
 ```
 Usage: sc2reset_replaypack_downloader.py [OPTIONS]
 
-Tool used for downloading
-SC2ReSet: StarCraft II Esport Replaypack Set
+Tool used for downloading SC2ReSet: StarCraft II Esport Replaypack Set
 (https://zenodo.org/doi/10.5281/zenodo.5575796).
 
 Options:
@@ -19,7 +18,7 @@ Options:
                                  will be unpacked.  [required]
   --n_workers INTEGER            Number of workers used for extracting the
                                  .zip archives.  [required]
-  --log [INFO|DEBUG|ERROR|WARN]  Log level (INFO, DEBUG, ERROR)
+  --log [INFO|DEBUG|ERROR|WARN]  Log level
   --help                         Show this message and exit.
 ```
 

@@ -140,7 +140,7 @@ def sc2egset_replaypack_processor(
     "--log",
     type=click.Choice(["INFO", "DEBUG", "ERROR", "WARN"], case_sensitive=False),
     default="WARN",
-    help="Log level (INFO, DEBUG, ERROR)",
+    help="Log level",
 )
 def main(
     input_path: Path,

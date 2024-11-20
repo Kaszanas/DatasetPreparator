@@ -88,7 +88,7 @@ def file_renamer(input_path: Path) -> None:
     "--log",
     type=click.Choice(["INFO", "DEBUG", "ERROR", "WARN"], case_sensitive=False),
     default="WARN",
-    help="Log level (INFO, DEBUG, ERROR)",
+    help="Log level",
 )
 def main(input_path: Path, log: str) -> None:
     numeric_level = getattr(logging, log.upper(), None)

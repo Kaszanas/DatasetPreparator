@@ -14,14 +14,15 @@ old structure to a separate file, and for later processing with other tools.
 Created primarily to define StarCraft 2 (SC2) datasets.
 
 Options:
-  --input_path DIRECTORY    Please provide input path to the dataset that is
-                            going to be processed.  [required]
-  --output_path DIRECTORY   Please provide output path where the tool will put
-                            files after processing.  [required]
-  --file_extension TEXT     Specify file extension for the files that will be
-                            put to the top level directory.  [required]
-  --log [INFO|DEBUG|ERROR]  Log level (INFO, DEBUG, ERROR)
-  --help                    Show this message and exit.
+  --input_path DIRECTORY         Please provide input path to the dataset that
+                                 is going to be processed.  [required]
+  --output_path DIRECTORY        Please provide output path where the tool
+                                 will put files after processing.  [required]
+  --file_extension TEXT          Specify file extension for the files that
+                                 will be put to the top level directory.
+                                 [required]
+  --log [INFO|DEBUG|ERROR|WARN]  Log level
+  --help                         Show this message and exit.
 ```
 
 # Execute With Docker

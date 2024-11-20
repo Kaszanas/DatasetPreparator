@@ -12,15 +12,16 @@ Tool used for merging two .json files. Created in order to merge two
 mappings created by https://github.com/Kaszanas/SC2MapLocaleExtractor
 
 Options:
-  --json_one FILE           Please provide the path to the first .json file
-                            that is going to be merged.  [required]
-  --json_two FILE           Please provide the path to the second .json file
-                            that is going to be merged.  [required]
-  --output_filepath FILE    Please provide a filepath to which the result JSON
-                            file will be saved, note that any existing file of
-                            the same name will be overwriten.  [required]
-  --log [INFO|DEBUG|ERROR]  Log level (INFO, DEBUG, ERROR)
-  --help                    Show this message and exit.
+  --json_one FILE                Please provide the path to the first .json
+                                 file that is going to be merged.  [required]
+  --json_two FILE                Please provide the path to the second .json
+                                 file that is going to be merged.  [required]
+  --output_filepath FILE         Please provide a filepath to which the result
+                                 JSON file will be saved, note that any
+                                 existing file of the same name will be
+                                 overwriten.  [required]
+  --log [INFO|DEBUG|ERROR|WARN]  Log level
+  --help                         Show this message and exit.
 ```
 
 # Execute With Docker

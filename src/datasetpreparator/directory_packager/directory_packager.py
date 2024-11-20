@@ -74,7 +74,7 @@ def dir_packager(directory_path: Path) -> Path:
     "--log",
     type=click.Choice(["INFO", "DEBUG", "ERROR", "WARN"], case_sensitive=False),
     default="WARN",
-    help="Log level (INFO, DEBUG, ERROR)",
+    help="Log level",
 )
 def main(input_path: Path, log: str):
     numeric_level = getattr(logging, log.upper(), None)

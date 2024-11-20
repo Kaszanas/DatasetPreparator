@@ -13,13 +13,14 @@ after processing the replaypack into a JSON dataset. This step is required
 to define the StarCraft 2 (SC2) dataset.
 
 Options:
-  --input_path DIRECTORY    Please provide input path to the flattened
-                            replaypacks that contain procesed_mapping.json
-                            files.  [required]
-  --output_path DIRECTORY   Please provide output path where
-                            processed_mapping.json will be copied.  [required]
-  --log [INFO|DEBUG|ERROR]  Log level (INFO, DEBUG, ERROR)
-  --help                    Show this message and exit.
+  --input_path DIRECTORY         Please provide input path to the flattened
+                                 replaypacks that contain
+                                 procesed_mapping.json files.  [required]
+  --output_path DIRECTORY        Please provide output path where
+                                 processed_mapping.json will be copied.
+                                 [required]
+  --log [INFO|DEBUG|ERROR|WARN]  Log level
+  --help                         Show this message and exit.
 ```
 
 # Execute With Docker
