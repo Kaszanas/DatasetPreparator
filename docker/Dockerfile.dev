@@ -3,7 +3,11 @@ ARG PYTHON_VERSION=3.10.11
 
 # Built .exe replay parsing tool is required to run sc2_replaypack_processor
 # https://github.com/Kaszanas/SC2InfoExtractorGo
+FROM kaszanas/sc2infoextractorgo:latest AS extractor
+
 FROM python:${PYTHON_VERSION} AS base
+
+ENV TEST_WORKSPACE=/app
 
 # Install other dependencies such as git, etc. This is needed for
 # pre-commit hooks to work and other QOL stuff.
@@ -11,6 +15,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     make build-essential libssl-dev wget ca-certificates curl llvm git vim bash
 
 WORKDIR /app
+
+# Copying the replay parsing tool:
+# sc2egset_replaypack_processor requires the .exe file to be in the same directory as the script:
+COPY --from=extractor /app/SC2InfoExtractorGo /app/SC2InfoExtractorGo
+# Ensure the executable has the right permissions:
+RUN chmod +x /app/SC2InfoExtractorGo
 
 # Install poetry
 RUN pip install poetry
@@ -21,8 +31,27 @@ COPY pyproject.toml poetry.lock /app/
 # Install only dependencies without installing current project:
 RUN poetry config virtualenvs.create false && poetry install --no-root
 
+# REVIEW: This is not the best way to build... This copies some old test files:
 # Copy entire repository contents
-COPY . .
+# COPY . .
+
+# Required to install pre-commit in future steps:
+COPY .git/ /app/.git/
+
+# Copy test files:
+COPY /src/ /app/src/
+COPY /tests/__init__.py /app/tests/__init__.py
+COPY /tests/conftest.py /app/tests/conftest.py
+COPY /tests/test_utils.py /app/tests/test_utils.py
+COPY /tests/test_settings.py /app/tests/test_settings.py
+COPY /tests/test_main.py /app/tests/test_main.py
+COPY /tests/test_cases/ /app/tests/test_cases/
+RUN mkdir -p /tests/test_files/
+
+# Copy docs files:
+COPY /docs/ /app/docs/
+COPY mkdocs.yml /app/mkdocs.yml
+COPY README.md /app/README.md
 
 RUN poetry run pre-commit install
 
