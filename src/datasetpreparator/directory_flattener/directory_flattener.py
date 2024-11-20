@@ -13,19 +13,22 @@ from tqdm import tqdm
 from datasetpreparator.settings import LOGGING_FORMAT
 
 
-def save_dir_mapping(output_path: str, dir_mapping: dict) -> None:
+def save_dir_mapping(output_path: Path, dir_mapping: dict) -> None:
     """
     Saves a JSON file containing the mapping of the
     directory structure before it was "flattened".
 
     Parameters
     ----------
-    output_path : str
+    output_path : Path
         Specifies the path where the mapping will be saved.
     dir_mapping : dict
         Specifies the directory mapping dict.
     """
-    with open(os.path.join(output_path, "processed_mapping.json"), "w") as json_file:
+
+    path_to_mapping = Path(output_path, "processed_mapping.json").resolve()
+
+    with path_to_mapping.open("w") as json_file:
         json.dump(dir_mapping, json_file)
 
 
@@ -106,7 +109,9 @@ def directory_flatten(
         logging.debug(f"File copied to {new_path_and_filename.as_posix()}")
 
         # Finding the relative path from the root directory to the file:
-        dir_structure_mapping[new_path_and_filename.name] = root_dir_name_and_file
+        dir_structure_mapping[
+            new_path_and_filename.name
+        ] = root_dir_name_and_file.as_posix()
 
     return dir_structure_mapping
 
@@ -244,7 +249,9 @@ def main(input_path: Path, output_path: Path, file_extension: str, log: str) -> 
     logging.basicConfig(format=LOGGING_FORMAT, level=numeric_level)
 
     multiple_directory_flattener(
-        input_path=input_path, output_path=output_path, file_extension=file_extension
+        input_path=input_path,
+        output_path=output_path,
+        file_extension=file_extension,
     )
 
 
