@@ -13,19 +13,16 @@ Tool used to execute SC2InfoExtractorGo
 directories. Assists in processing StarCraft 2 (SC2) datasets.
 
 Options:
-  --input_path DIRECTORY          Please provide an output directory for the
-                                  resulting files.  [required]
-  --output_path DIRECTORY         Please provide output path where StarCraft 2
-                                  (SC2) map files will be downloaded.
-                                  [required]
-  --perform_chat_anonymization BOOLEAN
-                                  Provide 'True' if chat should be anonymized,
-                                  otherwise 'False'.  [required]
-  --n_processes INTEGER           Please provide the number of processes to be
-                                  spawned for the dataset processing.
-                                  [required]
-  --log [INFO|DEBUG|ERROR|WARN]   Log level
-  --help                          Show this message and exit.
+  --input_path DIRECTORY         Please provide an output directory for the
+                                 resulting files.  [required]
+  --output_path DIRECTORY        Please provide output path where StarCraft 2
+                                 (SC2) map files will be downloaded.
+                                 [required]
+  --n_processes INTEGER          Please provide the number of processes to be
+                                 spawned for the dataset processing.
+                                 [required]
+  --log [INFO|DEBUG|ERROR|WARN]  Log level
+  --help                         Show this message and exit.
 ```
 
 # Execute With Docker

@@ -123,13 +123,6 @@ def sc2egset_replaypack_processor(
     help="Please provide output path where StarCraft 2 (SC2) map files will be downloaded.",
 )
 @click.option(
-    "--perform_chat_anonymization",
-    type=bool,
-    default=False,
-    required=True,
-    help="Provide 'True' if chat should be anonymized, otherwise 'False'.",
-)
-@click.option(
     "--n_processes",
     type=int,
     default=4,
@@ -146,7 +139,6 @@ def main(
     input_path: Path,
     output_path: Path,
     n_processes: int,
-    perform_chat_anonymization: bool,
     log: str,
 ) -> None:
     numeric_level = getattr(logging, log.upper(), None)
