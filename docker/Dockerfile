@@ -32,5 +32,35 @@ RUN $POETRY_HOME/bin/poetry \
 # Copy entire repository contents
 COPY . .
 
+# Copy test files:
+COPY /src/ /app/src/
+COPY /tests/__init__.py /app/tests/__init__.py
+COPY /tests/conftest.py /app/tests/conftest.py
+COPY /tests/test_utils.py /app/tests/test_utils.py
+COPY /tests/test_settings.py /app/tests/test_settings.py
+COPY /tests/test_main.py /app/tests/test_main.py
+COPY /tests/test_cases/ /app/tests/test_cases/
+
+# Copy docs files:
+COPY /docs/ /app/docs/
+COPY mkdocs.yml /app/mkdocs.yml
+COPY README.md /app/README.md
+COPY CONTRIBUTING.md /app/CONTRIBUTING.md
+
+# Bring the scripts to the top level.
+# They import parts of the project but as long as the project is installed
+# in the same environment, they can run from anywhere as long as the environment
+# is activated.
+COPY /src/datasetpreparator/directory_flattener/directory_flattener.py \
+    /src/datasetpreparator/directory_packager/directory_packager.py \
+    /src/datasetpreparator/file_renamer/file_renamer.py \
+    /src/datasetpreparator/json_merger/json_merger.py \
+    /src/datasetpreparator/processed_mapping_copier/processed_mapping_copier.py \
+    /src/datasetpreparator/sc2/sc2_map_downloader/sc2_map_downloader.py \
+    /src/datasetpreparator/sc2/sc2egset_replaypack_processor/sc2egset_replaypack_processor.py \
+    /src/datasetpreparator/sc2/sc2reset_replaypack_downloader/sc2reset_replaypack_downloader.py \
+    /app/
+
+
 # Install current project:
 RUN $POETRY_HOME/bin/poetry install --all-extras
