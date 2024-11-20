@@ -56,7 +56,7 @@ docker run -it -v .:/app datasetpreparator:devcontainer
 
 ### Local Development
 
-Ready to contribute? Here's how to set up `datasetpreparator` for local development.
+Ready to contribute? Here's how to set up `datasetpreparator` for local development. The code style standards that we use are defined in the `.pre-commit-config.yaml` file.
 
 1. Download a copy of `datasetpreparator` locally.
 2. Install `datasetpreparator` using `poetry`:
