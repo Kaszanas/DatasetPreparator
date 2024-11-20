@@ -19,6 +19,8 @@ WORKDIR /app
 # Copying the replay parsing tool:
 # sc2egset_replaypack_processor requires the .exe file to be in the same directory as the script:
 COPY --from=extractor /app/SC2InfoExtractorGo /app/SC2InfoExtractorGo
+COPY --from=extractor /app/maps/ /app/maps/
+
 # Ensure the executable has the right permissions:
 RUN chmod +x /app/SC2InfoExtractorGo
 
