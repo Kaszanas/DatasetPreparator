@@ -31,9 +31,6 @@ COPY pyproject.toml poetry.lock /app/
 # Install only dependencies without installing current project:
 RUN poetry config virtualenvs.create false && poetry install --no-root
 
-# REVIEW: This is not the best way to build... This copies some old test files:
-# Copy entire repository contents
-# COPY . .
 
 # Required for CI and pre-commit locally:
 COPY .pre-commit-config.yaml /app/.pre-commit-config.yaml
@@ -56,6 +53,21 @@ COPY /docs/ /app/docs/
 COPY mkdocs.yml /app/mkdocs.yml
 COPY README.md /app/README.md
 COPY CONTRIBUTING.md /app/CONTRIBUTING.md
+
+# Bring the scripts to the top level.
+# They import parts of the project but as long as the project is installed
+# in the same environment, they can run from anywhere as long as the environment
+# is activated.
+COPY /src/datasetpreparator/directory_flattener/directory_flattener.py \
+    /src/datasetpreparator/directory_packager/directory_packager.py \
+    /src/datasetpreparator/file_renamer/file_renamer.py \
+    /src/datasetpreparator/json_merger/json_merger.py \
+    /src/datasetpreparator/processed_mapping_copier/processed_mapping_copier.py \
+    /src/datasetpreparator/sc2/sc2_map_downloader/sc2_map_downloader.py \
+    /src/datasetpreparator/sc2/sc2egset_replaypack_processor/sc2egset_replaypack_processor.py \
+    /src/datasetpreparator/sc2/sc2reset_replaypack_downloader/sc2reset_replaypack_downloader.py \
+    /app/
+
 
 RUN poetry run pre-commit install
 
