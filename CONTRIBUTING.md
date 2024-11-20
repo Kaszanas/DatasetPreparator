@@ -65,15 +65,27 @@ Ready to contribute? Here's how to set up `datasetpreparator` for local developm
   poetry install
 ```
 
-3. Use `git` (or similar) to create a branch for local development and make your changes:
+3. Install the pre-commit hooks:
+
+```console
+  poetry run pre-commit install
+```
+
+4. Use `git` (or similar) to create a branch for local development and make your changes:
 
 ```console
   git checkout -b name-of-your-bugfix-or-feature
 ```
 
-4. When you're done making changes, check that your changes conform to any code formatting requirements and pass any tests.
+5. When you're done making changes, check that your changes conform to any code formatting requirements and pass any tests.
 
-5. Commit your changes and open a pull request.
+6. Format your commit with `commitizen`:
+
+```console
+  poetry run cz commit
+```
+
+7. Commit your changes (we are using commitizen to check commit messages) and open a pull request.
 
 ## Pull Request Guidelines
 
