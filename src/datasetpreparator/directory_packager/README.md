@@ -6,7 +6,7 @@ Utility script for compressing a directory into a `.zip` archive. This script it
 
 Please keep in mind that the  ```src/dir_packager.py``` contains default flag values and can be customized with the following command line flags:
 ```
-Usage: dir_packager.py [OPTIONS]
+Usage: directory_packager.py [OPTIONS]
 
 Tool used for processing StarCraft 2 (SC2) datasets.
 with https://github.com/Kaszanas/SC2InfoExtractorGo

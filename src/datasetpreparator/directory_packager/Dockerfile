@@ -6,4 +6,4 @@ WORKDIR /app
 
 COPY . .
 
-CMD ["python3", "file_packager.py"]
+CMD ["python3", "directory_packager.py"]
