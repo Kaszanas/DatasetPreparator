@@ -35,6 +35,9 @@ RUN poetry config virtualenvs.create false && poetry install --no-root
 # Copy entire repository contents
 # COPY . .
 
+# Required for CI and pre-commit locally:
+COPY .pre-commit-config.yaml /app/.pre-commit-config.yaml
+
 # Required to install pre-commit in future steps:
 COPY .git/ /app/.git/
 
