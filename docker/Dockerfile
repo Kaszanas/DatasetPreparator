@@ -18,7 +18,7 @@ COPY pyproject.toml poetry.lock ci/install_poetry.py /app/
 # Install poetry
 # TODO: this is rather ugly, we are installing poetry into the release Docker build. Use multi-stage builds instead.
 ENV POETRY_HOME=/opt/poetry
-RUN python3 install_poetry.py --version 1.8.2 && \
+RUN python3 install_poetry.py --version 1.8.4 && \
     $POETRY_HOME/bin/poetry --version
 
 # Install only dependencies without installing current project:
