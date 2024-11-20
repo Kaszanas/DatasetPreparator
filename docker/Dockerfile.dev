@@ -1,8 +1,8 @@
-# Built .exe replay parsing tool is required to run sc2_replaypack_processor
-# https://github.com/Kaszanas/SC2InfoExtractorGo
 
 ARG PYTHON_VERSION=3.10.11
 
+# Built .exe replay parsing tool is required to run sc2_replaypack_processor
+# https://github.com/Kaszanas/SC2InfoExtractorGo
 FROM python:${PYTHON_VERSION} AS base
 
 # Install other dependencies such as git, etc. This is needed for

@@ -37,7 +37,7 @@ When using Docker, you will have to pass the arguments through the `docker run` 
 ```bash
 docker run \
   -v "./processing:/app/processing" \
-  datasetpreparator \
+  datasetpreparator:latest \
   python3 ./src/datasetpreparator/directory_flattener/directory_flattener.py \
   --input_path /app/processing/directory_flattener/input \
   --output_path /app/processing/directory_flattener/output
