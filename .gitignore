@@ -34,3 +34,5 @@ ruff_cache/
 
 # PyCharm
 /.idea
+
+.env
