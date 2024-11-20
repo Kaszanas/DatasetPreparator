@@ -4,6 +4,9 @@ from datasetpreparator.sc2.sc2egset_replaypack_processor.sc2egset_replaypack_pro
     sc2egset_replaypack_processor,
 )
 
+from datasetpreparator.sc2.sc2egset_replaypack_processor.utils.replaypack_processor_args import (
+    ReplaypackProcessorArguments,
+)
 from tests.test_settings import (
     DELETE_SCRIPT_TEST_DIR,
     DELETE_SCRIPT_TEST_OUTPUT_DIR,
@@ -25,7 +28,7 @@ from tests.test_utils import (
 class SC2ReplaypackProcessorTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        cls.SCRIPT_NAME = "sc2_replaypack_processor"
+        cls.SCRIPT_NAME = "sc2egset_replaypack_processor"
         # Create and get test input and output directories:
         cls.input_path = create_script_test_input_dir(script_name=cls.SCRIPT_NAME)
         cls.output_path = create_script_test_output_dir(script_name=cls.SCRIPT_NAME)
@@ -44,12 +47,14 @@ class SC2ReplaypackProcessorTest(unittest.TestCase):
         # Maybe a pytest marker to skip this test?
         # Should this even be tested given that the SC2InfoExtractorGo will have its own tests?
         # This script is only providing a multiprocessing wrapper for the SC2InfoExtractorGo.
-        sc2egset_replaypack_processor(
+
+        arguments = ReplaypackProcessorArguments(
             input_path=self.input_path,
             output_path=self.output_path,
             n_processes=1,
-            perform_chat_anonymization=False,
         )
+
+        sc2egset_replaypack_processor(arguments=arguments)
         # TODO: Check if output contains the same directories as for input.
         # TODO: Check if outputs contain extracted JSON files with valid fields.
 

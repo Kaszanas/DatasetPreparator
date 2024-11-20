@@ -10,6 +10,8 @@ from datasetpreparator.sc2.sc2egset_replaypack_processor.utils.replaypack_proces
     SC2InfoExtractorGoArguments,
 )
 
+from datasetpreparator.settings import PATH_TO_SC2INFOEXTRACTORGO
+
 
 def multiprocessing_scheduler(
     processing_arguments: List[SC2InfoExtractorGoArguments], number_of_processes: int
@@ -66,7 +68,7 @@ def process_single_replaypack(arguments: SC2InfoExtractorGoArguments) -> None:
     subprocess.run(
         [
             # FIXME hardcoded binary name
-            "/SC2InfoExtractorGo",
+            str(PATH_TO_SC2INFOEXTRACTORGO),
             f"-input={arguments.processing_input}/",
             f"-output={arguments.output}/",
             f"-perform_integrity_checks={arguments.perform_integrity_checks}",
@@ -99,8 +101,7 @@ def pre_process_download_maps(arguments: SC2InfoExtractorGoArguments) -> None:
 
     subprocess.run(
         [
-            # FIXME hardcoded binary name
-            "/SC2InfoExtractorGo",
+            str(PATH_TO_SC2INFOEXTRACTORGO),
             f"-input={arguments.processing_input}/",
             f"-output={arguments.output}/",
             "-only_map_download=true",

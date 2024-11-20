@@ -1,6 +1,10 @@
 from pathlib import Path
 import unittest
-from datasetpreparator.sc2.sc2reset_replaypack_downloader.get_md5 import get_md5
+
+from datasetpreparator.sc2.sc2reset_replaypack_downloader.utils.get_md5 import (
+    get_md5,
+)
+
 from datasetpreparator.sc2.sc2reset_replaypack_downloader.sc2reset_replaypack_downloader import (
     sc2reset_replaypack_downloader,
 )
