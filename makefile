@@ -3,7 +3,9 @@ TEST_COMPOSE = $(DOCKER_DIR)/docker-test-compose.yml
 
 PYTHON_VERSION = 3.11
 
-TEST_COMMAND = "poetry run pytest --durations=100 --ignore-glob='test_*.py' tests --cov=datasetpreparator --cov-report term-missing --cov-report html 2>&1 | tee /app/logs/test_output.log"
+TEST_COMMAND = "poetry run pytest --durations=100 --ignore-glob='test_*.py' tests --cov=datasetpreparator --cov-report term-missing --cov-report html 2>&1"
+
+TEST_COMMAND_LOG = "poetry run pytest --durations=100 --ignore-glob='test_*.py' tests --cov=datasetpreparator --cov-report term-missing --cov-report html 2>&1 | tee /app/logs/test_output.log"
 
 ###################
 #### PIPELINE #####
@@ -117,12 +119,14 @@ docker_doc_build_action: ## Builds the Mkdocs documentation using Docker.
 #### PRE-COMMIT ###
 ###################
 docker_pre_commit: ## Runs pre-commit hooks using Docker.
+	@make docker_build_dev
 	docker run \
 		-v ".:/app" \
 		datasetpreparator:devcontainer \
 		pre-commit run --all-files
 
 docker_pre_commit_action: ## Runs pre-commit hooks using Docker.
+	@make docker_build_dev
 	docker run \
 		datasetpreparator:devcontainer \
 		pre-commit run --all-files
@@ -135,7 +139,7 @@ compose_build: ## Builds the Docker Image with docker-compose.
 
 action_compose_test: ## Runs the tests using Docker.
 	docker compose -f $(TEST_COMPOSE) run --rm lib \
-	bash -c $(TEST_COMMAND)
+	bash -c $(TEST_COMMAND) --exit-code-from lib
 
 compose_remove: ## Stops and removes the testing containers, images, volumes.
 	docker-compose -f $(TEST_COMPOSE) down --volumes --remove-orphans
