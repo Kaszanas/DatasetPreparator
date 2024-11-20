@@ -55,6 +55,7 @@ RUN mkdir -p /tests/test_files/
 COPY /docs/ /app/docs/
 COPY mkdocs.yml /app/mkdocs.yml
 COPY README.md /app/README.md
+COPY CONTRIBUTING.md /app/CONTRIBUTING.md
 
 RUN poetry run pre-commit install
 
