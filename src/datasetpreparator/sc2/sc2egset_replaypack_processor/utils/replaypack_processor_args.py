@@ -58,19 +58,20 @@ class SC2InfoExtractorGoArguments:
 
     def __init__(
         self,
-        game_mode_filter: int,
-        processing_input: Path,
-        log_dir: Path,
-        log_level: int,
-        number_of_packages: int,
-        only_map_download: bool,
-        output: Path,
-        perform_chat_anonymization: bool,
-        perform_cleanup: bool,
-        perform_filtering: bool,
-        perform_integrity_checks: bool,
-        perform_player_anonymization: bool,
-        perform_validity_checks: bool,
+        processing_input: Path = Path("./replays/input"),
+        output: Path = Path("./replays/output"),
+        game_mode_filter: int = 0b11111111,
+        log_dir: Path = Path("./logs/"),
+        log_level: int = 4,
+        number_of_packages: int = 1,
+        only_map_download: bool = False,
+        maps_directory: Path = Path("./maps/"),
+        perform_chat_anonymization: bool = False,
+        perform_cleanup: bool = False,
+        perform_filtering: bool = False,
+        perform_integrity_checks: bool = False,
+        perform_player_anonymization: bool = False,
+        perform_validity_checks: bool = False,
         max_procs: int = os.cpu_count(),
     ):
         self.game_mode_filter = game_mode_filter
@@ -80,6 +81,7 @@ class SC2InfoExtractorGoArguments:
         self.max_procs = max_procs
         self.number_of_packages = number_of_packages
         self.only_map_download = "true" if only_map_download else "false"
+        self.maps_directory = maps_directory
         self.output = output
         self.perform_chat_anonymization = (
             "true" if perform_chat_anonymization else "false"
