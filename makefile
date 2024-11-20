@@ -79,9 +79,7 @@ docker_build_dev: ## Builds the development image containing all of the tools.
 	--tag=datasetpreparator:devcontainer
 
 docker_run_test: ## Runs the test command using Docker.
-	docker run \
-		-v ".:/app" \
-		-e "TEST_WORKSPACE=/app" \
+	docker run --rm \
 		datasetpreparator:devcontainer \
 		sh -c \
 		$(TEST_COMMAND)
