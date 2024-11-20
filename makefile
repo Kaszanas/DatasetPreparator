@@ -20,7 +20,7 @@ sc2reset_sc2egset: ## Runs the entire processing pipeline to recreate SC2ReSet a
 flatten: ## Flattens the directory if the files are held in nested directories. This helps with streamlining the processing.
 	docker run --rm\
 		-v "./processing:/app/processing" \
-		datasetpreparator:latest \
+		datasetpreparator:dev \
 		python3 directory_flattener.py \
 		--input_dir ./processing/directory_flattener/input
 		--output_dir ./processing/directory_flattener/output
@@ -28,7 +28,7 @@ flatten: ## Flattens the directory if the files are held in nested directories. 
 process_replaypacks: ## Parses the raw (.SC2Replay) data into JSON files.
 	docker run --rm\
 		-v "./processing:/app/processing" \
-		datasetpreparator:latest \
+		datasetpreparator:dev \
 		python3 sc2egset_replaypack_processor.py \
 		--input_dir ./processing/directory_flattener/output \
 		--output_dir ./processing/sc2egset_replaypack_processor/output \
@@ -37,21 +37,21 @@ process_replaypacks: ## Parses the raw (.SC2Replay) data into JSON files.
 rename_files: ## Renames the files after processing with SC2InfoExtractorGo.
 	docker run \
 		-v "./processing:/app/processing" \
-		datasetpreparator:latest \
+		datasetpreparator:dev \
 		python3 file_renamer.py \
 		--input_dir ./processing/sc2egset_replaypack_processor/output
 
 package_sc2egset_dataset: ## Packages the pre-processed dataset from the output of datasetpreparator. Used to prepare SC2EGSet Dataset.
 	docker run --rm \
 		-v "./processing:/app/processing" \
-		datasetpreparator:latest \
+		datasetpreparator:dev \
 		python3 file_packager.py \
 		--input_dir ./processing/sc2egset_replaypack_processor/output
 
 package_sc2reset_dataset: ## Packages the raw data. Used to prepare SC2ReSet Replaypack set.
 	docker run --rm \
 		-v "./processing:/app/processing" \
-		datasetpreparator:latest \
+		datasetpreparator:dev \
 		python3 file_packager.py \
 		--input_dir ./processing/directory_flattener/output
 
