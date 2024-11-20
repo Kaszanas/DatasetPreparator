@@ -1,7 +1,9 @@
 import unittest
 import zipfile
 
-from datasetpreparator.dir_packager.dir_packager import multiple_dir_packager
+from datasetpreparator.directory_packager.directory_packager import (
+    multiple_dir_packager,
+)
 
 from tests.test_settings import (
     DELETE_SCRIPT_TEST_DIR,
