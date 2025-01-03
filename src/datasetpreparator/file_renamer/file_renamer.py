@@ -76,19 +76,19 @@ def file_renamer(input_path: Path) -> None:
 
 
 @click.command(
-    help="Tool used for processing StarCraft 2 (SC2) datasets. with https://github.com/Kaszanas/SC2InfoExtractorGo"
+    help="Tool used for renaming auxilliary files (log files) that are produced when creating StarCraft 2 (SC2) datasets with https://github.com/Kaszanas/SC2InfoExtractorGo"
 )
 @click.option(
     "--input_path",
     type=click.Path(exists=True, dir_okay=True, file_okay=False, resolve_path=True),
     required=True,
-    help="Please provide input path to the directory containing the dataset that is going to be processed by packaging into .zip archives.",
+    help="Input path to the directory containing the dataset that is going to be processed by packaging into .zip archives.",
 )
 @click.option(
     "--log",
     type=click.Choice(["INFO", "DEBUG", "ERROR", "WARN"], case_sensitive=False),
     default="WARN",
-    help="Log level",
+    help="Log level. Default is WARN.",
 )
 def main(input_path: Path, log: str) -> None:
     numeric_level = getattr(logging, log.upper(), None)

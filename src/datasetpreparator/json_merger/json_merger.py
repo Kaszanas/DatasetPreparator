@@ -97,31 +97,31 @@ def json_merger(
 
 
 @click.command(
-    help="Tool used for merging two .json files. Created in order to merge two mappings created by https://github.com/Kaszanas/SC2MapLocaleExtractor"
+    help="Tool used for merging two .json files. Originally used to merge two mappings created by https://github.com/Kaszanas/SC2MapLocaleExtractor"
 )
 @click.option(
     "--json_one",
     type=click.Path(exists=True, dir_okay=False, file_okay=True, resolve_path=True),
     required=True,
-    help="Please provide the path to the first .json file that is going to be merged.",
+    help="Path to the first .json file that is going to be merged.",
 )
 @click.option(
     "--json_two",
     type=click.Path(writable=True, dir_okay=False, file_okay=True, resolve_path=True),
     required=True,
-    help="Please provide the path to the second .json file that is going to be merged.",
+    help="Path to the second .json file that is going to be merged.",
 )
 @click.option(
     "--output_filepath",
     type=click.Path(dir_okay=False, file_okay=True, resolve_path=True),
     required=True,
-    help="Please provide a filepath to which the result JSON file will be saved, note that any existing file of the same name will be overwriten.",
+    help="Filepath to which the result JSON file will be saved, note that any existing file of the same name will be overwriten.",
 )
 @click.option(
     "--log",
     type=click.Choice(["INFO", "DEBUG", "ERROR", "WARN"], case_sensitive=False),
     default="WARN",
-    help="Log level",
+    help="Log level. Default is WARN.",
 )
 def main(
     path_to_json_one: Path, path_to_json_two: Path, output_filepath: Path, log: str

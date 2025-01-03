@@ -96,7 +96,7 @@ def sc2egset_replaypack_processor(
 
 
 @click.command(
-    help="Tool used to execute SC2InfoExtractorGo (https://github.com/Kaszanas/SC2InfoExtractorGo) on multiple replaypack directories. Assists in processing StarCraft 2 (SC2) datasets."
+    help="Tool used to recreate SC2EGSet Dataset. Executes SC2InfoExtractorGo (https://github.com/Kaszanas/SC2InfoExtractorGo) on multiple replaypack directories. Assists in processing StarCraft 2 (SC2) datasets."
 )
 @click.option(
     "--input_path",
@@ -108,7 +108,7 @@ def sc2egset_replaypack_processor(
         path_type=Path,
     ),
     required=True,
-    help="Please provide an output directory for the resulting files.",
+    help="Output directory for the resulting files.",
 )
 @click.option(
     "--output_path",
@@ -120,20 +120,20 @@ def sc2egset_replaypack_processor(
         path_type=Path,
     ),
     required=True,
-    help="Please provide output path where StarCraft 2 (SC2) map files will be downloaded.",
+    help="Output path where StarCraft 2 (SC2) map files will be downloaded.",
 )
 @click.option(
     "--n_processes",
     type=int,
     default=4,
     required=True,
-    help="Please provide the number of processes to be spawned for the dataset processing.",
+    help="Number of processes to be spawned for the dataset processing.",
 )
 @click.option(
     "--log",
     type=click.Choice(["INFO", "DEBUG", "ERROR", "WARN"], case_sensitive=False),
     default="WARN",
-    help="Log level",
+    help="Log level. Default is WARN.",
 )
 def main(
     input_path: Path,

@@ -62,19 +62,19 @@ def dir_packager(directory_path: Path) -> Path:
 
 
 @click.command(
-    help="Tool used for processing StarCraft 2 (SC2) datasets. with https://github.com/Kaszanas/SC2InfoExtractorGo"
+    help="Tool that packages directories into .zip archives. Each directory in the input path is packaged into a separate .zip archive."
 )
 @click.option(
     "--input_path",
     type=click.Path(exists=True, dir_okay=True, file_okay=False, resolve_path=True),
     required=True,
-    help="Please provide input path to the directory containing the dataset that is going to be processed by packaging into .zip archives.",
+    help="Input path to the directory containing the dataset that is going to be processed by packaging into .zip archives.",
 )
 @click.option(
     "--log",
     type=click.Choice(["INFO", "DEBUG", "ERROR", "WARN"], case_sensitive=False),
     default="WARN",
-    help="Log level",
+    help="Log level. Default is WARN.",
 )
 def main(input_path: Path, log: str):
     numeric_level = getattr(logging, log.upper(), None)

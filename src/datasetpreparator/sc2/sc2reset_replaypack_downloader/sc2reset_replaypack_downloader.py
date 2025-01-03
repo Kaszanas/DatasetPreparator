@@ -88,7 +88,7 @@ def sc2reset_replaypack_downloader(
         path_type=Path,
     ),
     required=True,
-    help="Please provide a path to which the archives will be downloaded.",
+    help="Path to which the archives will be downloaded.",
 )
 @click.option(
     "--unpack_path",
@@ -100,7 +100,7 @@ def sc2reset_replaypack_downloader(
         path_type=Path,
     ),
     required=True,
-    help="Please provide a path to which the archives will be unpacked.",
+    help="Path to which the archives will be unpacked.",
 )
 @click.option(
     "--n_workers",
@@ -113,7 +113,7 @@ def sc2reset_replaypack_downloader(
     "--log",
     type=click.Choice(["INFO", "DEBUG", "ERROR", "WARN"], case_sensitive=False),
     default="WARN",
-    help="Log level",
+    help="Log level. Default is WARN.",
 )
 def main(download_path: Path, unpack_path: Path, n_workers: int, log: str):
     numeric_level = getattr(logging, log.upper(), None)

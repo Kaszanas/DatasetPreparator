@@ -43,7 +43,7 @@ def processed_mapping_copier(input_path: str, output_path: str) -> None:
 
 
 @click.command(
-    help="Tool for copying the processed_mapping.json files to the matching directory after processing the replaypack into a JSON dataset. This step is required to define the StarCraft 2 (SC2) dataset."
+    help="Tool for copying the auxilliary file of processed_mapping.json to the matching directory after processing the replaypack into a JSON dataset with sc2egset_replaypack_processor.py. This script is required to reproduce SC2EGSet Dataset."
 )
 @click.option(
     "--input_path",
@@ -55,7 +55,7 @@ def processed_mapping_copier(input_path: str, output_path: str) -> None:
         path_type=Path,
     ),
     required=True,
-    help="Please provide input path to the flattened replaypacks that contain procesed_mapping.json files.",
+    help="Input path to the flattened replaypacks that contain procesed_mapping.json files.",
 )
 @click.option(
     "--output_path",
@@ -67,13 +67,13 @@ def processed_mapping_copier(input_path: str, output_path: str) -> None:
         path_type=Path,
     ),
     required=True,
-    help="Please provide output path where processed_mapping.json will be copied.",
+    help="Output path where processed_mapping.json will be copied.",
 )
 @click.option(
     "--log",
     type=click.Choice(["INFO", "DEBUG", "ERROR", "WARN"], case_sensitive=False),
     default="WARN",
-    help="Log level",
+    help="Log level. Default is WARN.",
 )
 def main(input_path: Path, output_path: Path, log: str) -> None:
     numeric_level = getattr(logging, log.upper(), None)

@@ -104,7 +104,7 @@ def sc2_map_downloader(input_path: Path, output_path: Path) -> Path:
 
 
 @click.command(
-    help="Tool for downloading StarCraft 2 (SC2) maps based on the data that is available within .SC2Replay file."
+    help="Tool for downloading StarCraft 2 (SC2) maps based on the data that available within .SC2Replay files."
 )
 @click.option(
     "--input_path",
@@ -116,7 +116,7 @@ def sc2_map_downloader(input_path: Path, output_path: Path) -> Path:
         path_type=Path,
     ),
     required=True,
-    help="Please provide input path to the dataset that is going to be processed.",
+    help="Input path to the dataset that is going to be processed. The script will find all .SC2Replay files in the directory.",
 )
 @click.option(
     "--output_path",
@@ -128,13 +128,13 @@ def sc2_map_downloader(input_path: Path, output_path: Path) -> Path:
         path_type=Path,
     ),
     required=True,
-    help="Please provide output path where StarCraft 2 (SC2) map files will be downloaded.",
+    help="Output path where StarCraft 2 (SC2) map files will be downloaded.",
 )
 @click.option(
     "--log",
     type=click.Choice(["INFO", "DEBUG", "ERROR", "WARN"], case_sensitive=False),
     default="WARN",
-    help="Log level",
+    help="Log level. Default is WARN.",
 )
 def main(input_path: Path, output_path: Path, log: str) -> None:
     input_path = Path(input_path).resolve()

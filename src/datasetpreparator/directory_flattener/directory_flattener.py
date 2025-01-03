@@ -215,7 +215,7 @@ def multiple_directory_flattener(
         path_type=Path,
     ),
     required=True,
-    help="Please provide input path to the dataset that is going to be processed.",
+    help="Input path to the dataset that is going to be processed.",
 )
 @click.option(
     "--output_path",
@@ -227,14 +227,14 @@ def multiple_directory_flattener(
         path_type=Path,
     ),
     required=True,
-    help="Please provide output path where the tool will put files after processing.",
+    help="Output path where the tool will put files after processing.",
 )
 @click.option(
     "--file_extension",
     type=str,
     default=".SC2Replay",
     required=True,
-    help="Specify file extension for the files that will be put to the top level directory.",
+    help="File extension for the files that will be put to the top level directory. Example ('.SC2Replay').",
 )
 @click.option(
     "--log",
