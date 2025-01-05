@@ -4,24 +4,26 @@ Utility script for entering each of the supplied replaypacks and flattening its 
 
 # CLI Usage
 
-Please keep in mind that ```src/directory_flattener.py``` does not contain default flag values and can be customized with the following command line flags:
+Please keep in mind that ```src/directory_flattener.py``` contains required argument values and can be customized with the following command line interaface:
 
 ```
 Usage: directory_flattener.py [OPTIONS]
 
-Directory restructuring tool used in order to flatten the structure, map the
-old structure to a separate file, and for later processing with other tools.
-Created primarily to define StarCraft 2 (SC2) datasets.
+  Directory restructuring tool used in order to flatten the structure. Saves
+  the mapping of the old directory structure to a separate file. Used to ease
+  processing with other tools. Can be used to extract additional meaning from
+  the directory structure in case of tournament replaypacks. Created primarily
+  to define StarCraft 2 (SC2) datasets.
 
 Options:
-  --input_path DIRECTORY         Please provide input path to the dataset that
-                                 is going to be processed.  [required]
-  --output_path DIRECTORY        Please provide output path where the tool
-                                 will put files after processing.  [required]
-  --file_extension TEXT          Specify file extension for the files that
-                                 will be put to the top level directory.
-                                 [required]
-  --log [INFO|DEBUG|ERROR|WARN]  Log level
+  --input_path DIRECTORY         Input path to the dataset that is going to be
+                                 processed.  [required]
+  --output_path DIRECTORY        Output path where the tool will put files
+                                 after processing.  [required]
+  --file_extension TEXT          File extension for the files that will be put
+                                 to the top level directory. Example
+                                 ('.SC2Replay').  [required]
+  --log [INFO|DEBUG|ERROR|WARN]  Log level. Default is WARN.
   --help                         Show this message and exit.
 ```
 
@@ -36,9 +38,9 @@ Please refer to the main [README](../../README.md) for the instructions.
 
 ## Script Docker Image
 
-Buil the docker image:
+Build the docker image:
 ```bash
-docker build --tag=datasetpreparator:directory_flattener .
+docker build --tag=datasetpreparator:latest .
 ```
 
 Run the docker image (please replace `<paths>`):
@@ -46,7 +48,7 @@ Run the docker image (please replace `<paths>`):
 docker run
     -v "<./input>:/app/input" \
     -v "<./output>:/app/output" \
-    datasetpreparator:directory_flattener \
+    datasetpreparator:latest \
     python3 directory_flattener.py \
     --input_dir /app/input \
     --output_dir /app/output \

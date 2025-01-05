@@ -4,21 +4,21 @@ Utility script, downloads the contents of SC2ReSet replaypack from a Zenodo repo
 
 # CLI Usage
 
-Please keep in mind that the ```src/sc2reset_replaypack_downloader.py```  contains default flag values and can be customized with the following command line flags:
+Please keep in mind that the ```sc2reset_replaypack_downloader.py``` contains required argument values and can be customized with the following command line interaface:
 ```
 Usage: sc2reset_replaypack_downloader.py [OPTIONS]
 
-Tool used for downloading SC2ReSet: StarCraft II Esport Replaypack Set
-(https://zenodo.org/doi/10.5281/zenodo.5575796).
+  Tool used for downloading SC2ReSet: StarCraft II Esport Replaypack Set
+  (https://zenodo.org/doi/10.5281/zenodo.5575796).
 
 Options:
-  --download_path DIRECTORY      Please provide a path to which the archives
-                                 will be downloaded.  [required]
-  --unpack_path DIRECTORY        Please provide a path to which the archives
-                                 will be unpacked.  [required]
+  --download_path DIRECTORY      Path to which the archives will be
+                                 downloaded.  [required]
+  --unpack_path DIRECTORY        Path to which the archives will be unpacked.
+                                 [required]
   --n_workers INTEGER            Number of workers used for extracting the
                                  .zip archives.  [required]
-  --log [INFO|DEBUG|ERROR|WARN]  Log level
+  --log [INFO|DEBUG|ERROR|WARN]  Log level. Default is WARN.
   --help                         Show this message and exit.
 ```
 
@@ -33,15 +33,15 @@ Please refer to the main [README](../../README.md) for the instructions.
 
 ## Script Docker Image
 
-Buil the docker image:
+Build the docker image:
 ```bash
-docker build --tag=datasetpreparator:sc2reset_replaypack_downloader .
+docker build --tag=datasetpreparator:latest .
 ```
 
 Run the docker image (please replace `<paths>`):
 ```bash
 docker run -v "<./input>:/app/input" \
-    datasetpreparator:sc2reset_replaypack_downloader \
+    datasetpreparator:latest \
     python3 sc2reset_replaypack_downloader.py --input_dir /app/input
 ```
 

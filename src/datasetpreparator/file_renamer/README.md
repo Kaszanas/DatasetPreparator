@@ -2,19 +2,19 @@
 
 # CLI Usage
 
-Please keep in mind that the  ```src/file_renamer.py``` contains default flag values and can be customized with the following command line flags:
+Please keep in mind that the  ```src/file_renamer.py``` contains required argument values and can be customized with the following command line interaface:
 ```
 Usage: file_renamer.py [OPTIONS]
 
-Tool used for processing StarCraft 2 (SC2) datasets. with
-https://github.com/Kaszanas/SC2InfoExtractorGo
+  Tool used for renaming auxilliary files (log files) that are produced when
+  creating StarCraft 2 (SC2) datasets with
+  https://github.com/Kaszanas/SC2InfoExtractorGo
 
 Options:
-  --input_path DIRECTORY         Please provide input path to the directory
-                                 containing the dataset that is going to be
-                                 processed by packaging into .zip archives.
-                                 [required]
-  --log [INFO|DEBUG|ERROR|WARN]  Log level
+  --input_path DIRECTORY         Input path to the directory containing the
+                                 dataset that is going to be processed by
+                                 packaging into .zip archives.  [required]
+  --log [INFO|DEBUG|ERROR|WARN]  Log level. Default is WARN.
   --help                         Show this message and exit.
 ```
 
@@ -29,14 +29,14 @@ Please refer to the main [README](../../README.md) for the instructions.
 
 ## Script Docker Image
 
-Buil the docker image:
+Build the docker image:
 ```bash
-docker build --tag=datasetpreparator:file_renamer .
+docker build --tag=datasetpreparator:latest .
 ```
 
 Run the docker image (please replace `<paths>`):
 ```bash
 docker run -v "<./input>:/app/input" \
-    datasetpreparator:file_renamer \
+    datasetpreparator:latest \
     python3 file_renamer.py --input_dir /app/input
 ```

@@ -4,24 +4,28 @@ Utility script that leverages the [SC2InfoExtractorGo](https://github.com/Kaszan
 
 # CLI Usage
 
-Please keep in mind that the ```src/sc2_replaypack_processor.py```  contains default flag values and can be customized with the following command line flags:
+Please keep in mind that the ```sc2_replaypack_processor.py``` contains required argument values and can be customized with the following command line interaface:
 ```
 Usage: sc2egset_replaypack_processor.py [OPTIONS]
 
-Tool used to execute SC2InfoExtractorGo
-(https://github.com/Kaszanas/SC2InfoExtractorGo) on multiple replaypack
-directories. Assists in processing StarCraft 2 (SC2) datasets.
+  Tool used to recreate SC2ReSet and SC2EGSet Dataset. Executes the entire
+  pipeline for replay processing. Depends on SC2InfoExtractorGo
+  (https://github.com/Kaszanas/SC2InfoExtractorGo) which is executed on
+  multiple replaypack directories in the process. Assists in processing
+  StarCraft 2 (SC2) datasets.
 
 Options:
-  --input_path DIRECTORY         Please provide an output directory for the
-                                 resulting files.  [required]
-  --output_path DIRECTORY        Please provide output path where StarCraft 2
-                                 (SC2) map files will be downloaded.
+  --input_path DIRECTORY         Input directory containing multiple StarCraft 2
+                                 replaypacks. These files will be processed
+                                 exactly the same as SC2ReSet and SC2EGSet
+                                 datasets.  [required]
+  --output_path DIRECTORY        Output path where the tool will place the
+                                 processed files for SC2ReSet and SC2EGSet
+                                 dataset as children directories.  [required]
+  --n_processes INTEGER          Number of processes to be spawned for the
+                                 dataset processing with SC2InfoExtractorGo.
                                  [required]
-  --n_processes INTEGER          Please provide the number of processes to be
-                                 spawned for the dataset processing.
-                                 [required]
-  --log [INFO|DEBUG|ERROR|WARN]  Log level
+  --log [INFO|DEBUG|ERROR|WARN]  Log level. Default is WARN.
   --help                         Show this message and exit.
 ```
 
@@ -36,14 +40,14 @@ Please refer to the main [README](../../README.md) for the instructions.
 
 ## Script Docker Image
 
-Buil the docker image:
+Build the docker image:
 ```bash
-docker build --tag=datasetpreparator:sc2_replaypack_processor .
+docker build --tag=datasetpreparator:latest .
 ```
 
 Run the docker image (please replace `<paths>`):
 ```bash
 docker run -v "<./input>:/app/input" \
-    datasetpreparator:sc2_replaypack_processor \
+    datasetpreparator:latest \
     python3 sc2_replaypack_processor.py --input_dir /app/input
 ```

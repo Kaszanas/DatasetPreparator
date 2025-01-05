@@ -4,22 +4,22 @@ Utility script that enters each of the processed replaypack directories and copi
 
 # CLI Usage
 
-Please keep in mind that the  ```src/processed_mapping_copier.py``` contains default flag values and can be customized with the following command line flags:
+Please keep in mind that the  ```src/processed_mapping_copier.py``` contains required argument values and can be customized with the following command line interaface:
 ```
 Usage: processed_mapping_copier.py [OPTIONS]
 
-Tool for copying the processed_mapping.json files to the matching directory
-after processing the replaypack into a JSON dataset. This step is required
-to define the StarCraft 2 (SC2) dataset.
+  Tool for copying the auxilliary file of processed_mapping.json to the
+  matching directory after processing the replaypack into a JSON dataset with
+  sc2egset_replaypack_processor.py. This script is required to reproduce
+  SC2EGSet Dataset.
 
 Options:
-  --input_path DIRECTORY         Please provide input path to the flattened
-                                 replaypacks that contain
-                                 procesed_mapping.json files.  [required]
-  --output_path DIRECTORY        Please provide output path where
-                                 processed_mapping.json will be copied.
+  --input_path DIRECTORY         Input path to the flattened replaypacks that
+                                 contain procesed_mapping.json files.
                                  [required]
-  --log [INFO|DEBUG|ERROR|WARN]  Log level
+  --output_path DIRECTORY        Output path where processed_mapping.json will
+                                 be copied.  [required]
+  --log [INFO|DEBUG|ERROR|WARN]  Log level. Default is WARN.
   --help                         Show this message and exit.
 ```
 
@@ -34,9 +34,9 @@ Please refer to the main [README](../../README.md) for the instructions.
 
 ## Script Docker Image
 
-Buil the docker image:
+Build the docker image:
 ```bash
-docker build --tag=datasetpreparator:processed_mapping_copier .
+docker build --tag=datasetpreparator:latest .
 ```
 
 Run the docker image (please replace `<paths>`):
@@ -44,7 +44,7 @@ Run the docker image (please replace `<paths>`):
 docker run \
     -v "<./input>:/app/input" \
     -v "<./output>:/app/output" \
-    datasetpreparator:file_packager \
+    datasetpreparator:latest \
     python3 processed_mapping_copier.py \
     --input_dir /app/input \
     --output_dir /app/output
