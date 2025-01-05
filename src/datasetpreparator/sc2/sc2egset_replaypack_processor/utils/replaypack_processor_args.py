@@ -163,8 +163,10 @@ class ReplaypackProcessorArguments:
         self,
         input_path: Path,
         output_path: Path,
+        maps_directory: Path,
         n_processes: int,
     ):
         self.input_path = input_path
         self.output_path = output_path
         self.n_processes = n_processes
+        self.maps_directory = maps_directory

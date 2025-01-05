@@ -14,6 +14,14 @@ from datasetpreparator.sc2.sc2egset_replaypack_processor.utils.multiprocess impo
     pre_process_download_maps,
 )
 
+from datasetpreparator.directory_flattener.directory_flattener import (
+    multiple_directory_flattener,
+)
+
+from datasetpreparator.directory_packager.directory_packager import (
+    multiple_dir_packager,
+)
+
 
 def define_sc2egset_args(
     input_path: Path,
@@ -56,6 +64,16 @@ def define_sc2egset_args(
     return sc2_info_extractor_go_args
 
 
+def sc2info_extractor_go_map_download(arguments: ReplaypackProcessorArguments):
+    # Pre-process, download all maps:
+    logging.info("Downloading all maps...")
+    map_download_arguments = SC2InfoExtractorGoArguments.get_download_maps_args(
+        processing_input=arguments.input_path, output=arguments.output_path
+    )
+    pre_process_download_maps(arguments=map_download_arguments)
+    pass
+
+
 def sc2egset_replaypack_processor(
     arguments: ReplaypackProcessorArguments,
 ):
@@ -83,13 +101,6 @@ def sc2egset_replaypack_processor(
         )
         if sc2_info_extractor_go_args is not None:
             multiprocessing_list.append(sc2_info_extractor_go_args)
-
-    # Pre-process, download all maps:
-    logging.info("Downloading all maps...")
-    map_download_arguments = SC2InfoExtractorGoArguments.get_download_maps_args(
-        processing_input=arguments.input_path, output=arguments.output_path
-    )
-    pre_process_download_maps(arguments=map_download_arguments)
 
     # Run processing with multiple SC2InfoExtractorGo instances:
     multiprocessing_scheduler(multiprocessing_list, int(n_processes))
@@ -146,14 +157,28 @@ def main(
         raise ValueError(f"Invalid log level: {numeric_level}")
     logging.basicConfig(format=LOGGING_FORMAT, level=numeric_level)
 
-    # TODO: Recreate the entire pipeline for SC2ReSet and SC2EGSet:
-
     arguments = ReplaypackProcessorArguments(
         input_path=input_path,
         output_path=output_path,
         n_processes=n_processes,
+        maps_directory="",
     )
 
+    # TODO: Recreate the entire pipeline for SC2ReSet and SC2EGSet:
+    # REVIEW: Note that the Chinese maps need to be pre-seeded so that they can be
+    # hosted later on.
+
+    # Directory flattener:
+    multiple_directory_flattener()
+
+    # Download all maps for multiprocess, map files are used as a source of truth for
+    # SC2InfoExtractorGo downloading mechanism:
+    sc2info_extractor_go_map_download(arguments=arguments)
+
+    # Package SC2ReSet and the downloaded maps, move to the output directory:
+    multiple_dir_packager(input_path="")
+
+    # Process SC2EGSet, this will use the same map directory as the previous step:
     sc2egset_replaypack_processor(arguments=arguments)
 
 
