@@ -54,6 +54,18 @@ process_replaypacks: ## Parses the raw (.SC2Replay) data into JSON files.
 		--output_dir ./processing/sc2egset_replaypack_processor/output \
 		--n_processes 8 \
 
+.PHONY: processed_mapping_copier
+processed_mapping_copier:
+	@echo "Copying the processed mapping files."
+	@make docker_pull_dev
+	@echo "Using the dev branch Docker image: $(DEV_BRANCH_CONTAINER)"
+	docker run --rm\
+		-v "./processing:/app/processing" \
+		$(DEV_BRANCH_CONTAINER) \
+		python3 processed_mapping_copier.py \
+		--input_dir ./processing/directory_flattener/output \
+		--output_dir ./processing/sc2egset_replaypack_processor/output
+
 .PHONY: rename_files
 rename_files: ## Renames the files after processing with SC2InfoExtractorGo.
 	@echo "Renaming the files."
@@ -64,6 +76,7 @@ rename_files: ## Renames the files after processing with SC2InfoExtractorGo.
 		$(DEV_BRANCH_CONTAINER) \
 		python3 file_renamer.py \
 		--input_dir ./processing/sc2egset_replaypack_processor/output
+
 
 .PHONY: package_sc2egset_dataset
 package_sc2egset_dataset: ## Packages the pre-processed dataset from the output of datasetpreparator. Used to prepare SC2EGSet Dataset.
