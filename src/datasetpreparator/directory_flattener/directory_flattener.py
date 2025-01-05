@@ -203,7 +203,7 @@ def multiple_directory_flattener(
 
 
 @click.command(
-    help="Directory restructuring tool used in order to flatten the structure, map the old structure to a separate file, and for later processing with other tools. Created primarily to define StarCraft 2 (SC2) datasets."
+    help="Directory restructuring tool used in order to flatten the structure. Saves the mapping of the old directory structure to a separate file. Used to ease processing with other tools. Can be used to extract additional meaning from the directory structure in case of tournament replaypacks. Created primarily to define StarCraft 2 (SC2) datasets."
 )
 @click.option(
     "--input_path",
@@ -240,7 +240,7 @@ def multiple_directory_flattener(
     "--log",
     type=click.Choice(["INFO", "DEBUG", "ERROR", "WARN"], case_sensitive=False),
     default="WARN",
-    help="Log level",
+    help="Log level. Default is WARN.",
 )
 def main(input_path: Path, output_path: Path, file_extension: str, log: str) -> None:
     numeric_level = getattr(logging, log.upper(), None)

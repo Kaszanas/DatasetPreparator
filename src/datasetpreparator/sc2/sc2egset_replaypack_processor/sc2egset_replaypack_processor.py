@@ -96,7 +96,7 @@ def sc2egset_replaypack_processor(
 
 
 @click.command(
-    help="Tool used to recreate SC2EGSet Dataset. Executes SC2InfoExtractorGo (https://github.com/Kaszanas/SC2InfoExtractorGo) on multiple replaypack directories. Assists in processing StarCraft 2 (SC2) datasets."
+    help="Tool used to recreate SC2ReSet and SC2EGSet Dataset. Executes the entire pipeline for replay processing. Depends on SC2InfoExtractorGo (https://github.com/Kaszanas/SC2InfoExtractorGo) which is executed on multiple replaypack directories in the process. Assists in processing StarCraft 2 (SC2) datasets."
 )
 @click.option(
     "--input_path",
@@ -108,7 +108,7 @@ def sc2egset_replaypack_processor(
         path_type=Path,
     ),
     required=True,
-    help="Output directory for the resulting files.",
+    help="Input directory containing multiple StarCraft 2 replaypacks. These files will be processed exactly the same as SC2ReSet and SC2EGSet datasets.",
 )
 @click.option(
     "--output_path",
@@ -120,14 +120,14 @@ def sc2egset_replaypack_processor(
         path_type=Path,
     ),
     required=True,
-    help="Output path where StarCraft 2 (SC2) map files will be downloaded.",
+    help="Output path where the tool will place the processed files for SC2ReSet and SC2EGSet dataset as children directories.",
 )
 @click.option(
     "--n_processes",
     type=int,
     default=4,
     required=True,
-    help="Number of processes to be spawned for the dataset processing.",
+    help="Number of processes to be spawned for the dataset processing with SC2InfoExtractorGo.",
 )
 @click.option(
     "--log",
@@ -145,6 +145,8 @@ def main(
     if not isinstance(numeric_level, int):
         raise ValueError(f"Invalid log level: {numeric_level}")
     logging.basicConfig(format=LOGGING_FORMAT, level=numeric_level)
+
+    # TODO: Recreate the entire pipeline for SC2ReSet and SC2EGSet:
 
     arguments = ReplaypackProcessorArguments(
         input_path=input_path,

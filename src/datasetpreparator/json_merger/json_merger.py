@@ -97,7 +97,7 @@ def json_merger(
 
 
 @click.command(
-    help="Tool used for merging two .json files. Originally used to merge two mappings created by https://github.com/Kaszanas/SC2MapLocaleExtractor"
+    help="Tool used for merging two .json files. Originally used to merge two json files created by https://github.com/Kaszanas/SC2MapLocaleExtractor"
 )
 @click.option(
     "--json_one",
