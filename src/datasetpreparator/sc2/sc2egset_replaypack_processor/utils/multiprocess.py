@@ -65,6 +65,8 @@ def process_single_replaypack(arguments: SC2InfoExtractorGoArguments) -> None:
         directory,
         output_directory_filepath,
     )
+
+    # TODO: Check if I can do a pipe from the subprocess to get multiple progress bars:
     subprocess.run(
         [
             # FIXME hardcoded binary name
