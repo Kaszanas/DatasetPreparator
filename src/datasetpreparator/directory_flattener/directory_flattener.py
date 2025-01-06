@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 from typing import Dict, List, Tuple
 import json
@@ -11,6 +10,7 @@ import click
 from tqdm import tqdm
 
 from datasetpreparator.settings import LOGGING_FORMAT
+from datasetpreparator.utils.user_prompt import user_prompt_overwrite_ok
 
 
 def save_dir_mapping(output_path: Path, dir_mapping: dict) -> None:
@@ -117,7 +117,7 @@ def directory_flatten(
 
 
 def multiple_directory_flattener(
-    input_path: Path, output_path: Path, file_extension: str
+    input_path: Path, output_path: Path, file_extension: str, force_overwrite: bool
 ) -> Tuple[bool, List[Path]]:
     """
     Provides the main logic for "directory flattening".
@@ -139,6 +139,9 @@ def multiple_directory_flattener(
     file_extension : str
         Specifies extension for which the detected files will be brought \
         up to the top level of the "flattened" directory
+    force : bool
+        Specifies if the user wants to overwrite the output directory without \
+        being prompted.
 
     Returns
     -------
@@ -149,26 +152,25 @@ def multiple_directory_flattener(
 
     # input must be a directory:
     if not input_path.is_dir():
-        logging.error(
-            f"Input path must be a directory! {input_path.resolve().as_posix()}"
-        )
+        logging.error(f"Input path must be a directory! {str(input_path.resolve())}")
         return (False, [Path()])
 
     # Input must exist:
     if not input_path.exists():
-        logging.error(f"Input path must exist! {input_path.resolve().as_posix()}")
+        logging.error(f"Input path must exist! {str(input_path.resolve())}")
         return (False, [Path()])
 
     # Output path must be a directory:
     if not output_path.is_dir():
-        logging.error(
-            f"Output path must be a directory! {output_path.resolve().as_posix()}"
-        )
+        logging.error(f"Output path must be a directory! {str(output_path.resolve())}")
         return (False, [Path()])
+
+    if user_prompt_overwrite_ok(path=output_path, force_overwrite=force_overwrite):
+        output_path.mkdir(exist_ok=True)
 
     output_directories = []
     # Iterate over directories:
-    for item in os.listdir(input_path):
+    for item in input_path.iterdir():
         maybe_dir = Path(input_path, item).resolve()
         if not maybe_dir.is_dir():
             logging.debug(f"Skipping {str(maybe_dir)}, not a directory.")
@@ -182,9 +184,11 @@ def multiple_directory_flattener(
             continue
 
         dir_output_path = Path(output_path, item).resolve()
-        if not dir_output_path.exists():
+        if user_prompt_overwrite_ok(
+            path=dir_output_path, force_overwrite=force_overwrite
+        ):
             logging.debug(f"Creating directory {str(dir_output_path)}, didn't exist.")
-            dir_output_path.mkdir()
+            dir_output_path.mkdir(exist_ok=True)
 
         dir_structure_mapping = directory_flatten(
             root_directory=maybe_dir,
@@ -237,12 +241,25 @@ def multiple_directory_flattener(
     help="File extension for the files that will be put to the top level directory. Example ('.SC2Replay').",
 )
 @click.option(
+    "--force_overwrite",
+    type=bool,
+    default=False,
+    required=True,
+    help="Flag that specifies if the user wants to overwrite files or directories without being prompted.",
+)
+@click.option(
     "--log",
     type=click.Choice(["INFO", "DEBUG", "ERROR", "WARN"], case_sensitive=False),
     default="WARN",
     help="Log level. Default is WARN.",
 )
-def main(input_path: Path, output_path: Path, file_extension: str, log: str) -> None:
+def main(
+    input_path: Path,
+    output_path: Path,
+    file_extension: str,
+    log: str,
+    force_overwrite: bool,
+) -> None:
     numeric_level = getattr(logging, log.upper(), None)
     if not isinstance(numeric_level, int):
         raise ValueError(f"Invalid log level: {numeric_level}")
@@ -252,6 +269,7 @@ def main(input_path: Path, output_path: Path, file_extension: str, log: str) -> 
         input_path=input_path,
         output_path=output_path,
         file_extension=file_extension,
+        force_overwrite=force_overwrite,
     )
 
 

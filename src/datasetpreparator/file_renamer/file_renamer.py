@@ -1,5 +1,4 @@
 import logging
-import os
 from pathlib import Path
 
 import click
@@ -23,60 +22,50 @@ def file_renamer(input_path: Path) -> None:
     """
 
     if not input_path.exists():
-        raise FileNotFoundError(f"Input path {input_path.as_posix()} does not exist.")
-
-    if not input_path.is_dir():
-        raise NotADirectoryError(
-            f"Input path {input_path.as_posix()} is not a directory."
+        logging.error(
+            f"Input path {str(input_path)} does not exist. No files will be renamed."
         )
+        return
+    if not input_path.is_dir():
+        logging.error(f"Input path {str(input_path)} is not a directory.")
+        return
 
     if not len(list(input_path.iterdir())) > 0:
-        raise ValueError(f"Input path {input_path.as_posix()} is empty.")
+        logging.error(f"Input path {str(input_path)} is empty. No files to rename.")
+        return
 
-    # TODO: This can be done with iterdir:
-    for directory, _, file_list in os.walk(input_path.as_posix()):
-        for file in file_list:
-            # REVIEW: Can this be done better? Match case statement?
-            if file.endswith(".zip"):
-                os.rename(
-                    os.path.join(directory, file),
-                    os.path.join(directory, os.path.basename(directory) + "_data.zip"),
-                )
-            if file.startswith("package_summary"):
-                os.rename(
-                    os.path.join(directory, file),
-                    os.path.join(
-                        directory, os.path.basename(directory) + "_summary.json"
-                    ),
-                )
-            if file.startswith("processed_mapping"):
-                os.rename(
-                    os.path.join(directory, file),
-                    os.path.join(
-                        directory,
-                        os.path.basename(directory) + "_processed_mapping.json",
-                    ),
-                )
-            if file.startswith("processed_failed"):
-                os.rename(
-                    os.path.join(directory, file),
-                    os.path.join(
-                        directory,
-                        os.path.basename(directory) + "_processed_failed.log",
-                    ),
-                )
-            if file.startswith("main_log"):
-                os.rename(
-                    os.path.join(directory, file),
-                    os.path.join(
-                        directory,
-                        os.path.basename(directory) + "_main_log.log",
-                    ),
-                )
+    all_files = input_path.glob("**/*")
+    for file in all_files:
+        directory = file.parent
+
+        if file.name.endswith(".zip"):
+            new_name = file.stem + "_data.zip"
+            new_path = directory / new_name
+            file.rename(new_path)
+
+        if file.name.startswith("package_summary"):
+            new_name = file.stem + "_summary.json"
+            new_path = directory / new_name
+            file.rename(new_path)
+
+        if file.name.startswith("processed_mapping"):
+            new_name = file.stem + "_processed_mapping.json"
+            new_path = directory / new_name
+            file.rename(new_path)
+
+        if file.name.startswith("processed_failed"):
+            new_name = file.stem + "_processed_failed.log"
+            new_path = directory / new_name
+            file.rename(new_path)
+
+        if file.name.startswith("main_log"):
+            new_name = file.stem + "_main_log.log"
+            new_path = directory / new_name
+            file.rename(new_path)
 
 
 @click.command(
-    help="Tool used for renaming auxilliary files (log files) that are produced when creating StarCraft 2 (SC2) datasets with https://github.com/Kaszanas/SC2InfoExtractorGo"
+    help="Tool used for renaming auxilliary files (log files) that are produced when creating StarCraft 2 (SC2) datasets with https://github.com/Kaszanas/SC2InfoExtractorGo. Additionally, this tool renames the .zip files so that they carry the original directory name with an added '_data' suffix."
 )
 @click.option(
     "--input_path",

@@ -7,6 +7,7 @@ import sc2reader
 import requests
 
 from datasetpreparator.settings import LOGGING_FORMAT
+from datasetpreparator.utils.user_prompt import user_prompt_overwrite_ok
 
 
 def list_maps_to_download(replay_files: List[Path]) -> Set[Tuple[str, str]]:
@@ -64,14 +65,19 @@ def download_maps(
 
     for map_hash, map_url in hash_set:
         try:
-            response = requests.get(map_url, allow_redirects=True)
             output_filepath = Path(output_path, f"{map_hash}.SC2Map").resolve()
+            if not user_prompt_overwrite_ok(output_filepath):
+                logging.warning(f"Skipping map: hash: {map_hash} url: {map_url}")
+                continue
+            response = requests.get(map_url, allow_redirects=True)
             with output_filepath.open(mode="wb") as output_map_file:
                 output_map_file.write(response.content)
         except:  # noqa: E722
             logging.error(
                 f"Error detected! Cannot process map: hash: {map_hash} url: {map_url}"
             )
+        finally:
+            logging.warning("Exception handled, continuing...")
             continue
 
     return output_path
@@ -91,7 +97,6 @@ def sc2_map_downloader(input_path: Path, output_path: Path) -> Path:
     """
 
     glob_pattern = "**/*.SC2Replay"
-
     replay_files = input_path.glob(glob_pattern)
     maps_to_download = list_maps_to_download(replay_files=replay_files)
 
@@ -146,7 +151,7 @@ def main(input_path: Path, output_path: Path, log: str) -> None:
     logging.basicConfig(format=LOGGING_FORMAT, level=numeric_level)
 
     output_dir = sc2_map_downloader(
-        input_path=input_path, output_path=output_path.resolve()
+        input_path=input_path.resolve(), output_path=output_path.resolve()
     )
 
     logging.info(f"Finished donwloading maps to: {output_dir.as_posix()}")

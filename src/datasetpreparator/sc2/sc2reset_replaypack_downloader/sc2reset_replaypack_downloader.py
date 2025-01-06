@@ -115,7 +115,7 @@ def sc2reset_replaypack_downloader(
     default="WARN",
     help="Log level. Default is WARN.",
 )
-def main(download_path: Path, unpack_path: Path, n_workers: int, log: str):
+def main(download_path: Path, unpack_path: Path, n_workers: int, log: str) -> None:
     numeric_level = getattr(logging, log.upper(), None)
     if not isinstance(numeric_level, int):
         raise ValueError(f"Invalid log level: {numeric_level}")
