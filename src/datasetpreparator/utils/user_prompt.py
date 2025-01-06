@@ -1,7 +1,7 @@
 from pathlib import Path
 
 
-def user_prompt_possible_overwrite(filepath: Path, force: bool) -> bool:
+def user_prompt_overwrite_ok(filepath: Path, force: bool) -> bool:
     """
     Prompts the user to confirm if they want to potentially overwrite a file or directory if
     it already exists.
@@ -29,6 +29,10 @@ def user_prompt_possible_overwrite(filepath: Path, force: bool) -> bool:
     if not filepath.exists():
         return True
 
+    # Directory is empty, so it can be overwritten without any risk:
+    if filepath.is_dir() and len(list(filepath.iterdir())) == 0:
+        return True
+
     return_map = {
         "y": True,
         "n": False,
@@ -36,14 +40,13 @@ def user_prompt_possible_overwrite(filepath: Path, force: bool) -> bool:
 
     # File or directory exists, so we need to prompt the user to confirm
     # if they want to potentially overwrite something and loose data:
-    if filepath.exists():
-        print(f"File {filepath} already exists.")
-        user_input = input("Do you want to overwrite it? (y/n): ")
+    print(f"File {filepath} already exists.")
+    user_input = input("Do you want to overwrite it? (y/n): ")
 
-        if user_input.lower() in return_map:
-            return return_map[user_input.lower()]
+    if user_input.lower() in return_map:
+        return return_map[user_input.lower()]
 
-        print("Invalid input, please type 'y' or 'n'.")
-        return user_prompt_possible_overwrite(filepath, force)
+    print("Invalid input, please type 'y' or 'n'.")
+    return user_prompt_overwrite_ok(filepath, force)
 
     return False
