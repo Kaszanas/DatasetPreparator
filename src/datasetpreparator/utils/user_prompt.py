@@ -2,7 +2,7 @@ from pathlib import Path
 import logging
 
 
-def user_prompt_overwrite_ok(path: Path, force: bool) -> bool:
+def user_prompt_overwrite_ok(path: Path, force_overwrite: bool) -> bool:
     """
     Prompts the user to confirm if they want to potentially overwrite a file or directory if
     it already exists.
@@ -22,7 +22,7 @@ def user_prompt_overwrite_ok(path: Path, force: bool) -> bool:
     """
 
     # User passed the force flag, so the files or directories can be overwritten:
-    if force:
+    if force_overwrite:
         return True
 
     # File or directory does not exist, so it can be created,
@@ -56,4 +56,4 @@ def user_prompt_overwrite_ok(path: Path, force: bool) -> bool:
         f"Invalid input provided: {user_input.lower()}, calling the function recursively."
     )
     print("Invalid input, please type 'y' or 'n'.")
-    return user_prompt_overwrite_ok(path, force)
+    return user_prompt_overwrite_ok(path, force_overwrite)
