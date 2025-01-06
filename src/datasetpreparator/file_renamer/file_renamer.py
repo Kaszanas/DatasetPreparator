@@ -65,7 +65,7 @@ def file_renamer(input_path: Path) -> None:
 
 
 @click.command(
-    help="Tool used for renaming auxilliary files (log files) that are produced when creating StarCraft 2 (SC2) datasets with https://github.com/Kaszanas/SC2InfoExtractorGo"
+    help="Tool used for renaming auxilliary files (log files) that are produced when creating StarCraft 2 (SC2) datasets with https://github.com/Kaszanas/SC2InfoExtractorGo. Additionally, this tool renames the .zip files so that they carry the original directory name with an added '_data' suffix."
 )
 @click.option(
     "--input_path",
