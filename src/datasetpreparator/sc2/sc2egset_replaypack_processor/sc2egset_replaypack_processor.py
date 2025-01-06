@@ -117,7 +117,7 @@ def main(
     logging.basicConfig(format=LOGGING_FORMAT, level=numeric_level)
 
     # Create output directory if it does not exist:
-    if user_prompt_overwrite_ok(filepath=output_path, force=force_overwrite):
+    if user_prompt_overwrite_ok(path=output_path, force_overwrite=force_overwrite):
         output_path.mkdir(exist_ok=True)
 
     input_path = Path(input_path).resolve()
@@ -147,7 +147,7 @@ def main(
     #
 
     if user_prompt_overwrite_ok(
-        filepath=directory_flattener_output_path, force=force_overwrite
+        path=directory_flattener_output_path, force_overwrite=force_overwrite
     ):
         directory_flattener_output_path.mkdir(exist_ok=True)
 

@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 from typing import Dict, List, Tuple
 import json
@@ -118,7 +117,7 @@ def directory_flatten(
 
 
 def multiple_directory_flattener(
-    input_path: Path, output_path: Path, file_extension: str, force: bool
+    input_path: Path, output_path: Path, file_extension: str, force_overwrite: bool
 ) -> Tuple[bool, List[Path]]:
     """
     Provides the main logic for "directory flattening".
@@ -166,12 +165,12 @@ def multiple_directory_flattener(
         logging.error(f"Output path must be a directory! {str(output_path.resolve())}")
         return (False, [Path()])
 
-    if user_prompt_overwrite_ok(path=output_path, force=force):
+    if user_prompt_overwrite_ok(path=output_path, force_overwrite=force_overwrite):
         output_path.mkdir(exist_ok=True)
 
     output_directories = []
     # Iterate over directories:
-    for item in os.listdir(input_path):
+    for item in input_path.iterdir():
         maybe_dir = Path(input_path, item).resolve()
         if not maybe_dir.is_dir():
             logging.debug(f"Skipping {str(maybe_dir)}, not a directory.")
@@ -185,7 +184,9 @@ def multiple_directory_flattener(
             continue
 
         dir_output_path = Path(output_path, item).resolve()
-        if user_prompt_overwrite_ok(path=dir_output_path, force=force):
+        if user_prompt_overwrite_ok(
+            path=dir_output_path, force_overwrite=force_overwrite
+        ):
             logging.debug(f"Creating directory {str(dir_output_path)}, didn't exist.")
             dir_output_path.mkdir(exist_ok=True)
 
@@ -240,12 +241,25 @@ def multiple_directory_flattener(
     help="File extension for the files that will be put to the top level directory. Example ('.SC2Replay').",
 )
 @click.option(
+    "--force_overwrite",
+    type=bool,
+    default=False,
+    required=True,
+    help="Flag that specifies if the user wants to overwrite files or directories without being prompted.",
+)
+@click.option(
     "--log",
     type=click.Choice(["INFO", "DEBUG", "ERROR", "WARN"], case_sensitive=False),
     default="WARN",
     help="Log level. Default is WARN.",
 )
-def main(input_path: Path, output_path: Path, file_extension: str, log: str) -> None:
+def main(
+    input_path: Path,
+    output_path: Path,
+    file_extension: str,
+    log: str,
+    force_overwrite: bool,
+) -> None:
     numeric_level = getattr(logging, log.upper(), None)
     if not isinstance(numeric_level, int):
         raise ValueError(f"Invalid log level: {numeric_level}")
@@ -255,6 +269,7 @@ def main(input_path: Path, output_path: Path, file_extension: str, log: str) -> 
         input_path=input_path,
         output_path=output_path,
         file_extension=file_extension,
+        force_overwrite=force_overwrite,
     )
 
 

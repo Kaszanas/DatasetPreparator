@@ -76,18 +76,25 @@ def dir_packager(directory_path: Path) -> Path:
     help="Input path to the directory containing the dataset that is going to be processed by packaging into .zip archives.",
 )
 @click.option(
+    "--force_overwrite",
+    type=bool,
+    default=False,
+    required=True,
+    help="Flag that specifies if the user wants to overwrite files or directories without being prompted.",
+)
+@click.option(
     "--log",
     type=click.Choice(["INFO", "DEBUG", "ERROR", "WARN"], case_sensitive=False),
     default="WARN",
     help="Log level. Default is WARN.",
 )
-def main(input_path: Path, log: str):
+def main(input_path: Path, log: str, force_overwrite: bool):
     numeric_level = getattr(logging, log.upper(), None)
     if not isinstance(numeric_level, int):
         raise ValueError(f"Invalid log level: {numeric_level}")
     logging.basicConfig(format=LOGGING_FORMAT, level=numeric_level)
 
-    multiple_dir_packager(input_path=input_path)
+    multiple_dir_packager(input_path=input_path, force_overwrite=force_overwrite)
 
 
 if __name__ == "__main__":
