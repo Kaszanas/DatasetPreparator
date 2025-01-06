@@ -6,6 +6,7 @@ from typing import Dict
 import click
 
 from datasetpreparator.settings import LOGGING_FORMAT
+from datasetpreparator.utils.user_prompt import user_prompt_overwrite_ok
 
 
 def merge_files(path_to_json_one: Path, path_to_json_two: Path) -> Dict[str, str]:
@@ -65,7 +66,10 @@ def save_output(output_filepath: Path, output_dict: Dict[str, str]) -> Path:
 
 
 def json_merger(
-    path_to_json_one: Path, path_to_json_two: Path, output_filepath: Path
+    path_to_json_one: Path,
+    path_to_json_two: Path,
+    output_filepath: Path,
+    force_overwrite: bool,
 ) -> Path:
     """
     Merges two JSON files into one.
@@ -84,6 +88,13 @@ def json_merger(
     Path
         Returns a path to the saved merged file.
     """
+
+    # Checking early if the output file can be overwritten:
+    # at this stage no merging of JSON files has been done yet.
+    # User won't have to wait for the files to be merged to be prompted.
+    if not user_prompt_overwrite_ok(output_filepath, force_overwrite):
+        logging.error("User did not confirm possible overwrite. Exiting...")
+        return Path("")
 
     output_dict = merge_files(
         path_to_json_one=path_to_json_one, path_to_json_two=path_to_json_two
@@ -118,13 +129,24 @@ def json_merger(
     help="Filepath to which the result JSON file will be saved, note that any existing file of the same name will be overwriten.",
 )
 @click.option(
+    "--force_overwrite",
+    type=bool,
+    default=False,
+    required=True,
+    help="Flag that specifies if the user wants to overwrite files or directories without being prompted.",
+)
+@click.option(
     "--log",
     type=click.Choice(["INFO", "DEBUG", "ERROR", "WARN"], case_sensitive=False),
     default="WARN",
     help="Log level. Default is WARN.",
 )
 def main(
-    path_to_json_one: Path, path_to_json_two: Path, output_filepath: Path, log: str
+    path_to_json_one: Path,
+    path_to_json_two: Path,
+    output_filepath: Path,
+    log: str,
+    force_overwrite: bool,
 ) -> None:
     numeric_level = getattr(logging, log.upper(), None)
     if not isinstance(numeric_level, int):
@@ -135,6 +157,7 @@ def main(
         path_to_json_one=path_to_json_one,
         path_to_json_two=path_to_json_two,
         output_filepath=output_filepath,
+        force_overwrite=force_overwrite,
     )
 
 
