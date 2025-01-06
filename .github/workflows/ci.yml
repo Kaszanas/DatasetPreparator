@@ -44,7 +44,7 @@ jobs:
 
       - name: Build Dev Docker Image
         run: |
-          make docker_build_dev PYTHON_VERSION=${{ matrix.python-version }}
+          make docker_build_devcontainer PYTHON_VERSION=${{ matrix.python-version }}
 
       - name: Build Docker Image With Python ${{ matrix.python-version }}
         run: |
