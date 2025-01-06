@@ -23,7 +23,7 @@ jobs:
 
       - name: Build Dev Docker Image
         run: |
-          make docker_build_dev
+          make docker_build_devcontainer
 
       - name: Docker Run pre-commit on all files.
         run: |
