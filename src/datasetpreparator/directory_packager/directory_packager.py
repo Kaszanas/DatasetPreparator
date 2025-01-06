@@ -7,6 +7,7 @@ from zipfile import ZipFile, ZIP_BZIP2
 import click
 
 from datasetpreparator.settings import LOGGING_FORMAT
+from datasetpreparator.utils.user_prompt import user_prompt_overwrite_ok
 
 
 def multiple_dir_packager(input_path: str) -> List[Path]:
@@ -52,11 +53,15 @@ def dir_packager(directory_path: Path) -> Path:
     """
 
     final_archive_path = directory_path.with_suffix(".zip")
-    logging.info(f"Set final archive name to: {final_archive_path.as_posix()}")
-    with ZipFile(final_archive_path.as_posix(), "w") as zip_file:
-        for file in directory_path.iterdir():
-            abs_filepath = os.path.join(directory_path, file)
-            zip_file.write(filename=abs_filepath, arcname=file, compress_type=ZIP_BZIP2)
+
+    if user_prompt_overwrite_ok(final_archive_path):
+        logging.info(f"Set final archive name to: {str(final_archive_path)}")
+        with ZipFile(str(final_archive_path), "w") as zip_file:
+            for file in directory_path.iterdir():
+                abs_filepath = os.path.join(directory_path, file)
+                zip_file.write(
+                    filename=abs_filepath, arcname=file, compress_type=ZIP_BZIP2
+                )
 
     return final_archive_path
 
