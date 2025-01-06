@@ -11,6 +11,7 @@ import click
 from tqdm import tqdm
 
 from datasetpreparator.settings import LOGGING_FORMAT
+from datasetpreparator.utils.user_prompt import user_prompt_overwrite_ok
 
 
 def save_dir_mapping(output_path: Path, dir_mapping: dict) -> None:
@@ -117,7 +118,7 @@ def directory_flatten(
 
 
 def multiple_directory_flattener(
-    input_path: Path, output_path: Path, file_extension: str
+    input_path: Path, output_path: Path, file_extension: str, force: bool
 ) -> Tuple[bool, List[Path]]:
     """
     Provides the main logic for "directory flattening".
@@ -139,6 +140,9 @@ def multiple_directory_flattener(
     file_extension : str
         Specifies extension for which the detected files will be brought \
         up to the top level of the "flattened" directory
+    force : bool
+        Specifies if the user wants to overwrite the output directory without \
+        being prompted.
 
     Returns
     -------
@@ -149,22 +153,21 @@ def multiple_directory_flattener(
 
     # input must be a directory:
     if not input_path.is_dir():
-        logging.error(
-            f"Input path must be a directory! {input_path.resolve().as_posix()}"
-        )
+        logging.error(f"Input path must be a directory! {str(input_path.resolve())}")
         return (False, [Path()])
 
     # Input must exist:
     if not input_path.exists():
-        logging.error(f"Input path must exist! {input_path.resolve().as_posix()}")
+        logging.error(f"Input path must exist! {str(input_path.resolve())}")
         return (False, [Path()])
 
     # Output path must be a directory:
     if not output_path.is_dir():
-        logging.error(
-            f"Output path must be a directory! {output_path.resolve().as_posix()}"
-        )
+        logging.error(f"Output path must be a directory! {str(output_path.resolve())}")
         return (False, [Path()])
+
+    if user_prompt_overwrite_ok(path=output_path, force=force):
+        output_path.mkdir(exist_ok=True)
 
     output_directories = []
     # Iterate over directories:
@@ -182,9 +185,9 @@ def multiple_directory_flattener(
             continue
 
         dir_output_path = Path(output_path, item).resolve()
-        if not dir_output_path.exists():
+        if user_prompt_overwrite_ok(path=dir_output_path, force=force):
             logging.debug(f"Creating directory {str(dir_output_path)}, didn't exist.")
-            dir_output_path.mkdir()
+            dir_output_path.mkdir(exist_ok=True)
 
         dir_structure_mapping = directory_flatten(
             root_directory=maybe_dir,
