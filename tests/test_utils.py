@@ -1,11 +1,11 @@
-import os
-import logging
-from pathlib import Path
-import shutil
-from typing import List
 import json
+import logging
+import shutil
+from pathlib import Path
+from typing import List
 
-from tests.test_settings import TEST_DIR_NAME, TEST_FILES_NAME
+
+from tests.test_settings import TEST_DIR_NAME, TEST_FILES_NAME, TEST_WORKSPACE
 
 
 def get_workspace_dir() -> Path:
@@ -19,16 +19,10 @@ def get_workspace_dir() -> Path:
         Returns the path to the workspace.
     """
 
-    logging.info(
-        "Entered get_workspace_dir(), attempting to set \
-        workspace_dir = os.environ.get('TEST_WORKSPACE')"
-    )
+    logging.info("Entered get_workspace_dir(), attempting to set workspace_dir.")
 
-    workspace_dir = Path(os.environ.get("TEST_WORKSPACE")).resolve()
-    logging.info(
-        f"Successfully set workspace_dir = {workspace_dir}, \
-        Attempting to return workspace_dir."
-    )
+    workspace_dir = Path(TEST_WORKSPACE).resolve()
+    logging.info(f"Successfully set workspace_dir = {workspace_dir}")
     return workspace_dir
 
 
@@ -345,11 +339,14 @@ def dir_test_cleanup(
     # Removes entire script test directory and returns as it
     # contains both input and output directories:
     if delete_script_test_dir_bool:
+        logging.info(f"{delete_script_test_dir_bool=}, deleting script test dir.")
         delete_script_test_dir(script_name=script_name)
         return
 
     if delete_script_test_input_bool:
+        logging.info(f"{delete_script_test_input_bool=}, deleting script test input.")
         delete_script_test_input(script_name=script_name)
 
     if delete_script_test_output_bool:
+        logging.info(f"{delete_script_test_output_bool=}, deleting script test output.")
         delete_script_test_output(script_name=script_name)

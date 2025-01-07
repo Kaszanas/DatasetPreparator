@@ -1,3 +1,8 @@
+import sys
+
+
+TEST_WORKSPACE = sys.path[0]
+
 TEST_DIR_NAME = "tests"
 TEST_FILES_NAME = "test_files"
 

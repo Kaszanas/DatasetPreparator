@@ -1,3 +1,4 @@
+import logging
 import unittest
 from datasetpreparator.directory_flattener.directory_flattener import (
     multiple_directory_flattener,
@@ -48,11 +49,19 @@ class DirectoryFlattenerTest(unittest.TestCase):
                 extension=".txt",
             )
 
+        # TODO: There could also be empty input directories to test or directorie
+        # with all files that are not of the selected extension.
+        # In that case to get a proper assertion each of the input directories should
+        # be remembered and the number of files in the output should be known
+        # before the assertions are made.
+        # cls.list_of_input_dirs = list(cls.input_path.iterdir())
+
     def test_directory_flattener(self) -> None:
         ok, list_of_output_dirs = multiple_directory_flattener(
             input_path=self.input_path,
             output_path=self.output_path,
             file_extension=self.file_extension,
+            force_overwrite=True,
         )
 
         # Check if the input data was correct for processing:
@@ -60,12 +69,25 @@ class DirectoryFlattenerTest(unittest.TestCase):
 
         # Check the number of output directories:
         self.assertEqual(self.n_dirs, len(list_of_output_dirs))
+        logging.info(f"Number of output directories: {len(list_of_output_dirs)}")
+        logging.info(f"Output directories: {list_of_output_dirs}")
 
         for output_dir in list_of_output_dirs:
+            logging.info(f"Checking output directory: {output_dir}")
             # Assert the final directory have the same number of
             # files with the selected extension.
             out_files = list(output_dir.glob(f"*{self.file_extension}"))
+
+            logging.info(
+                f"Number of files with extension {self.file_extension}: {len(out_files)}"
+            )
+            logging.info(f"{self.n_nested_files=}")
+
+            # Check only the number of files with the selected extension:
             self.assertEqual(self.n_nested_files, len(out_files))
+
+            # Check with the processed mapping file created:
+            self.assertEqual(self.n_nested_files + 1, len(list(output_dir.iterdir())))
 
             # Assert the final flattened directory to
             # have one .json file with the mapping

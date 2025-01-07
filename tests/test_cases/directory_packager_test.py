@@ -38,7 +38,9 @@ class TestDirPackagerTest(unittest.TestCase):
             create_test_text_files(input_path=directory, n_files=cls.n_files)
 
     def test_multiple_dir_packager(self) -> None:
-        archives = multiple_dir_packager(input_path=self.input_path)
+        archives = multiple_dir_packager(
+            input_path=self.input_path, force_overwrite=True
+        )
 
         # Archive should exists:
         self.assertTrue(archives[0].exists())

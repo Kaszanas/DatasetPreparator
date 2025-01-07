@@ -14,7 +14,9 @@ COMPOSE_PROJECT_NAME = datasetpreparator
 # Python variables:
 PYTHON_VERSION = 3.11
 
-TEST_COMMAND = "poetry run pytest --durations=100 --ignore-glob='test_*.py' tests --cov=datasetpreparator --cov-report term-missing --cov-report html 2>&1"
+TEST_COMMAND_RAW = poetry run pytest --durations=100 --ignore-glob='test_*.py' tests --cov=datasetpreparator --cov-report term-missing --cov-report html 2>&1
+
+TEST_COMMAND = "$(TEST_COMMAND_RAW)"
 
 TEST_COMMAND_LOG = "poetry run pytest --durations=100 --ignore-glob='test_*.py' tests --cov=datasetpreparator --cov-report term-missing --cov-report html 2>&1 | tee /app/logs/test_output.log"
 
@@ -99,6 +101,16 @@ package_sc2reset_dataset: ## Packages the raw data. Used to prepare SC2ReSet Rep
 		$(DEV_BRANCH_CONTAINER) \
 		python3 file_packager.py \
 		--input_dir ./processing/directory_flattener/output
+
+###################
+#### LOCAL ########
+###################
+.PHONY: test
+test: ## Runs the tests using the local environment.
+	@echo "Running the tests using the local environment."
+	@echo "Using the test command: $(TEST_COMMAND)"
+	$(TEST_COMMAND_RAW)
+
 
 ###################
 #### DOCKER #######

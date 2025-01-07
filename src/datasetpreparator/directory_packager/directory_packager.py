@@ -10,7 +10,7 @@ from datasetpreparator.settings import LOGGING_FORMAT
 from datasetpreparator.utils.user_prompt import user_prompt_overwrite_ok
 
 
-def multiple_dir_packager(input_path: str) -> List[Path]:
+def multiple_dir_packager(input_path: str, force_overwrite: bool) -> List[Path]:
     """
     Packages the specified directory into a .zip archive.
 
@@ -18,6 +18,8 @@ def multiple_dir_packager(input_path: str) -> List[Path]:
     ----------
     input_path : str
         Specifies the path which will be turned into a .zip archive.
+    force_overwrite : bool
+        Specifies if the user wants to overwrite files or directories without being prompted
 
     Returns
     -------
@@ -31,12 +33,14 @@ def multiple_dir_packager(input_path: str) -> List[Path]:
         if not directory_path.is_dir():
             continue
 
-        output_archives.append(dir_packager(directory_path=directory_path))
+        output_archives.append(
+            dir_packager(directory_path=directory_path, force_overwrite=force_overwrite)
+        )
 
     return output_archives
 
 
-def dir_packager(directory_path: Path) -> Path:
+def dir_packager(directory_path: Path, force_overwrite: bool) -> Path:
     """
     Archives a single input directory.
     Archive is stored in the same directory as the input.
@@ -45,6 +49,8 @@ def dir_packager(directory_path: Path) -> Path:
     ----------
     directory_path : Path
         Specifies the path to the directory that will be archived.
+    force_overwrite : bool
+        Specifies if the user wants to overwrite files or directories without being prompted
 
     Returns
     -------
@@ -54,7 +60,7 @@ def dir_packager(directory_path: Path) -> Path:
 
     final_archive_path = directory_path.with_suffix(".zip")
 
-    if user_prompt_overwrite_ok(final_archive_path):
+    if user_prompt_overwrite_ok(final_archive_path, force_overwrite=force_overwrite):
         logging.info(f"Set final archive name to: {str(final_archive_path)}")
         with ZipFile(str(final_archive_path), "w") as zip_file:
             for file in directory_path.iterdir():

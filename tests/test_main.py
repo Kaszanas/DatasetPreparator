@@ -21,7 +21,7 @@ def suite():
     start_dir = os.path.join(get_workspace_dir(), "tests")
     suite = unittest.TestLoader().discover(
         start_dir=start_dir,
-        pattern="sc2reset_replaypack_downloader_test.py",  # *_test.py
+        pattern="directory_flattener_test.py",  # *_test.py
     )
     return suite
 

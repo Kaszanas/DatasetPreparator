@@ -32,6 +32,7 @@ class SC2ReplaypackProcessorTest(unittest.TestCase):
         # Create and get test input and output directories:
         cls.input_path = create_script_test_input_dir(script_name=cls.SCRIPT_NAME)
         cls.output_path = create_script_test_output_dir(script_name=cls.SCRIPT_NAME)
+        cls.maps_directory = cls.input_path / "maps"
 
         # TODO: Verify that SC2InfoExtractorGo is available in path.
         # If not available download from GitHub release page.
@@ -51,6 +52,7 @@ class SC2ReplaypackProcessorTest(unittest.TestCase):
         arguments = ReplaypackProcessorArguments(
             input_path=self.input_path,
             output_path=self.output_path,
+            maps_directory=self.maps_directory,
             n_processes=1,
         )
 

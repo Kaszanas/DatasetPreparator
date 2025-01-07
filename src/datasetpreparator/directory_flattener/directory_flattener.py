@@ -183,7 +183,7 @@ def multiple_directory_flattener(
             )
             continue
 
-        dir_output_path = Path(output_path, item).resolve()
+        dir_output_path = Path(output_path, item.name).resolve()
         if user_prompt_overwrite_ok(
             path=dir_output_path, force_overwrite=force_overwrite
         ):
