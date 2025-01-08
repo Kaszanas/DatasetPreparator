@@ -83,7 +83,7 @@ def directory_flatten(
     for file in tqdm(
         list_of_files,
         desc=f"Flattening directory {root_directory.name}",
-        unit="files",
+        unit="file",
     ):
         # Getting the ReplayPack/directory/structure/file.SC2Replay path,
         # this is needed to calculate the hash of the filepath:
@@ -170,7 +170,7 @@ def multiple_directory_flattener(
 
     output_directories = []
     # Iterate over directories:
-    for item in input_path.iterdir():
+    for item in tqdm(input_path.iterdir()):
         maybe_dir = Path(input_path, item).resolve()
         if not maybe_dir.is_dir():
             logging.debug(f"Skipping {str(maybe_dir)}, not a directory.")

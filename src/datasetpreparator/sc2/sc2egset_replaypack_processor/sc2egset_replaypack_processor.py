@@ -44,12 +44,6 @@ def prepare_sc2reset(
     ):
         directory_flattener_output_path.mkdir(exist_ok=True)
 
-    # TODO: Check if the output directory is not empty, if it is you can proceed
-    # if the directory is not empty issue a warning with confirmation prompt.
-
-    # if not empty and not force:
-    #   prompt user to confirm overwrite
-
     logging.info("Flattening directories...")
     multiple_directory_flattener(
         input_path=replaypacks_input_path,
@@ -76,10 +70,9 @@ def prepare_sc2reset(
     # Package SC2ReSet and the downloaded maps, move to the output directory:
     logging.info("Packaging SC2ReSet and the downloaded maps...")
     multiple_dir_packager(input_path=directory_flattener_output_path)
-    # TODO: SC2ReSet should be ready, move it to the final output directory.
 
     sc2reset_output_path = Path(output_path, "SC2ReSet").resolve()
-
+    logging.info("Moving SC2ReSet to the output directory...")
     move_files(
         input_path=directory_flattener_output_path,
         output_path=sc2reset_output_path,
@@ -122,7 +115,7 @@ def prepare_sc2egset(
 
     # SC2EGSet should be ready, move it to the final output directory:
     sc2egset_output_path = Path(output_path, "SC2EGSet").resolve()
-
+    logging.info("Moving SC2EGSet to the output directory...")
     move_files(
         input_path=output_path,
         output_path=sc2egset_output_path,
