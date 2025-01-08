@@ -57,7 +57,7 @@ def process_single_replaypack(arguments: SC2InfoExtractorGoArguments) -> None:
     # Copying the mapping file that contains directory tree information:
     directory_contents = os.listdir(directory)
     if "processed_mapping.json" in directory_contents:
-        logging.debug("Found mapping json in %s", directory)
+        logging.debug(f"Found mapping json in {directory}")
         mapping_filepath = os.path.join(directory, "processed_mapping.json")
         output_mapping_filepath = os.path.join(
             output_directory_filepath, "processed_mapping.json"
@@ -65,28 +65,27 @@ def process_single_replaypack(arguments: SC2InfoExtractorGoArguments) -> None:
         shutil.copy(mapping_filepath, output_mapping_filepath)
 
     logging.debug(
-        "Running subprocess for %s with output to %s",
-        directory,
-        output_directory_filepath,
+        f"Running subprocess for {directory} with output to {output_directory_filepath}",
     )
 
     # TODO: Check if I can do a pipe from the subprocess to get multiple progress bars:
-    subprocess.run(
-        [
-            # FIXME hardcoded binary name
-            str(PATH_TO_SC2INFOEXTRACTORGO),
-            f"-input={arguments.processing_input}/",
-            f"-output={arguments.output}/",
-            f"-perform_integrity_checks={arguments.perform_integrity_checks}",
-            f"-perform_validity_checks={arguments.perform_validity_checks}",
-            f"-perform_cleanup={arguments.perform_cleanup}",
-            f"-perform_chat_anonymization={arguments.perform_chat_anonymization}",
-            f"-number_of_packages={arguments.number_of_packages}",
-            f"-max_procs={arguments.max_procs}",
-            f"-log_level={arguments.log_level}",
-            f"-log_dir={output_directory_filepath}/",
-        ]
-    )
+
+    command = [
+        # FIXME hardcoded binary name
+        str(PATH_TO_SC2INFOEXTRACTORGO),
+        f"-input={arguments.processing_input}/",
+        f"-output={arguments.output}/",
+        f"-perform_integrity_checks={arguments.perform_integrity_checks}",
+        f"-perform_validity_checks={arguments.perform_validity_checks}",
+        f"-perform_cleanup={arguments.perform_cleanup}",
+        f"-perform_chat_anonymization={arguments.perform_chat_anonymization}",
+        f"-number_of_packages={arguments.number_of_packages}",
+        f"-max_procs={arguments.max_procs}",
+        f"-log_level={arguments.log_level}",
+        f"-log_dir={output_directory_filepath}/",
+    ]
+
+    subprocess.run(command)
 
 
 def sc2egset_replaypack_processor(
