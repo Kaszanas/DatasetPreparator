@@ -4,7 +4,8 @@ from typing import List
 from zipfile import ZipFile, ZIP_BZIP2
 
 import click
-
+from tqdm import tqdm
+from tqdm.contrib.logging import logging_redirect_tqdm
 from datasetpreparator.settings import LOGGING_FORMAT
 from datasetpreparator.utils.user_prompt import user_prompt_overwrite_ok
 
@@ -68,15 +69,20 @@ def dir_packager(directory_path: Path, force_overwrite: bool) -> Path:
     ):
         logging.info(f"Set final archive name to: {str(final_archive_path)}")
         with ZipFile(str(final_archive_path), "w") as zip_file:
-            for file in directory_path.rglob("*"):
-                abs_filepath = str(file.resolve())
+            with logging_redirect_tqdm():
+                for file in tqdm(
+                    list(directory_path.rglob("*")),
+                    desc=f"Packaging {final_archive_path.name}",
+                    unit="files",
+                ):
+                    abs_filepath = str(file.resolve())
 
-                logging.debug(f"Adding file: {abs_filepath}")
-                zip_file.write(
-                    filename=abs_filepath,
-                    arcname=file.relative_to(directory_path),
-                    compress_type=ZIP_BZIP2,
-                )
+                    logging.debug(f"Adding file: {abs_filepath}")
+                    zip_file.write(
+                        filename=abs_filepath,
+                        arcname=file.relative_to(directory_path),
+                        compress_type=ZIP_BZIP2,
+                    )
 
     return final_archive_path
 
