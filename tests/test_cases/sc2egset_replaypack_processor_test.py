@@ -36,6 +36,7 @@ class SC2ReplaypackProcessorTest(unittest.TestCase):
 
         # TODO: Verify that SC2InfoExtractorGo is available in path.
         # If not available download from GitHub release page.
+        # It is probably best for this test to be ran from the docker container.
 
         # TODO: Set up a test directory with at least
         # two replaypacks with at least one SC2Replay file within.

@@ -2,6 +2,8 @@ import logging
 from pathlib import Path
 import os
 
+from datasetpreparator.utils.user_prompt import user_prompt_overwrite_ok
+
 
 class SC2InfoExtractorGoArguments:
     """
@@ -176,6 +178,7 @@ class ReplaypackProcessorArguments:
 def define_sc2egset_args(
     arguments: ReplaypackProcessorArguments,
     maybe_dir: Path,
+    force_overwrite: bool,
 ) -> ReplaypackProcessorArguments | None:
     """
     Creates final ReplaypackProcessorArguments for SC2InfoExtractorGo. These arguments
@@ -187,7 +190,9 @@ def define_sc2egset_args(
     arguments : ReplaypackProcessorArguments
         Arguments to the command line tool
     maybe_dir : Path
-        _description_
+        Directory that is being processed
+    force_overwrite : bool
+        Specifies if the output directory should forcefully overwriten without asking the user.
 
     Returns
     -------
@@ -206,8 +211,8 @@ def define_sc2egset_args(
 
     logging.debug(f"Output dir: {output_path}")
     # Create the main output directory:
-    if not output_path.exists():
-        output_path.mkdir()
+    if not user_prompt_overwrite_ok(path=output_path, force_overwrite=force_overwrite):
+        output_path.mkdir(exist_ok=True)
 
     # TODO: use pathlib:
     path, output_directory_name = os.path.split(maybe_dir)
@@ -219,8 +224,10 @@ def define_sc2egset_args(
     logging.debug(f"Output filepath: {output_directory_with_name}")
 
     # Create the output subdirectories:
-    if not output_directory_with_name.exists():
-        output_directory_with_name.mkdir()
+    if not user_prompt_overwrite_ok(
+        path=output_directory_with_name, force_overwrite=force_overwrite
+    ):
+        output_directory_with_name.mkdir(exist_ok=True)
 
     sc2_info_extractor_go_args = (
         SC2InfoExtractorGoArguments.get_sc2egset_processing_args(

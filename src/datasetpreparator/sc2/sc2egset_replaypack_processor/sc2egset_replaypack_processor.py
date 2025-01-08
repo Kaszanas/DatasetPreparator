@@ -1,60 +1,133 @@
-from pathlib import Path
 import logging
-import click
-from tqdm import tqdm
+from pathlib import Path
 
-from datasetpreparator.sc2.sc2egset_replaypack_processor.utils.download_maps import (
-    sc2info_extractor_go_map_download,
-)
-from datasetpreparator.settings import LOGGING_FORMAT
-from datasetpreparator.sc2.sc2egset_replaypack_processor.utils.replaypack_processor_args import (
-    ReplaypackProcessorArguments,
-    define_sc2egset_args,
-)
-from datasetpreparator.sc2.sc2egset_replaypack_processor.utils.multiprocess import (
-    multiprocessing_scheduler,
-)
+import click
 
 from datasetpreparator.directory_flattener.directory_flattener import (
     multiple_directory_flattener,
 )
-
 from datasetpreparator.directory_packager.directory_packager import (
     multiple_dir_packager,
 )
-
+from datasetpreparator.file_renamer.file_renamer import file_renamer
 from datasetpreparator.processed_mapping_copier.processed_mapping_copier import (
     processed_mapping_copier,
 )
-
-from datasetpreparator.file_renamer.file_renamer import file_renamer
+from datasetpreparator.sc2.sc2egset_replaypack_processor.utils.download_maps import (
+    sc2info_extractor_go_map_download,
+)
+from datasetpreparator.sc2.sc2egset_replaypack_processor.utils.file_copier import (
+    move_files,
+)
+from datasetpreparator.sc2.sc2egset_replaypack_processor.utils.multiprocess import (
+    sc2egset_replaypack_processor,
+)
+from datasetpreparator.sc2.sc2egset_replaypack_processor.utils.replaypack_processor_args import (
+    ReplaypackProcessorArguments,
+)
+from datasetpreparator.settings import LOGGING_FORMAT
 from datasetpreparator.utils.user_prompt import user_prompt_overwrite_ok
 
 
-def sc2egset_replaypack_processor(
-    arguments: ReplaypackProcessorArguments,
-):
-    """
-    Processes multiple StarCraft II replaypacks
-    by using https://github.com/Kaszanas/SC2InfoExtractorGo
+def prepare_sc2reset(
+    output_path: Path,
+    replaypacks_input_path: Path,
+    n_processes: int,
+    force_overwrite: bool,
+    maps_output_path: Path,
+    directory_flattener_output_path: Path,
+) -> None:
+    # Directory flattener:
 
-    Parameters
-    ----------
-    arguments : ReplaypackProcessorArguments
-        Specifies the arguments as per the ReplaypackProcessorArguments class fields.
-    """
+    if user_prompt_overwrite_ok(
+        path=directory_flattener_output_path, force_overwrite=force_overwrite
+    ):
+        directory_flattener_output_path.mkdir(exist_ok=True)
 
-    multiprocessing_list = []
-    for maybe_dir in tqdm(list(arguments.input_path.iterdir())):
-        sc2_info_extractor_go_args = define_sc2egset_args(
-            arguments=arguments,
-            maybe_dir=maybe_dir,
-        )
-        if sc2_info_extractor_go_args is not None:
-            multiprocessing_list.append(sc2_info_extractor_go_args)
+    # TODO: Check if the output directory is not empty, if it is you can proceed
+    # if the directory is not empty issue a warning with confirmation prompt.
 
-    # Run processing with multiple SC2InfoExtractorGo instances:
-    multiprocessing_scheduler(multiprocessing_list, int(arguments.n_processes))
+    # if not empty and not force:
+    #   prompt user to confirm overwrite
+
+    logging.info("Flattening directories...")
+    multiple_directory_flattener(
+        input_path=replaypacks_input_path,
+        output_path=directory_flattener_output_path,
+        file_extension=".SC2Replay",
+    )
+
+    # Separate arguments for map downloading are required because the maps directory should be placed
+    # ready for the SC2ReSet to be zipped and moved to the output directory:
+    map_downloader_args = ReplaypackProcessorArguments(
+        input_path=replaypacks_input_path,
+        output_path=directory_flattener_output_path,
+        n_processes=n_processes,
+        maps_directory=maps_output_path,
+    )
+
+    # NOTE: Chinese maps need to be pre-seeded so that they can be
+    # hosted later on. They are also needed for the SC2EGSet to reproduce the results.
+    # Download all maps for multiprocess, map files are used as a source of truth for
+    # SC2InfoExtractorGo downloading mechanism:
+    logging.info("Downloading all maps using SC2InfoExtractorGo...")
+    sc2info_extractor_go_map_download(arguments=map_downloader_args)
+
+    # Package SC2ReSet and the downloaded maps, move to the output directory:
+    logging.info("Packaging SC2ReSet and the downloaded maps...")
+    multiple_dir_packager(input_path=directory_flattener_output_path)
+    # TODO: SC2ReSet should be ready, move it to the final output directory.
+
+    sc2reset_output_path = Path(output_path, "SC2ReSet").resolve()
+
+    move_files(
+        input_path=directory_flattener_output_path,
+        output_path=sc2reset_output_path,
+        force_overwrite=force_overwrite,
+    )
+
+
+def prepare_sc2egset(
+    replaypacks_input_path: Path,
+    output_path: Path,
+    n_processes: int,
+    maps_output_path: Path,
+    directory_flattener_output_path: Path,
+    force_overwrite: bool,
+) -> None:
+    # SC2EGSet Processor:
+    sc2egset_processor_args = ReplaypackProcessorArguments(
+        input_path=replaypacks_input_path,
+        output_path=output_path,
+        n_processes=n_processes,
+        maps_directory=maps_output_path,
+    )
+
+    # Process SC2EGSet, this will use the same map directory as the previous step:
+    logging.info("Processing SC2EGSet using SC2InfoExtractorGo...")
+    sc2egset_replaypack_processor(arguments=sc2egset_processor_args)
+
+    # Processed Mapping Copier:
+    logging.info("Copying processed_mapping.json files...")
+    processed_mapping_copier(
+        input_path=directory_flattener_output_path, output_path=output_path
+    )
+
+    # File Renamer:
+    logging.info("Renaming auxilliary (log) files...")
+    file_renamer(input_path=output_path)
+
+    logging.info("Packaging SC2EGSet...")
+    multiple_dir_packager(input_path=output_path, force_overwrite=force_overwrite)
+
+    # SC2EGSet should be ready, move it to the final output directory:
+    sc2egset_output_path = Path(output_path, "SC2EGSet").resolve()
+
+    move_files(
+        input_path=output_path,
+        output_path=sc2egset_output_path,
+        force_overwrite=force_overwrite,
+    )
 
 
 @click.command(
@@ -120,70 +193,32 @@ def main(
     if user_prompt_overwrite_ok(path=output_path, force_overwrite=force_overwrite):
         output_path.mkdir(exist_ok=True)
 
-    input_path = Path(input_path).resolve()
+    # This input will be flattened:
+    replaypacks_input_path = Path(input_path).resolve()
     output_path = Path(output_path).resolve()
 
     maps_output_path = Path(output_path, "maps").resolve()
-
-    arguments = ReplaypackProcessorArguments(
-        input_path=input_path,
-        output_path=output_path,
-        n_processes=n_processes,
-        maps_directory=maps_output_path,
-    )
-
-    # TODO: Recreate the entire pipeline for SC2ReSet and SC2EGSet:
-    # REVIEW: Note that the Chinese maps need to be pre-seeded so that they can be
-    # hosted later on.
-
-    # Directory flattener:
     directory_flattener_output_path = Path(
         output_path, "directory_flattener_output"
     ).resolve()
-    # REVIEW: Should it be ok if the directory exists?
-    # it may contain some files that should not be overwritten:
-    # --force as a flag in CLI
-    # input command waiting for user input to confirm potential overwrite:
-    #
 
-    if user_prompt_overwrite_ok(
-        path=directory_flattener_output_path, force_overwrite=force_overwrite
-    ):
-        directory_flattener_output_path.mkdir(exist_ok=True)
-
-    # TODO: Check if the output directory is not empty, if it is you can proceed
-    # if the directory is not empty issue a warning with confirmation prompt.
-
-    # if not empty and not force:
-    #   prompt user to confirm overwrite
-
-    logging.info("Flattening directories...")
-    multiple_directory_flattener(
-        input_path=input_path,
-        output_path=directory_flattener_output_path,
-        file_extension=".SC2Replay",
+    # TODO: Recreate the entire pipeline for SC2ReSet and SC2EGSet:
+    prepare_sc2reset(
+        output_path=output_path,
+        replaypacks_input_path=replaypacks_input_path,
+        n_processes=n_processes,
+        force_overwrite=force_overwrite,
+        maps_output_path=maps_output_path,
+        directory_flattener_output_path=directory_flattener_output_path,
     )
 
-    # Download all maps for multiprocess, map files are used as a source of truth for
-    # SC2InfoExtractorGo downloading mechanism:
-    logging.info("Downloading all maps using SC2InfoExtractorGo...")
-    sc2info_extractor_go_map_download(arguments=arguments)
-
-    # Package SC2ReSet and the downloaded maps, move to the output directory:
-    logging.info("Packaging SC2ReSet and the downloaded maps...")
-    multiple_dir_packager(input_path="")
-
-    # Process SC2EGSet, this will use the same map directory as the previous step:
-    logging.info("Processing SC2EGSet using SC2InfoExtractorGo...")
-    sc2egset_replaypack_processor(arguments=arguments)
-
-    # Processed Mapping Copier:
-    logging.info("Copying processed_mapping.json files...")
-    processed_mapping_copier(input_path="", output_path="")
-
-    # File Renamer:
-    logging.info("Renaming auxilliary (log) files...")
-    file_renamer(input_path="")
+    prepare_sc2egset(
+        replaypacks_input_path=replaypacks_input_path,
+        output_path=output_path,
+        n_processes=n_processes,
+        maps_output_path=maps_output_path,
+        directory_flattener_output_path=directory_flattener_output_path,
+    )
 
 
 if __name__ == "__main__":

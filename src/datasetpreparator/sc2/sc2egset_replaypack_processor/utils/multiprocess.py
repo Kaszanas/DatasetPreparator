@@ -6,8 +6,12 @@ from multiprocessing import Pool
 
 from typing import List
 
+from tqdm import tqdm
+
 from datasetpreparator.sc2.sc2egset_replaypack_processor.utils.replaypack_processor_args import (
+    ReplaypackProcessorArguments,
     SC2InfoExtractorGoArguments,
+    define_sc2egset_args,
 )
 
 from datasetpreparator.settings import PATH_TO_SC2INFOEXTRACTORGO
@@ -83,6 +87,32 @@ def process_single_replaypack(arguments: SC2InfoExtractorGoArguments) -> None:
             f"-log_dir={output_directory_filepath}/",
         ]
     )
+
+
+def sc2egset_replaypack_processor(
+    arguments: ReplaypackProcessorArguments,
+):
+    """
+    Processes multiple StarCraft II replaypacks
+    by using https://github.com/Kaszanas/SC2InfoExtractorGo
+
+    Parameters
+    ----------
+    arguments : ReplaypackProcessorArguments
+        Specifies the arguments as per the ReplaypackProcessorArguments class fields.
+    """
+
+    multiprocessing_list = []
+    for maybe_dir in tqdm(list(arguments.input_path.iterdir())):
+        sc2_info_extractor_go_args = define_sc2egset_args(
+            arguments=arguments,
+            maybe_dir=maybe_dir,
+        )
+        if sc2_info_extractor_go_args is not None:
+            multiprocessing_list.append(sc2_info_extractor_go_args)
+
+    # Run processing with multiple SC2InfoExtractorGo instances:
+    multiprocessing_scheduler(multiprocessing_list, int(arguments.n_processes))
 
 
 def pre_process_download_maps(arguments: SC2InfoExtractorGoArguments) -> None:
