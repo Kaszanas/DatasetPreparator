@@ -1,5 +1,4 @@
 import logging
-import os
 from pathlib import Path
 from typing import List
 from zipfile import ZipFile, ZIP_BZIP2
@@ -10,14 +9,14 @@ from datasetpreparator.settings import LOGGING_FORMAT
 from datasetpreparator.utils.user_prompt import user_prompt_overwrite_ok
 
 
-def multiple_dir_packager(input_path: str, force_overwrite: bool) -> List[Path]:
+def multiple_dir_packager(input_path: Path, force_overwrite: bool) -> List[Path]:
     """
     Packages the specified directory into a .zip archive.
 
     Parameters
     ----------
-    input_path : str
-        Specifies the path which will be turned into a .zip archive.
+    input_path : Path
+        Specifies the path to a directoryu for which each of its directories will be turned into a .zip archive.
     force_overwrite : bool
         Specifies if the user wants to overwrite files or directories without being prompted
 
@@ -28,14 +27,18 @@ def multiple_dir_packager(input_path: str, force_overwrite: bool) -> List[Path]:
     """
 
     output_archives = []
-    for directory in os.listdir(path=input_path):
-        directory_path = Path(input_path, directory).resolve()
+    for directory in input_path.iterdir():
+        logging.debug(f"Processing directory: {str(directory)}")
+
+        directory_path = Path(input_path, directory.name).resolve()
         if not directory_path.is_dir():
             continue
 
-        output_archives.append(
-            dir_packager(directory_path=directory_path, force_overwrite=force_overwrite)
+        logging.debug(f"Packaging directory: {str(directory_path)}")
+        processed_path = dir_packager(
+            directory_path=directory_path, force_overwrite=force_overwrite
         )
+        output_archives.append(processed_path)
 
     return output_archives
 
@@ -60,13 +63,19 @@ def dir_packager(directory_path: Path, force_overwrite: bool) -> Path:
 
     final_archive_path = directory_path.with_suffix(".zip")
 
-    if user_prompt_overwrite_ok(final_archive_path, force_overwrite=force_overwrite):
+    if user_prompt_overwrite_ok(
+        path=final_archive_path, force_overwrite=force_overwrite
+    ):
         logging.info(f"Set final archive name to: {str(final_archive_path)}")
         with ZipFile(str(final_archive_path), "w") as zip_file:
-            for file in directory_path.iterdir():
-                abs_filepath = os.path.join(directory_path, file)
+            for file in directory_path.rglob("*"):
+                abs_filepath = str(file.resolve())
+
+                logging.debug(f"Adding file: {abs_filepath}")
                 zip_file.write(
-                    filename=abs_filepath, arcname=file, compress_type=ZIP_BZIP2
+                    filename=abs_filepath,
+                    arcname=file.relative_to(directory_path),
+                    compress_type=ZIP_BZIP2,
                 )
 
     return final_archive_path
@@ -77,7 +86,13 @@ def dir_packager(directory_path: Path, force_overwrite: bool) -> Path:
 )
 @click.option(
     "--input_path",
-    type=click.Path(exists=True, dir_okay=True, file_okay=False, resolve_path=True),
+    type=click.Path(
+        exists=True,
+        dir_okay=True,
+        file_okay=False,
+        resolve_path=True,
+        path_type=Path,
+    ),
     required=True,
     help="Input path to the directory containing the dataset that is going to be processed by packaging into .zip archives.",
 )

@@ -170,7 +170,7 @@ def multiple_directory_flattener(
 
     output_directories = []
     # Iterate over directories:
-    for item in tqdm(input_path.iterdir()):
+    for item in input_path.iterdir():
         maybe_dir = Path(input_path, item).resolve()
         if not maybe_dir.is_dir():
             logging.debug(f"Skipping {str(maybe_dir)}, not a directory.")
