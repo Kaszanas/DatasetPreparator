@@ -57,7 +57,7 @@ class SC2ReplaypackProcessorTest(unittest.TestCase):
             n_processes=1,
         )
 
-        sc2egset_replaypack_processor(arguments=arguments)
+        sc2egset_replaypack_processor(arguments=arguments, force_overwrite=True)
         # TODO: Check if output contains the same directories as for input.
         # TODO: Check if outputs contain extracted JSON files with valid fields.
 
