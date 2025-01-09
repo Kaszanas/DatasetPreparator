@@ -48,7 +48,7 @@ def calculate_file_hash(file_path: Path) -> str:
     """
 
     # Open the file, read it in binary mode and calculate the hash:
-    path_str = file_path.as_posix().encode("utf-8")
+    path_str = str(file_path).encode("utf-8")
 
     path_hash = hashlib.md5(path_str).hexdigest()
 
@@ -160,11 +160,7 @@ def multiple_directory_flattener(
         logging.error(f"Input path must exist! {str(input_path.resolve())}")
         return (False, [Path()])
 
-    # Output path must be a directory:
-    if not output_path.is_dir():
-        logging.error(f"Output path must be a directory! {str(output_path.resolve())}")
-        return (False, [Path()])
-
+    # Output path must be an existing directory:
     if user_prompt_overwrite_ok(path=output_path, force_overwrite=force_overwrite):
         output_path.mkdir(exist_ok=True)
 
@@ -224,7 +220,7 @@ def multiple_directory_flattener(
 @click.option(
     "--output_path",
     type=click.Path(
-        exists=True,
+        exists=False,
         dir_okay=True,
         file_okay=False,
         resolve_path=True,
