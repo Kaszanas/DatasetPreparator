@@ -1,11 +1,13 @@
+CURRENT_DIR := $(dir $(abspath $(firstword $(MAKEFILE_LIST))))
+
 # Docker variables:
 DOCKER_DIR = ./docker
 DOCKER_FILE = $(DOCKER_DIR)/Dockerfile
 DOCKER_FILE_DEV = $(DOCKER_DIR)/Dockerfile.dev
 
 # Local devcontainer
-DEVCONTAINER_NAME = datasetpreparator:devcontainer
-DEV_BRANCH_CONTAINER = datasetpreparator:dev
+DEVCONTAINER = datasetpreparator:devcontainer
+DEV_BRANCH_CONTAINER = kaszanas/datasetpreparator:dev
 
 # Compose variables:
 TEST_COMPOSE = $(DOCKER_DIR)/docker-test-compose.yml
@@ -115,6 +117,28 @@ test: ## Runs the tests using the local environment.
 ###################
 #### DOCKER #######
 ###################
+.PHONY: create_temp_container
+create_temp_container:
+	@echo "Creating a temporary container."
+	@echo "Using the dev branch Docker image: $(DEVCONTAINER)"
+	docker create --name temp_container $(DEVCONTAINER)
+
+.PHONY: remove_temp_container
+remove_temp_container:
+	@echo "Removing the temporary container."
+	docker rm temp_container
+
+.PHONY: seed_maps_locally
+seed_maps_locally:
+	@echo "Seeding the maps locally."
+	@make docker_build_devcontainer
+	@echo "Using the dev branch Docker image: $(DEVCONTAINER)"
+	@make create_temp_container
+	docker cp \
+		temp_container:/app/processing/maps \
+		$(CURRENT_DIR)processing
+	@make remove_temp_container
+
 .PHONY: docker_pull
 docker_pull_dev: ## Pulls the latest image from the Docker Hub.
 	@echo "Pulling the dev branch Docker image: $(DEV_BRANCH_CONTAINER)"
@@ -134,23 +158,23 @@ docker_build_devcontainer: ## Builds the development image containing all of the
 	docker build \
 		--build-arg="PYTHON_VERSION=$(PYTHON_VERSION)" \
 		-f $(DOCKER_FILE_DEV) . \
-		--tag=$(DEVCONTAINER_NAME)
+		--tag=$(DEVCONTAINER)
 
 .PHONY: docker_run_test
 docker_run_test: ## Runs the test command using Docker.
 	docker run --rm \
-		$(DEVCONTAINER_NAME) \
+		$(DEVCONTAINER) \
 		sh -c \
 		$(TEST_COMMAND)
 
 .PHONY: docker_run_dev
 docker_run_dev: ## Runs the development image containing all of the tools.
-	@echo "Running the devcontainer image: $(DEVCONTAINER_NAME)"
+	@echo "Running the devcontainer image: $(DEVCONTAINER)"
 	docker run \
 		-v ".:/app" \
 		-it \
 		-e "TEST_WORKSPACE=/app" \
-		$(DEVCONTAINER_NAME) \
+		$(DEVCONTAINER) \
 		bash
 
 ###################
@@ -170,20 +194,20 @@ doc_build: ## Builds the Mkdocs documentation.
 docker_doc_build: ## Builds the Mkdocs documentation using Docker.
 	@echo "Building the Mkdocs documentation using Docker."
 	@make docker_build_devcontainer
-	@echo "Using the devcontainer image: $(DEVCONTAINER_NAME)"
+	@echo "Using the devcontainer image: $(DEVCONTAINER)"
 	docker run \
 		-v "./docs:/docs" \
-		$(DEVCONTAINER_NAME) \
+		$(DEVCONTAINER) \
 		poetry run mkdocs build
 
 .PHONY: docker_doc_build_action
 docker_doc_build_action: ## Builds the Mkdocs documentation using Docker.
 	@echo "Building the Mkdocs documentation using Docker."
 	@make docker_build_devcontainer
-	@echo "Using the devcontainer image: $(DEVCONTAINER_NAME)"
+	@echo "Using the devcontainer image: $(DEVCONTAINER)"
 	docker run \
 		-v "./docs:/docs" \
-		$(DEVCONTAINER_NAME) \
+		$(DEVCONTAINER) \
 		poetry run mkdocs build
 
 ###################
@@ -193,19 +217,19 @@ docker_doc_build_action: ## Builds the Mkdocs documentation using Docker.
 docker_pre_commit: ## Runs pre-commit hooks using Docker.
 	@echo "Running pre-commit hooks using Docker."
 	@make docker_build_devcontainer
-	@echo "Using the devcontainer image: $(DEVCONTAINER_NAME)"
+	@echo "Using the devcontainer image: $(DEVCONTAINER)"
 	docker run \
 		-v ".:/app" \
-		$(DEVCONTAINER_NAME) \
+		$(DEVCONTAINER) \
 		pre-commit run --all-files
 
 .PHONY: docker_pre_commit_action
 docker_pre_commit_action: ## Runs pre-commit hooks using Docker.
 	@echo "Running pre-commit hooks using Docker."
 	@make docker_build_devcontainer
-	@echo "Using the devcontainer image: $(DEVCONTAINER_NAME)"
+	@echo "Using the devcontainer image: $(DEVCONTAINER)"
 	docker run \
-		$(DEVCONTAINER_NAME) \
+		$(DEVCONTAINER) \
 		pre-commit run --all-files
 
 ###################
