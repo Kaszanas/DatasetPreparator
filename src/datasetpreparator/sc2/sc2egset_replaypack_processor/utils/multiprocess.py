@@ -90,6 +90,7 @@ def process_single_replaypack(arguments: SC2InfoExtractorGoArguments) -> None:
 
 def sc2egset_replaypack_processor(
     arguments: ReplaypackProcessorArguments,
+    force_overwrite: bool,
 ):
     """
     Processes multiple StarCraft II replaypacks
@@ -99,6 +100,8 @@ def sc2egset_replaypack_processor(
     ----------
     arguments : ReplaypackProcessorArguments
         Specifies the arguments as per the ReplaypackProcessorArguments class fields.
+    force_overwrite : bool
+        Specifies whether the output directory should be overwritten.
     """
 
     multiprocessing_list = []
@@ -106,6 +109,7 @@ def sc2egset_replaypack_processor(
         sc2_info_extractor_go_args = define_sc2egset_args(
             arguments=arguments,
             maybe_dir=maybe_dir,
+            force_overwrite=force_overwrite,
         )
         if sc2_info_extractor_go_args is not None:
             multiprocessing_list.append(sc2_info_extractor_go_args)

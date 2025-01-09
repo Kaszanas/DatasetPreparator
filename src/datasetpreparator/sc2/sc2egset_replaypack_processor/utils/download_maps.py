@@ -8,7 +8,7 @@ from datasetpreparator.sc2.sc2egset_replaypack_processor.utils.replaypack_proces
 )
 
 
-def sc2info_extractor_go_map_download(arguments: ReplaypackProcessorArguments):
+def sc2infoextractorgo_map_download(arguments: ReplaypackProcessorArguments):
     # Pre-process, download all maps:
     logging.info("Downloading all maps...")
     map_download_arguments = SC2InfoExtractorGoArguments.get_download_maps_args(

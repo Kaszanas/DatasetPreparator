@@ -98,7 +98,9 @@ def prepare_sc2egset(
 
     # Process SC2EGSet, this will use the same map directory as the previous step:
     logging.info("Processing SC2EGSet using SC2InfoExtractorGo...")
-    sc2egset_replaypack_processor(arguments=sc2egset_processor_args)
+    sc2egset_replaypack_processor(
+        arguments=sc2egset_processor_args, force_overwrite=force_overwrite
+    )
 
     # Processed Mapping Copier:
     logging.info("Copying processed_mapping.json files...")
@@ -141,18 +143,6 @@ def prepare_sc2egset(
 @click.option(
     "--output_path",
     type=click.Path(
-        exists=False,
-        dir_okay=True,
-        file_okay=False,
-        resolve_path=True,
-        path_type=Path,
-    ),
-    required=True,
-    help="Output path where the tool will place the processed files for SC2ReSet and SC2EGSet dataset as children directories.",
-)
-@click.option(
-    "--maps_path",
-    type=click.Path(
         exists=True,
         dir_okay=True,
         file_okay=False,
@@ -160,7 +150,7 @@ def prepare_sc2egset(
         path_type=Path,
     ),
     required=True,
-    help="Path to the StarCraft 2 maps that will be used in replay processing. If there are no maps, they will be downloaded.",
+    help="Output path where the tool will place the processed files for SC2ReSet and SC2EGSet dataset as children directories.",
 )
 @click.option(
     "--n_processes",
@@ -185,7 +175,6 @@ def prepare_sc2egset(
 def main(
     input_path: Path,
     output_path: Path,
-    maps_path: Path,
     n_processes: int,
     force_overwrite: bool,
     log: str,
@@ -195,35 +184,35 @@ def main(
         raise ValueError(f"Invalid log level: {numeric_level}")
     logging.basicConfig(format=LOGGING_FORMAT, level=numeric_level)
 
-    output_path = output_path.resolve()
-
-    replaypacks_input_path = input_path.resolve()
-    maps_path = maps_path.resolve()
-    if user_prompt_overwrite_ok(path=maps_path, force_overwrite=force_overwrite):
-        maps_path.mkdir(exist_ok=True)
-
     # Create output directory if it does not exist:
     if user_prompt_overwrite_ok(path=output_path, force_overwrite=force_overwrite):
         output_path.mkdir(exist_ok=True)
 
-    # Pre-processing, downloading maps and flattening directories:
-    map_downloader_args = ReplaypackProcessorArguments(
-        input_path=replaypacks_input_path,
-        output_path=output_path,
-        maps_directory=maps_path,
-        n_processes=n_processes,
-    )
-    sc2infoextractorgo_map_download(arguments=map_downloader_args)
+    # This input will be flattened:
+    replaypacks_input_path = Path(input_path).resolve()
+    output_path = Path(output_path).resolve()
 
-    # Main processing
-    sc2egset_processor_args = ReplaypackProcessorArguments(
-        input_path=replaypacks_input_path,
+    maps_output_path = Path(output_path, "maps").resolve()
+    directory_flattener_output_path = Path(
+        output_path, "directory_flattener_output"
+    ).resolve()
+
+    # TODO: Recreate the entire pipeline for SC2ReSet and SC2EGSet:
+    prepare_sc2reset(
         output_path=output_path,
-        maps_directory=maps_path,
+        replaypacks_input_path=replaypacks_input_path,
         n_processes=n_processes,
+        force_overwrite=force_overwrite,
+        maps_output_path=maps_output_path,
+        directory_flattener_output_path=directory_flattener_output_path,
     )
-    sc2egset_replaypack_processor(
-        arguments=sc2egset_processor_args, force_overwrite=force_overwrite
+
+    prepare_sc2egset(
+        replaypacks_input_path=replaypacks_input_path,
+        output_path=output_path,
+        n_processes=n_processes,
+        maps_output_path=maps_output_path,
+        directory_flattener_output_path=directory_flattener_output_path,
     )
 
 
