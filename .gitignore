@@ -1,7 +1,8 @@
 /.vscode
 /venv*
 
-/processing
+processing/
+maps/
 
 *.SC2Replay
 *.SC2Map
