@@ -42,8 +42,8 @@ flatten: ## Flattens the directory if the files are held in nested directories. 
 		-v "./processing:/app/processing" \
 		$(DEV_BRANCH_CONTAINER) \
 		python3 directory_flattener.py \
-		--input_dir ./processing/directory_flattener/input
-		--output_dir ./processing/directory_flattener/output
+		--input_path ./processing/replaypacks
+		--output_path ./processing/output/directory_flattener
 
 .PHONY: process_replaypacks
 process_replaypacks: ## Parses the raw (.SC2Replay) data into JSON files.
