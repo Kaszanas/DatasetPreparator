@@ -56,10 +56,10 @@ def sc2reset_replaypack_downloader(
             replaypack_url=replaypack_url,
             replaypack_md5=file_md5,
         )
-        # If the download was succesful, break out of the inner loop:
+        # If the download was succesful, add the path to the list of downloaded paths:
         if ok:
             downloaded_paths.append((replaypack_name, downloaded_replaypack_path))
-            break
+            continue
         logging.error(
             f"Replaypack {replaypack_name} could not be downloaded. Adding to retry list..."
         )

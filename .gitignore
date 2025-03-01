@@ -3,6 +3,7 @@
 
 processing/
 maps/
+profiler/
 
 *.SC2Replay
 *.SC2Map
