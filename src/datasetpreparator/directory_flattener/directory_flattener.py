@@ -186,16 +186,16 @@ def multiple_directory_flattener(
             logging.debug(f"Creating directory {str(dir_output_path)}, didn't exist.")
             dir_output_path.mkdir(exist_ok=True)
 
-        dir_structure_mapping = directory_flatten(
-            root_directory=maybe_dir,
-            list_of_files=files_with_extension,
-            dir_output_path=dir_output_path,
-        )
+            dir_structure_mapping = directory_flatten(
+                root_directory=maybe_dir,
+                list_of_files=files_with_extension,
+                dir_output_path=dir_output_path,
+            )
 
-        save_dir_mapping(
-            output_path=dir_output_path,
-            dir_mapping=dir_structure_mapping,
-        )
+            save_dir_mapping(
+                output_path=dir_output_path,
+                dir_mapping=dir_structure_mapping,
+            )
 
         output_directories.append(dir_output_path)
 
