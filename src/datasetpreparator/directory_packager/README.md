@@ -27,17 +27,3 @@ Options:
 ## Repository Docker Image
 
 Please refer to the main [README](../../README.md) for the instructions.
-
-## Script Docker Image
-
-Build the docker image:
-```bash
-docker build --tag=datasetpreparator:latest .
-```
-
-Run the docker image (please replace `<paths>`):
-```bash
-docker run -v "<./input>:/app/input" \
-    datasetpreparator:latest \
-    python3 dir_packager.py --input_dir /app/input
-```

@@ -25,27 +25,6 @@ Options:
 
 # Execute With Docker
 
-> [!NOTE]
-> There are two ways of executing this script with Docker. One is to use the main repository Dockerfile (available in `docker` directory) and the other is to use the Dockerfile contained in this directory.
-
 ## Repository Docker Image
 
 Please refer to the main [README](../../README.md) for the instructions.
-
-## Script Docker Image
-
-Build the docker image:
-```bash
-docker build --tag=datasetpreparator:latest .
-```
-
-Run the docker image (please replace `<paths>`):
-```bash
-docker run \
-    -v "<./input>:/app/input" \
-    -v "<./output>:/app/output" \
-    datasetpreparator:latest \
-    python3 processed_mapping_copier.py \
-    --input_dir /app/input \
-    --output_dir /app/output
-```

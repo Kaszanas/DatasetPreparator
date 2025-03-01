@@ -25,26 +25,6 @@ Options:
 
 # Execute With Docker
 
-> [!NOTE]
-> There are two ways of executing this script with Docker. One is to use the main repository Dockerfile (available in `docker` directory) and the other is to use the Dockerfile contained in this directory.
-
 ## Repository Docker Image
 
 Please refer to the main [README](../../README.md) for the instructions.
-
-## Script Docker Image
-
-Build the docker image:
-```bash
-docker build --tag=datasetpreparator:latest .
-```
-
-Run the docker image (please replace `<paths>`):
-```bash
-docker run -v "<./input>:/app/input" \
-    datasetpreparator:latest \
-    python3 json_merger.py \
-    --json_one /app/input/json1.json \
-    --json_two /app/input/json2.json \
-    --output_filepath /app/input/merged.json
-```

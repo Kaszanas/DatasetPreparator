@@ -124,7 +124,7 @@ def prepare_sc2egset(
 
 
 @click.command(
-    help="Tool used to recreate SC2ReSet and SC2EGSet Dataset. Depends on SC2InfoExtractorGo (https://github.com/Kaszanas/SC2InfoExtractorGo) which is executed on multiple replaypack directories in the process. Entire pipeline for replay processing runs with the command line arguments used to create SC2EGSet. Assists in processing StarCraft 2 (SC2) datasets."
+    help="Tool used to recreate SC2EGSet Dataset. Executes SC2InfoExtractorGo (https://github.com/Kaszanas/SC2InfoExtractorGo) on multiple replaypack directories with hardcoded CLI arguments. Assists in processing StarCraft 2 (SC2) datasets."
 )
 @click.option(
     "--input_path",
