@@ -99,7 +99,6 @@ def prepare_sc2egset(
 @click.option(
     "--maps_path",
     type=click.Path(
-        exists=True,
         dir_okay=True,
         file_okay=False,
         resolve_path=True,
