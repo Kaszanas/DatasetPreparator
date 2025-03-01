@@ -9,8 +9,8 @@ Please keep in mind that ```src/directory_flattener.py``` contains required argu
 ```
 Usage: directory_flattener.py [OPTIONS]
 
-  Directory restructuring tool used in order to flatten the structure. Saves
-  the mapping of the old directory structure to a separate file. Used to ease
+  Directory restructuring tool used in order to flatten the structure.
+  Saves the mapping of the old directory structure to a separate file. Used to ease
   processing with other tools. Can be used to extract additional meaning from
   the directory structure in case of tournament replaypacks. Created primarily
   to define StarCraft 2 (SC2) datasets.
@@ -23,6 +23,9 @@ Options:
   --file_extension TEXT          File extension for the files that will be put
                                  to the top level directory. Example
                                  ('.SC2Replay').  [required]
+  --force_overwrite BOOLEAN      Flag that specifies if the user wants to
+                                 overwrite files or directories without being
+                                 prompted.  [required]
   --log [INFO|DEBUG|ERROR|WARN]  Log level. Default is WARN.
   --help                         Show this message and exit.
 ```

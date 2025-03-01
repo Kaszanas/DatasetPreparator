@@ -8,7 +8,9 @@ Usage: file_renamer.py [OPTIONS]
 
   Tool used for renaming auxilliary files (log files) that are produced when
   creating StarCraft 2 (SC2) datasets with
-  https://github.com/Kaszanas/SC2InfoExtractorGo
+  https://github.com/Kaszanas/SC2InfoExtractorGo. Additionally, this tool
+  renames the .zip files so that they carry the original directory name with
+  an added '_data' suffix.
 
 Options:
   --input_path DIRECTORY         Input path to the directory containing the

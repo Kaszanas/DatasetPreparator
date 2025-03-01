@@ -8,8 +8,8 @@ Please keep in mind that the  ```src/sc2_map_downloader.py``` contains required 
 ```
 Usage: sc2_map_downloader.py [OPTIONS]
 
-  Tool for downloading StarCraft 2 (SC2) maps based on the data that available
-  within .SC2Replay files.
+  Tool for downloading StarCraft 2 (SC2) maps based on the
+  data that available within .SC2Replay files.
 
 Options:
   --input_path DIRECTORY         Input path to the dataset that is going to be

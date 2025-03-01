@@ -19,6 +19,9 @@ Options:
   --output_filepath FILE         Filepath to which the result JSON file will
                                  be saved, note that any existing file of the
                                  same name will be overwriten.  [required]
+  --force_overwrite BOOLEAN      Flag that specifies if the user wants to
+                                 overwrite files or directories without being
+                                 prompted.  [required]
   --log [INFO|DEBUG|ERROR|WARN]  Log level. Default is WARN.
   --help                         Show this message and exit.
 ```

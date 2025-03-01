@@ -15,6 +15,9 @@ Options:
   --input_path DIRECTORY         Input path to the directory containing the
                                  dataset that is going to be processed by
                                  packaging into .zip archives.  [required]
+  --force_overwrite BOOLEAN      Flag that specifies if the user wants to
+                                 overwrite files or directories without being
+                                 prompted.  [required]
   --log [INFO|DEBUG|ERROR|WARN]  Log level. Default is WARN.
   --help                         Show this message and exit.
 ```
