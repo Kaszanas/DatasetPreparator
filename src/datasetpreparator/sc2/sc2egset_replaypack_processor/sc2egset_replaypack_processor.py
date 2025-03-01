@@ -3,9 +3,6 @@ from pathlib import Path
 
 import click
 
-from datasetpreparator.directory_flattener.directory_flattener import (
-    multiple_directory_flattener,
-)
 from datasetpreparator.directory_packager.directory_packager import (
     multiple_dir_packager,
 )
@@ -27,57 +24,6 @@ from datasetpreparator.sc2.sc2egset_replaypack_processor.utils.replaypack_proces
 )
 from datasetpreparator.settings import LOGGING_FORMAT
 from datasetpreparator.utils.user_prompt import user_prompt_overwrite_ok
-
-
-def prepare_sc2reset(
-    output_path: Path,
-    replaypacks_input_path: Path,
-    n_processes: int,
-    force_overwrite: bool,
-    maps_output_path: Path,
-    directory_flattener_output_path: Path,
-) -> None:
-    # Directory flattener:
-
-    if user_prompt_overwrite_ok(
-        path=directory_flattener_output_path, force_overwrite=force_overwrite
-    ):
-        directory_flattener_output_path.mkdir(exist_ok=True)
-
-    logging.info("Flattening directories...")
-    multiple_directory_flattener(
-        input_path=replaypacks_input_path,
-        output_path=directory_flattener_output_path,
-        file_extension=".SC2Replay",
-    )
-
-    # Separate arguments for map downloading are required because the maps directory should be placed
-    # ready for the SC2ReSet to be zipped and moved to the output directory:
-    map_downloader_args = ReplaypackProcessorArguments(
-        input_path=replaypacks_input_path,
-        output_path=directory_flattener_output_path,
-        n_processes=n_processes,
-        maps_directory=maps_output_path,
-    )
-
-    # NOTE: Chinese maps need to be pre-seeded so that they can be
-    # hosted later on. They are also needed for the SC2EGSet to reproduce the results.
-    # Download all maps for multiprocess, map files are used as a source of truth for
-    # SC2InfoExtractorGo downloading mechanism:
-    logging.info("Downloading all maps using SC2InfoExtractorGo...")
-    sc2infoextractorgo_map_download(arguments=map_downloader_args)
-
-    # Package SC2ReSet and the downloaded maps, move to the output directory:
-    logging.info("Packaging SC2ReSet and the downloaded maps...")
-    multiple_dir_packager(input_path=directory_flattener_output_path)
-
-    sc2reset_output_path = Path(output_path, "SC2ReSet").resolve()
-    logging.info("Moving SC2ReSet to the output directory...")
-    move_files(
-        input_path=directory_flattener_output_path,
-        output_path=sc2reset_output_path,
-        force_overwrite=force_overwrite,
-    )
 
 
 def prepare_sc2egset(
