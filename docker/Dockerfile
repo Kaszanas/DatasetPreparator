@@ -60,6 +60,7 @@ COPY /src/datasetpreparator/directory_flattener/directory_flattener.py \
     /src/datasetpreparator/processed_mapping_copier/processed_mapping_copier.py \
     /src/datasetpreparator/sc2/sc2_map_downloader/sc2_map_downloader.py \
     /src/datasetpreparator/sc2/sc2egset_replaypack_processor/sc2egset_replaypack_processor.py \
+    /src/datasetpreparator/sc2/sc2egset_replaypack_processor/sc2egset_pipeline.py \
     /src/datasetpreparator/sc2/sc2reset_replaypack_downloader/sc2reset_replaypack_downloader.py \
     /app/
 
