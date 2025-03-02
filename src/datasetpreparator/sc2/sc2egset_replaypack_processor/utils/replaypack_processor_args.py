@@ -70,7 +70,7 @@ class SC2InfoExtractorGoArguments:
         only_map_download: bool = False,
         maps_directory: Path = Path("./maps/"),
         perform_chat_anonymization: bool = False,
-        perform_cleanup: bool = False,
+        perform_cleanup: bool = True,
         perform_filtering: bool = False,
         perform_integrity_checks: bool = False,
         perform_player_anonymization: bool = False,
@@ -233,7 +233,7 @@ def define_sc2egset_args(
         SC2InfoExtractorGoArguments.get_sc2egset_processing_args(
             processing_input=processing_input_dir,
             output=output_directory_with_name,
-            perform_chat_anonymization=arguments.perform_chat_anonymization,
+            perform_chat_anonymization=False,
         )
     )
 
