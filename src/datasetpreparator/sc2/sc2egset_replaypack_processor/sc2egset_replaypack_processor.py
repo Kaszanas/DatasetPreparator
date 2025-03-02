@@ -3,18 +3,8 @@ from pathlib import Path
 
 import click
 
-from datasetpreparator.directory_packager.directory_packager import (
-    multiple_dir_packager,
-)
-from datasetpreparator.file_renamer.file_renamer import file_renamer
-from datasetpreparator.processed_mapping_copier.processed_mapping_copier import (
-    processed_mapping_copier,
-)
 from datasetpreparator.sc2.sc2egset_replaypack_processor.utils.download_maps import (
     sc2infoextractorgo_map_download,
-)
-from datasetpreparator.sc2.sc2egset_replaypack_processor.utils.file_copier import (
-    move_files,
 )
 from datasetpreparator.sc2.sc2egset_replaypack_processor.utils.multiprocess import (
     sc2egset_replaypack_processor,
@@ -24,49 +14,6 @@ from datasetpreparator.sc2.sc2egset_replaypack_processor.utils.replaypack_proces
 )
 from datasetpreparator.settings import LOGGING_FORMAT
 from datasetpreparator.utils.user_prompt import user_prompt_overwrite_ok
-
-
-def prepare_sc2egset(
-    replaypacks_input_path: Path,
-    output_path: Path,
-    n_processes: int,
-    maps_output_path: Path,
-    directory_flattener_output_path: Path,
-    force_overwrite: bool,
-) -> None:
-    # SC2EGSet Processor:
-    sc2egset_processor_args = ReplaypackProcessorArguments(
-        input_path=replaypacks_input_path,
-        output_path=output_path,
-        n_processes=n_processes,
-        maps_directory=maps_output_path,
-    )
-
-    # Process SC2EGSet, this will use the same map directory as the previous step:
-    logging.info("Processing SC2EGSet using SC2InfoExtractorGo...")
-    sc2egset_replaypack_processor(arguments=sc2egset_processor_args)
-
-    # Processed Mapping Copier:
-    logging.info("Copying processed_mapping.json files...")
-    processed_mapping_copier(
-        input_path=directory_flattener_output_path, output_path=output_path
-    )
-
-    # File Renamer:
-    logging.info("Renaming auxilliary (log) files...")
-    file_renamer(input_path=output_path)
-
-    logging.info("Packaging SC2EGSet...")
-    multiple_dir_packager(input_path=output_path, force_overwrite=force_overwrite)
-
-    # SC2EGSet should be ready, move it to the final output directory:
-    sc2egset_output_path = Path(output_path, "SC2EGSet").resolve()
-    logging.info("Moving SC2EGSet to the output directory...")
-    move_files(
-        input_path=output_path,
-        output_path=sc2egset_output_path,
-        force_overwrite=force_overwrite,
-    )
 
 
 @click.command(
@@ -140,10 +87,12 @@ def main(
         raise ValueError(f"Invalid log level: {numeric_level}")
     logging.basicConfig(format=LOGGING_FORMAT, level=numeric_level)
 
-    output_path = output_path.resolve()
-
     replaypacks_input_path = input_path.resolve()
+    logging.info(f"Input path: {str(replaypacks_input_path)}")
+    output_path = output_path.resolve()
+    logging.info(f"Output path: {str(output_path)}")
     maps_path = maps_path.resolve()
+    logging.info(f"Maps path: {str(maps_path)}")
     if user_prompt_overwrite_ok(path=maps_path, force_overwrite=force_overwrite):
         maps_path.mkdir(exist_ok=True)
 
@@ -158,6 +107,7 @@ def main(
         maps_directory=maps_path,
         n_processes=n_processes,
     )
+    logging.info("Downloading maps...")
     sc2infoextractorgo_map_download(arguments=map_downloader_args)
 
     # Main processing
@@ -167,8 +117,10 @@ def main(
         maps_directory=maps_path,
         n_processes=n_processes,
     )
+    logging.info("Processing replaypacks with SC2InfoExtractorGo...")
     sc2egset_replaypack_processor(
-        arguments=sc2egset_processor_args, force_overwrite=force_overwrite
+        arguments=sc2egset_processor_args,
+        force_overwrite=force_overwrite,
     )
 
 
