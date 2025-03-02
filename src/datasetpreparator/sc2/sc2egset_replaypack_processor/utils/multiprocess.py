@@ -138,7 +138,7 @@ def pre_process_download_maps(arguments: SC2InfoExtractorGoArguments) -> None:
         [
             str(PATH_TO_SC2INFOEXTRACTORGO),
             f"-input={arguments.processing_input}/",
-            f"-output={arguments.output}/",
+            f"-maps_directory={arguments.maps_directory}/",
             "-only_map_download=true",
             f"-max_procs={arguments.max_procs}",
             f"-log_level={arguments.log_level}",

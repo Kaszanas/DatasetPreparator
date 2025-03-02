@@ -101,14 +101,11 @@ def main(
         output_path.mkdir(exist_ok=True)
 
     # Pre-processing, downloading maps and flattening directories:
-    map_downloader_args = ReplaypackProcessorArguments(
-        input_path=replaypacks_input_path,
-        output_path=output_path,
-        maps_directory=maps_path,
-        n_processes=n_processes,
-    )
     logging.info("Downloading maps...")
-    sc2infoextractorgo_map_download(arguments=map_downloader_args)
+    sc2infoextractorgo_map_download(
+        input_path=replaypacks_input_path,
+        maps_directory=maps_path,
+    )
 
     # Main processing
     sc2egset_processor_args = ReplaypackProcessorArguments(

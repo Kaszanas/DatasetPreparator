@@ -99,11 +99,11 @@ class SC2InfoExtractorGoArguments:
 
     @staticmethod
     def get_download_maps_args(
-        processing_input: Path, output: Path
+        processing_input: Path, maps_directory: Path
     ) -> "SC2InfoExtractorGoArguments":
         arguments = SC2InfoExtractorGoArguments(
             processing_input=processing_input,
-            output=output,
+            maps_directory=maps_directory,
             only_map_download=True,
             max_procs=4,
         )
