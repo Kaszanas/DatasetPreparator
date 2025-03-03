@@ -112,19 +112,36 @@ def json_merger(
 )
 @click.option(
     "--json_one",
-    type=click.Path(exists=True, dir_okay=False, file_okay=True, resolve_path=True),
+    type=click.Path(
+        exists=True,
+        dir_okay=False,
+        file_okay=True,
+        resolve_path=True,
+        path_type=Path,
+    ),
     required=True,
     help="Path to the first .json file that is going to be merged.",
 )
 @click.option(
     "--json_two",
-    type=click.Path(writable=True, dir_okay=False, file_okay=True, resolve_path=True),
+    type=click.Path(
+        writable=True,
+        dir_okay=False,
+        file_okay=True,
+        resolve_path=True,
+        path_type=Path,
+    ),
     required=True,
     help="Path to the second .json file that is going to be merged.",
 )
 @click.option(
     "--output_filepath",
-    type=click.Path(dir_okay=False, file_okay=True, resolve_path=True),
+    type=click.Path(
+        dir_okay=False,
+        file_okay=True,
+        resolve_path=True,
+        path_type=Path,
+    ),
     required=True,
     help="Filepath to which the result JSON file will be saved, note that any existing file of the same name will be overwriten.",
 )

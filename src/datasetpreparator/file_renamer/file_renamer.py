@@ -69,7 +69,13 @@ def file_renamer(input_path: Path) -> None:
 )
 @click.option(
     "--input_path",
-    type=click.Path(exists=True, dir_okay=True, file_okay=False, resolve_path=True),
+    type=click.Path(
+        exists=True,
+        dir_okay=True,
+        file_okay=False,
+        resolve_path=True,
+        path_type=Path,
+    ),
     required=True,
     help="Input path to the directory containing the dataset that is going to be processed by packaging into .zip archives.",
 )
