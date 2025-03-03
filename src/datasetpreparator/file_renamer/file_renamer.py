@@ -39,27 +39,27 @@ def file_renamer(input_path: Path) -> None:
         directory = file.parent
 
         if file.name.endswith(".zip"):
-            new_name = file.stem + "_data.zip"
+            new_name = directory.name + "_data.zip"
             new_path = directory / new_name
             file.rename(new_path)
 
         if file.name.startswith("package_summary"):
-            new_name = file.stem + "_summary.json"
+            new_name = directory.name + "_summary.json"
             new_path = directory / new_name
             file.rename(new_path)
 
         if file.name.startswith("processed_mapping"):
-            new_name = file.stem + "_processed_mapping.json"
+            new_name = directory.name + "_processed_mapping.json"
             new_path = directory / new_name
             file.rename(new_path)
 
         if file.name.startswith("processed_failed"):
-            new_name = file.stem + "_processed_failed.log"
+            new_name = directory.name + "_processed_failed.log"
             new_path = directory / new_name
             file.rename(new_path)
 
         if file.name.startswith("main_log"):
-            new_name = file.stem + "_main_log.log"
+            new_name = directory.name + "_main_log.log"
             new_path = directory / new_name
             file.rename(new_path)
 
