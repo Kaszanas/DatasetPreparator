@@ -64,7 +64,7 @@ class SC2InfoExtractorGoArguments:
         processing_input: Path = Path("./replays/input"),
         output: Path = Path("./replays/output"),
         game_mode_filter: int = 0b11111111,
-        log_dir: Path = Path("./logs/"),
+        log_dir: Path = Path("./logs"),
         log_level: int = 4,
         number_of_packages: int = 1,
         only_map_download: bool = False,
@@ -77,15 +77,16 @@ class SC2InfoExtractorGoArguments:
         perform_validity_checks: bool = False,
         max_procs: int = os.cpu_count(),
     ):
+        self.processing_input = processing_input.resolve()
+        self.output = output.resolve()
+        self.log_dir = log_dir.resolve()
+        self.maps_directory = maps_directory.resolve()
+
         self.game_mode_filter = game_mode_filter
-        self.processing_input = processing_input
-        self.log_dir = log_dir
         self.log_level = log_level
         self.max_procs = max_procs
         self.number_of_packages = number_of_packages
         self.only_map_download = "true" if only_map_download else "false"
-        self.maps_directory = maps_directory
-        self.output = output
         self.perform_chat_anonymization = (
             "true" if perform_chat_anonymization else "false"
         )
@@ -114,6 +115,7 @@ class SC2InfoExtractorGoArguments:
     def get_sc2egset_processing_args(
         processing_input: Path,
         output: Path,
+        maps_directory: Path,
         perform_chat_anonymization: bool,
     ) -> "SC2InfoExtractorGoArguments":
         #     # FIXME hardcoded binary name
@@ -135,6 +137,7 @@ class SC2InfoExtractorGoArguments:
         arguments = SC2InfoExtractorGoArguments(
             processing_input=processing_input,
             output=output,
+            maps_directory=maps_directory,
             perform_integrity_checks=True,
             perform_validity_checks=False,
             perform_cleanup=True,
@@ -234,7 +237,10 @@ def define_sc2egset_args(
             processing_input=processing_input_dir,
             output=output_directory_with_name,
             perform_chat_anonymization=False,
+            maps_directory=arguments.maps_directory,
         )
     )
+
+    logging.debug(f"Finished creating args for {maybe_dir}")
 
     return sc2_info_extractor_go_args
