@@ -30,13 +30,33 @@ from datasetpreparator.utils.user_prompt import user_prompt_overwrite_ok
 
 
 def prepare_sc2reset(
-    output_path: Path,
     replaypacks_input_path: Path,
+    output_path: Path,
     n_processes: int,
     force_overwrite: bool,
     maps_output_path: Path,
     directory_flattener_output_path: Path,
 ) -> None:
+    """
+    Function that runs all of the necessary steps to prepare SC2ReSet dataset.
+
+    Parameters
+    ----------
+    replaypacks_input_path : Path
+        Input directory containing multiple replaypacks.
+    output_path : Path
+        Output path where the tool will place the processed files for SC2ReSet.
+    n_processes : int
+        Number of goroutines to be spawned for reading the replay files,
+        this will multiplied by two.
+    force_overwrite : bool
+        Flag that specifies if the user wants to overwrite files or directories without being prompted.
+    maps_output_path : Path
+        Path where the maps will be downloaded.
+    directory_flattener_output_path : Path
+        Path where the directory flattener output will be placed
+    """
+
     # Directory flattener:
 
     if user_prompt_overwrite_ok(
@@ -88,6 +108,26 @@ def prepare_sc2egset(
     directory_flattener_output_path: Path,
     force_overwrite: bool,
 ) -> None:
+    """
+    Function that runs all of the necessary steps to prepare SC2EGSet dataset.
+
+    Parameters
+    ----------
+    replaypacks_input_path : Path
+        Input directory containing multiple replaypacks.
+        Should be the same as the output of directory flattener.
+    output_path : Path
+        Output path where the tool will place the processed files for SC2EGSet.
+    n_processes : int
+        Number of Python processes to be spawned for the dataset processing with SC2InfoExtractorGo.
+    maps_output_path : Path
+        Path where the maps are stored.
+    directory_flattener_output_path : Path
+        Path where the directory flattener output is placed.
+    force_overwrite : bool
+        Flag that specifies if the user wants to overwrite files or directories without being prompted.
+    """
+
     # SC2EGSet Processor:
     sc2egset_processor_args = ReplaypackProcessorArguments(
         input_path=replaypacks_input_path,

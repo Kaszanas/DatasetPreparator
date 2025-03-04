@@ -12,6 +12,19 @@ def sc2infoextractorgo_map_download(
     input_path: Path,
     maps_directory: Path,
 ) -> None:
+    """
+    Downloads all maps contained in the .SC2Replay files in the input directory.
+    Maps are placed in the maps_directory.
+
+    Parameters
+    ----------
+    input_path : Path
+        Specifies the input directory where the .SC2Replay files are held.
+        SC2InfoExtractorGo will recursively search for .SC2Replay files in this directory.
+    maps_directory : Path
+        Specifies the directory where the maps are stored and will be downloaded to.
+    """
+
     # Pre-process, download all maps:
     logging.info("Downloading all maps...")
     map_download_arguments = SC2InfoExtractorGoArguments.get_download_maps_args(

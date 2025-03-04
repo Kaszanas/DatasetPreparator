@@ -11,11 +11,13 @@ class SC2InfoExtractorGoArguments:
 
     Parameters
     ----------
+    processing_input : Path, optional
+        Input directory where .SC2Replay files are held.
+    output : Path, optional
+        Output directory where compressed zip packages will be saved
     game_mode_filter : int, optional
         Specifies which game mode should be included from the processed files
         in a format of a binary flag: AllGameModes: 0b11111111.
-    input : Path, optional
-        Input directory where .SC2Replay files are held.
     log_dir : Path, optional
         Specifies directory which will hold the logging information
     log_level : int, optional
@@ -32,8 +34,6 @@ class SC2InfoExtractorGoArguments:
     only_map_download : bool, optional
         Specifies if the tool is supposed to only download
         the maps and not process the replays
-    output : Path, optional
-        Output directory where compressed zip packages will be saved
     perform_chat_anonymization : bool, optional
         Specifies if the chat anonymization should be performed
     perform_cleanup: bool, optional
@@ -102,6 +102,23 @@ class SC2InfoExtractorGoArguments:
     def get_download_maps_args(
         processing_input: Path, maps_directory: Path
     ) -> "SC2InfoExtractorGoArguments":
+        """
+        Creates arguments for downloading the maps using the SC2InfoExtractorGo binary.
+
+        Parameters
+        ----------
+        processing_input : Path
+            Specifies the input directory where the .SC2Replay files are held.
+            SC2InfoExtractorGo will recursively search for .SC2Replay files in this directory.
+        maps_directory : Path
+            Specifies the directory where the maps are stored and will be downloaded to.
+
+        Returns
+        -------
+        SC2InfoExtractorGoArguments
+            Arguments for the SC2InfoExtractorGo binary.
+        """
+
         arguments = SC2InfoExtractorGoArguments(
             processing_input=processing_input,
             maps_directory=maps_directory,
@@ -118,21 +135,25 @@ class SC2InfoExtractorGoArguments:
         maps_directory: Path,
         perform_chat_anonymization: bool,
     ) -> "SC2InfoExtractorGoArguments":
-        #     # FIXME hardcoded binary name
-        #     "/SC2InfoExtractorGo",
-        #     f"-processing_input={directory}/",
-        #     f"-output={output_directory_filepath}/",
-        #     "-perform_integrity_checks=true",
-        #     "-perform_validity_checks=false",
-        #     "-perform_cleanup=true",
-        #     f"-perform_chat_anonymization={perform_chat_anonymization}",
-        #     "-number_of_packages=1",
-        #     # FIXME hardcoded path
-        #     "-localized_maps_file=../processing/json_merger/merged.json",
-        #     "-max_procs=1",
-        #     "-log_level=3",
-        #     f"-log_dir={output_directory_filepath}/",
-        # ]
+        """
+        Creates arguments for the processing of the SC2EGSet dataset.
+
+        Parameters
+        ----------
+        processing_input : Path
+            Specifies the input directory where the flattened replaypacks are held.
+        output : Path
+            Specifies the output directory where the processed replaypacks will be saved.
+        maps_directory : Path
+            Specifies the directory where the maps are stored.
+        perform_chat_anonymization : bool
+            Specifies if the chat anonymization should be performed.
+
+        Returns
+        -------
+        SC2InfoExtractorGoArguments
+            Arguments for the SC2InfoExtractorGo binary.
+        """
 
         arguments = SC2InfoExtractorGoArguments(
             processing_input=processing_input,
