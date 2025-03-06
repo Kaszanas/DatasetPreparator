@@ -26,6 +26,7 @@ class DirectoryFlattenerTest(unittest.TestCase):
         # Create and get test input and output directories:
         cls.input_path = create_script_test_input_dir(script_name=cls.SCRIPT_NAME)
         cls.output_path = create_script_test_output_dir(script_name=cls.SCRIPT_NAME)
+        cls.n_threads = 1
         cls.file_extension = ".SC2Replay"
 
         # Create nested directory structure mimicking how real replaypacks look like:
@@ -61,6 +62,7 @@ class DirectoryFlattenerTest(unittest.TestCase):
             input_path=self.input_path,
             output_path=self.output_path,
             file_extension=self.file_extension,
+            n_threads=self.n_threads,
             force_overwrite=True,
         )
 
