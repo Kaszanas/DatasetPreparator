@@ -25,6 +25,7 @@ class TestDirPackagerTest(unittest.TestCase):
         cls.SCRIPT_NAME = "file_packager"
         # Get test directory input and output:
         cls.input_path = create_script_test_input_dir(script_name=cls.SCRIPT_NAME)
+        cls.n_threads = 1
 
         cls.n_dirs = 1
         # Create multiple nested directories:
@@ -39,7 +40,9 @@ class TestDirPackagerTest(unittest.TestCase):
 
     def test_multiple_dir_packager(self) -> None:
         archives = multiple_dir_packager(
-            input_path=self.input_path, force_overwrite=True
+            input_path=self.input_path,
+            n_threads=self.n_threads,
+            force_overwrite=True,
         )
 
         # Archive should exists:
