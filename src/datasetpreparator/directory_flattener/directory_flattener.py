@@ -244,7 +244,6 @@ def multiple_directory_flattener(
     if user_prompt_overwrite_ok(path=output_path, force_overwrite=force_overwrite):
         output_path.mkdir(exist_ok=True)
 
-    output_directories = []
     directories_to_process = []
 
     # Iterate over directories:
@@ -281,7 +280,7 @@ def multiple_directory_flattener(
                 )
             )
 
-    multiprocess_directory_flattener(
+    output_directories = multiprocess_directory_flattener(
         directories_to_process=directories_to_process,
         n_processes=n_threads,
     )
