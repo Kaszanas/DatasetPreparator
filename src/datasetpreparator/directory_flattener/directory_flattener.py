@@ -194,7 +194,7 @@ def multiple_directory_flattener(
     input_path: Path,
     output_path: Path,
     file_extension: str,
-    n_processes: int,
+    n_threads: int,
     force_overwrite: bool,
 ) -> Tuple[bool, List[Path]]:
     """
@@ -283,7 +283,7 @@ def multiple_directory_flattener(
 
     multiprocess_directory_flattener(
         directories_to_process=directories_to_process,
-        n_processes=n_processes,
+        n_processes=n_threads,
     )
 
     return (True, output_directories)
@@ -324,7 +324,7 @@ def multiple_directory_flattener(
     help="File extension for the files that will be put to the top level directory. Example ('.SC2Replay').",
 )
 @click.option(
-    "--n_processes",
+    "--n_threads",
     type=int,
     default=1,
     required=False,
@@ -347,7 +347,7 @@ def main(
     input_path: Path,
     output_path: Path,
     file_extension: str,
-    n_processes: int,
+    n_threads: int,
     log: str,
     force_overwrite: bool,
 ) -> None:
@@ -360,7 +360,7 @@ def main(
         input_path=input_path,
         output_path=output_path,
         file_extension=file_extension,
-        n_processes=n_processes,
+        n_threads=n_threads,
         force_overwrite=force_overwrite,
     )
 
