@@ -313,7 +313,7 @@ docker_doc_build_action: ## Builds the Mkdocs documentation using Docker.
 	@make docker_build_devcontainer
 	@echo "Using the devcontainer image: $(DEVCONTAINER)"
 	docker run \
-		-v ".\docs:/docs" \
+		-v "docs:/docs" \
 		$(DEVCONTAINER) \
 		poetry run mkdocs build
 
