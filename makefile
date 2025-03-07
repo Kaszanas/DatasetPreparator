@@ -25,25 +25,66 @@ TEST_COMMAND_LOG = "poetry run pytest --durations=100 --ignore-glob='test_*.py' 
 ###################
 #### PIPELINE #####
 ###################
-.PHONY: sc2reset_sc2egset
-sc2reset_sc2egset: ## Runs the entire processing pipeline to recreate SC2ReSet and SC2EGSet or any other dataset using our standard tooling.
-	@make flatten
-	@make process_replaypacks
-	@make rename_files
-	@make package_sc2egset_dataset
-	@make package_sc2reset_dataset
+.PHONY: sc2reset_sc2egset_pipeline
+sc2reset_sc2egset_pipeline: ## Runs the entire processing pipeline to recreate SC2ReSet and SC2EGSet or any other dataset using our standard tooling.
+	@echo "Running the entire processing pipeline."
+	@make docker_pull_dev
+	@echo "Using the dev branch Docker image: $(DEV_BRANCH_CONTAINER)"
+	docker run --rm \
+		-v ".\processing:/app/processing" \
+		$(DEV_BRANCH_CONTAINER) \
+		python3 sc2egset_pipeline.py \
+		--input_path ./processing/input/directory_flattener \
+		--output_path ./processing/output \
+		--maps_path ./processing/maps \
+		--n_processes 12 \
+		--force_overwrite True
+
+.PHONY: sc2reset_sc2egset_pipeline_dev
+sc2reset_sc2egset_pipeline_dev: ## Runs the entire processing pipeline to recreate SC2ReSet and SC2EGSet or any other dataset using our standard tooling.
+	@echo "Running the entire processing pipeline."
+	@make docker_build_devcontainer
+	@echo "Using the dev branch Docker image: $(DEVCONTAINER)"
+	docker run --rm \
+		-v ".\processing:/app/processing" \
+		$(DEVCONTAINER) \
+		python3 sc2egset_pipeline.py \
+		--input_path ./processing/input/directory_flattener \
+		--output_path ./processing/output \
+		--maps_path ./processing/maps \
+		--n_processes 12 \
+		--force_overwrite True
+
 
 .PHONY: flatten
 flatten: ## Flattens the directory if the files are held in nested directories. This helps with streamlining the processing.
 	@echo "Flattening the directory structure."
 	@make docker_pull_dev
 	@echo "Using the dev branch Docker image: $(DEV_BRANCH_CONTAINER)"
-	docker run --rm\
-		-v "./processing:/app/processing" \
+	docker run --rm \
+		-v ".\processing:/app/processing" \
 		$(DEV_BRANCH_CONTAINER) \
 		python3 directory_flattener.py \
-		--input_path ./processing/replaypacks
-		--output_path ./processing/output/directory_flattener
+		--input_path ./processing/input/directory_flattener \
+		--output_path ./processing/output/directory_flattener \
+		--n_processes 8 \
+		--force_overwrite True \
+
+
+.PHONY: flatten_dev
+flatten_dev: ## Flattens the directory using the development container
+	@echo "Flattening the directory structure."
+	@make docker_build_devcontainer
+	@echo "Using the dev branch Docker image: $(DEVCONTAINER)"
+	docker run --rm \
+		-v ".\processing:/app/processing" \
+		$(DEVCONTAINER) \
+		python3 directory_flattener.py \
+		--input_path ./processing/input/directory_flattener \
+		--output_path ./processing/output/directory_flattener \
+		--n_processes 12 \
+		--force_overwrite True
+
 
 .PHONY: process_replaypacks
 process_replaypacks: ## Parses the raw (.SC2Replay) data into JSON files.
@@ -51,24 +92,54 @@ process_replaypacks: ## Parses the raw (.SC2Replay) data into JSON files.
 	@make docker_pull_dev
 	@echo "Using the dev branch Docker image: $(DEV_BRANCH_CONTAINER)"
 	docker run --rm\
-		-v "./processing:/app/processing" \
+		-v ".\processing:/app/processing" \
 		$(DEV_BRANCH_CONTAINER) \
 		python3 sc2egset_replaypack_processor.py \
-		--input_dir ./processing/directory_flattener/output \
-		--output_dir ./processing/sc2egset_replaypack_processor/output \
-		--n_processes 8 \
+		--input_path ./processing/output/directory_flattener \
+		--output_path ./processing/output/sc2egset_replaypack_processor \
+		--maps_path ./processing/maps \
+		--n_processes 12 \
+		--force_overwrite True \
+
+
+.PHONY: process_replaypacks_dev
+process_replaypacks_dev: ## Parses the raw (.SC2Replay) data into JSON files.
+	@echo "Processing the replaypacks."
+	@make docker_build_devcontainer
+	@echo "Using the dev branch Docker image: $(DEV_BRANCH_CONTAINER)"
+	docker run --rm\
+		-v ".\processing:/app/processing" \
+		$(DEVCONTAINER) \
+		python3 sc2egset_replaypack_processor.py \
+		--input_path ./processing/output/directory_flattener \
+		--output_path ./processing/output/sc2egset_replaypack_processor \
+		--maps_path ./processing/maps \
+		--n_processes 12 \
+		--force_overwrite True \
 
 .PHONY: processed_mapping_copier
-processed_mapping_copier:
+processed_mapping_copier: ## Copies the processed mapping files.
 	@echo "Copying the processed mapping files."
 	@make docker_pull_dev
 	@echo "Using the dev branch Docker image: $(DEV_BRANCH_CONTAINER)"
 	docker run --rm\
-		-v "./processing:/app/processing" \
+		-v ".\processing:/app/processing" \
 		$(DEV_BRANCH_CONTAINER) \
 		python3 processed_mapping_copier.py \
-		--input_dir ./processing/directory_flattener/output \
-		--output_dir ./processing/sc2egset_replaypack_processor/output
+		--input_path ./processing/output/directory_flattener \
+		--output_path ./processing/output/sc2egset_replaypack_processor
+
+.PHONY: processed_mapping_copier_dev
+processed_mapping_copier_dev: ## Copies the processed mapping files using the devcontainer.
+	@echo "Copying the processed mapping files."
+	@make docker_build_devcontainer
+	@echo "Using the dev branch Docker image: $(DEVCONTAINER)"
+	docker run --rm\
+		-v ".\processing:/app/processing" \
+		$(DEVCONTAINER) \
+		python3 processed_mapping_copier.py \
+		--input_path ./processing/output/directory_flattener \
+		--output_path ./processing/output/sc2egset_replaypack_processor
 
 .PHONY: rename_files
 rename_files: ## Renames the files after processing with SC2InfoExtractorGo.
@@ -76,10 +147,45 @@ rename_files: ## Renames the files after processing with SC2InfoExtractorGo.
 	@make docker_pull_dev
 	@echo "Using the dev branch Docker image: $(DEV_BRANCH_CONTAINER)"
 	docker run \
-		-v "./processing:/app/processing" \
+		-v ".\processing:/app/processing" \
 		$(DEV_BRANCH_CONTAINER) \
 		python3 file_renamer.py \
-		--input_dir ./processing/sc2egset_replaypack_processor/output
+		--input_path ./processing/output/sc2egset_replaypack_processor
+
+.PHONY: rename_files_dev
+rename_files_dev: ## Renames the files after processing with SC2InfoExtractorGo.
+	@echo "Renaming the files."
+	@make docker_build_devcontainer
+	@echo "Using the dev branch Docker image: $(DEVCONTAINER)"
+	docker run \
+		-v ".\processing:/app/processing" \
+		$(DEVCONTAINER) \
+		python3 file_renamer.py \
+		--input_path ./processing/output/sc2egset_replaypack_processor
+
+.PHONY: package_sc2reset_dataset
+package_sc2reset_dataset: ## Packages the raw data. Used to prepare SC2ReSet Replaypack set.
+	@echo "Packaging the dataset."
+	@make docker_pull_dev
+	@echo "Using the dev branch Docker image: $(DEV_BRANCH_CONTAINER)"
+	docker run --rm \
+		-v ".\processing:/app/processing" \
+		$(DEV_BRANCH_CONTAINER) \
+		python3 directory_packager.py \
+		--input_path ./processing/output/directory_flattener
+		--n_threads 12
+
+.PHONY: package_sc2reset_dataset_dev
+package_sc2reset_dataset_dev: ## Packages the raw data using the devcontainer. Used to prepare SC2ReSet Replaypack set.
+	@echo "Packaging the dataset."
+	@make docker_build_devcontainer
+	@echo "Using the dev branch Docker image: $(DEVCONTAINER)"
+	docker run --rm \
+		-v ".\processing:/app/processing" \
+		$(DEVCONTAINER) \
+		python3 directory_packager.py \
+		--input_path ./processing/output/directory_flattener \
+		--n_threads 12
 
 
 .PHONY: package_sc2egset_dataset
@@ -88,21 +194,22 @@ package_sc2egset_dataset: ## Packages the pre-processed dataset from the output 
 	@make docker_pull_dev
 	@echo "Using the dev branch Docker image: $(DEV_BRANCH_CONTAINER)"
 	docker run --rm \
-		-v "./processing:/app/processing" \
+		-v ".\processing:/app/processing" \
 		$(DEV_BRANCH_CONTAINER) \
-		python3 file_packager.py \
-		--input_dir ./processing/sc2egset_replaypack_processor/output
+		python3 directory_packager.py \
+		--input_path ./processing/output/sc2egset_replaypack_processor
 
-.PHONY: package_sc2reset_dataset
-package_sc2reset_dataset: ## Packages the raw data. Used to prepare SC2ReSet Replaypack set.
+.PHONY: package_sc2egset_dataset_dev
+package_sc2egset_dataset_dev: ## Packages the SC2EGSet dataset using the devcontainer.
 	@echo "Packaging the dataset."
-	@make docker_pull_dev
-	@echo "Using the dev branch Docker image: $(DEV_BRANCH_CONTAINER)"
+	@make docker_build_devcontainer
+	@echo "Using the dev branch Docker image: $(DEVCONTAINER)"
 	docker run --rm \
-		-v "./processing:/app/processing" \
-		$(DEV_BRANCH_CONTAINER) \
-		python3 file_packager.py \
-		--input_dir ./processing/directory_flattener/output
+		-v ".\processing:/app/processing" \
+		$(DEVCONTAINER) \
+		python3 directory_packager.py \
+		--input_path ./processing/output/sc2egset_replaypack_processor
+
 
 ###################
 #### LOCAL ########
@@ -196,7 +303,7 @@ docker_doc_build: ## Builds the Mkdocs documentation using Docker.
 	@make docker_build_devcontainer
 	@echo "Using the devcontainer image: $(DEVCONTAINER)"
 	docker run \
-		-v "./docs:/docs" \
+		-v ".\docs:/docs" \
 		$(DEVCONTAINER) \
 		poetry run mkdocs build
 
@@ -206,7 +313,7 @@ docker_doc_build_action: ## Builds the Mkdocs documentation using Docker.
 	@make docker_build_devcontainer
 	@echo "Using the devcontainer image: $(DEVCONTAINER)"
 	docker run \
-		-v "./docs:/docs" \
+		-v ".\docs:/docs" \
 		$(DEVCONTAINER) \
 		poetry run mkdocs build
 
