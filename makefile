@@ -67,9 +67,8 @@ flatten: ## Flattens the directory if the files are held in nested directories. 
 		python3 directory_flattener.py \
 		--input_path ./processing/input/directory_flattener \
 		--output_path ./processing/output/directory_flattener \
-		--n_processes 8 \
-		--force_overwrite True \
-
+		--n_processes 12 \
+		--force_overwrite True
 
 .PHONY: flatten_dev
 flatten_dev: ## Flattens the directory using the development container
