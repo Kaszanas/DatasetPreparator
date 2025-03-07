@@ -11,9 +11,9 @@ Tools in this repository were used to create the **[SC2ReSet: StarCraft II Espor
 > [!NOTE]
 > To run this project there are some prerequisites that you need to have installed on your system:
 > - Docker
-> - make
+> - **Optional** make (if you do not wish to use make, please refer to the commands defined in the `makefile` and run them manually)
 
-Our prefered way of distributing the toolset is through DockerHub. We Use the Docker Image to provide a fully reproducible environment for our scripts.
+Our prefered way of distributing the toolset is through DockerHub. We use the Docker Image to provide a fully reproducible environment for our scripts.
 
 To pull the image from DockerHub, run the following command:
 
@@ -35,12 +35,14 @@ After building the image, please refer to the **[Command Line Arguments Usage](#
 When using Docker, you will have to pass the arguments through the `docker run` command and mount the input/output directory. Below is an example of how to run the `directory_flattener` script using Docker. For ease of use we have prepared example directory structure in the `processing` directory. The command below uses that to issue a command to flatten the directory structure:
 
 ```bash
-docker run \
-  -v "./processing:/app/processing" \
+docker run -rm \
+  -v ".\processing:/app/processing" \
   datasetpreparator:latest \
   python3 directory_flattener.py \
-  --input_path /app/processing/directory_flattener/input \
-  --output_path /app/processing/directory_flattener/output
+  --input_path ./processing/input/directory_flattener \
+  --output_path ./processing/output/directory_flattener \
+  --n_processes 8 \
+  --force_overwrite True \
 ```
 
 ## SC2EGSet Dataset Reproduction Steps
@@ -52,10 +54,10 @@ docker run \
 
 We provide a release image containing all of the scripts. To see the usage of these scripts please refer to their respective ``README.md`` files as described in [Detailed Tools Description](#detailed-tools-description).
 
-The following steps were used to prepare the SC2EGSet dataset:
-1. Build the docker image for the DatasetPreparator using the provided ```makefile``` command: ```make docker_build```. This will load all of the dependencies such as the [SC2InfoExtractorGo](https://github.com/Kaszanas/SC2InfoExtractorGo).
-2. Place the input replaypacks into `./processing/directory_flattener/input` directory.
-3. Run the command ```make sc2reset_sc2egset``` to process the replaypacks and create the dataset. The output will be placed in `./processing/sc2egset_replaypack_processor/output` directory.
+The following steps were used to prepare the SC2ReSet and SC2EGSet datasets:
+1. Build the docker image for the DatasetPreparator using the provided ```makefile``` target: ```make docker_build```. This will load all of the dependencies such as the [SC2InfoExtractorGo](https://github.com/Kaszanas/SC2InfoExtractorGo).
+2. Place the input replaypacks into `./processing/input/directory_flattener` directory.
+3. Run the command ```make sc2reset_sc2egset_pipeline``` to process the replaypacks and create the datasets. The output will be placed in `./processing/output/SC2ReSet` and `./processing/output/SC2EGSet` directories.
 
 
 ### Detailed Tools Description
@@ -71,8 +73,9 @@ Each of the scripts has its usage described in their respective `README.md` file
 
 #### CLI Usage; StarCraft 2 Specific Scripts
 1. [SC2 Map Downloader (sc2_map_downloader): README](src/datasetpreparator/sc2/sc2_map_downloader/README.md)
-2. [SC2EGSet Replaypack Processor (sc2egset_replaypack_processor): README](src/datasetpreparator/sc2/sc2egset_replaypack_processor/README.md)
-3. [SC2ReSet Replaypack Downloader (sc2reset_replaypack_downloader): README](src/datasetpreparator/sc2/sc2reset_replaypack_downloader/README.md)
+2. [SC2EGSet Pipeline (sc2egset_pipeline): README](src/datasetpreparator/sc2/sc2egset_replaypack_processor/README.md)
+3. [SC2EGSet Replaypack Processor (sc2egset_replaypack_processor): README](src/datasetpreparator/sc2/sc2egset_replaypack_processor/README.md)
+4. [SC2ReSet Replaypack Downloader (sc2reset_replaypack_downloader): README](src/datasetpreparator/sc2/sc2reset_replaypack_downloader/README.md)
 
 
 <!-- ### Using Python
@@ -97,23 +100,6 @@ Please see **[CONTRIBUTING.md](https://github.com/Kaszanas/SC2DatasetPreparator/
 
 ### This Repository
 
-```
-@software{Białecki_2022_6366039,
-  author    = {Białecki, Andrzej and
-               Białecki, Piotr and
-               Krupiński, Leszek},
-  title     = {{Kaszanas/SC2DatasetPreparator: 1.2.0
-               SC2DatasetPreparator Release}},
-  month     = {jun},
-  year      = {2022},
-  publisher = {Zenodo},
-  version   = {1.2.0},
-  doi       = {10.5281/zenodo.5296664},
-  url       = {https://doi.org/10.5281/zenodo.5296664}
-}
-
-```
-
 ### [SC2EGSet: Dataset Description](https://www.researchgate.net/publication/373767449_SC2EGSet_StarCraft_II_Esport_Replay_and_Game-state_Dataset)
 
 ```
@@ -137,5 +123,21 @@ Please see **[CONTRIBUTING.md](https://github.com/Kaszanas/SC2DatasetPreparator/
   issn     = {2052-4463},
   doi      = {10.1038/s41597-023-02510-7},
   url      = {https://doi.org/10.1038/s41597-023-02510-7}
+}
+```
+
+```
+@software{Białecki_2022_6366039,
+  author    = {Białecki, Andrzej and
+               Białecki, Piotr and
+               Krupiński, Leszek},
+  title     = {{Kaszanas/SC2DatasetPreparator: 1.2.0
+               SC2DatasetPreparator Release}},
+  month     = {jun},
+  year      = {2022},
+  publisher = {Zenodo},
+  version   = {1.2.0},
+  doi       = {10.5281/zenodo.5296664},
+  url       = {https://doi.org/10.5281/zenodo.5296664}
 }
 ```
