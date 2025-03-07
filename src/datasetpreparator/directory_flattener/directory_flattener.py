@@ -26,6 +26,20 @@ class MultiprocessFlattenArguments:
         self.files_with_extension = files_with_extension
 
 
+class DirectoryCreationArguments:
+    def __init__(
+        self,
+        dir_output_path: Path,
+        maybe_dir: Path,
+        files_with_extension: List[Path],
+        force_overwrite: bool,
+    ):
+        self.dir_output_path = dir_output_path
+        self.maybe_dir = maybe_dir
+        self.files_with_extension = files_with_extension
+        self.force_overwrite = force_overwrite
+
+
 def save_dir_mapping(output_path: Path, dir_mapping: dict) -> None:
     """
     Saves a JSON file containing the mapping of the
@@ -190,6 +204,41 @@ def flatten_save_dir_mapping(
     return arguments.dir_output_path
 
 
+def create_output_directory(
+    arguments: DirectoryCreationArguments,
+) -> MultiprocessFlattenArguments:
+    """
+    Creates the output directory if it doesn't exist.
+    Returns the arguments for the directory flattening.
+
+    Parameters
+    ----------
+    arguments : DirectoryCreationArguments
+        Specifies the arguments as per the DirectoryCreationArguments class fields.
+        These arguments are used to create the output directory.
+
+    Returns
+    -------
+    MultiprocessFlattenArguments
+        Returns the arguments for the directory flattening.
+    """
+
+    if user_prompt_overwrite_ok(
+        path=arguments.dir_output_path,
+        force_overwrite=arguments.force_overwrite,
+    ):
+        logging.debug(
+            f"Creating directory {str(arguments.dir_output_path)}, didn't exist."
+        )
+        arguments.dir_output_path.mkdir(exist_ok=True)
+
+    return MultiprocessFlattenArguments(
+        dir_output_path=arguments.dir_output_path,
+        maybe_dir=arguments.maybe_dir,
+        files_with_extension=arguments.files_with_extension,
+    )
+
+
 def multiple_directory_flattener(
     input_path: Path,
     output_path: Path,
@@ -244,11 +293,10 @@ def multiple_directory_flattener(
     if user_prompt_overwrite_ok(path=output_path, force_overwrite=force_overwrite):
         output_path.mkdir(exist_ok=True)
 
-    output_directories = []
-    directories_to_process = []
+    directories_to_create = []
 
     # Iterate over directories:
-
+    # TODO: this can be sped up:
     directory_contants = list(input_path.iterdir())
     for item in tqdm(
         directory_contants,
@@ -268,21 +316,22 @@ def multiple_directory_flattener(
             continue
 
         dir_output_path = Path(output_path, item.name).resolve()
-        if user_prompt_overwrite_ok(
-            path=dir_output_path, force_overwrite=force_overwrite
-        ):
-            logging.debug(f"Creating directory {str(dir_output_path)}, didn't exist.")
-            dir_output_path.mkdir(exist_ok=True)
-            directories_to_process.append(
-                MultiprocessFlattenArguments(
-                    dir_output_path=dir_output_path,
-                    maybe_dir=maybe_dir,
-                    files_with_extension=files_with_extension,
-                )
+        directories_to_create.append(
+            DirectoryCreationArguments(
+                dir_output_path=dir_output_path,
+                maybe_dir=maybe_dir,
+                files_with_extension=files_with_extension,
+                force_overwrite=force_overwrite,
             )
+        )
 
-    multiprocess_directory_flattener(
-        directories_to_process=directories_to_process,
+    with ThreadPoolExecutor(max_workers=n_threads) as executor:
+        multiprocess_flatten_arguments = list(
+            executor.map(create_output_directory, directories_to_create)
+        )
+
+    output_directories = multiprocess_directory_flattener(
+        directories_to_process=multiprocess_flatten_arguments,
         n_processes=n_threads,
     )
 

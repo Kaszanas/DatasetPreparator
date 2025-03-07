@@ -16,7 +16,8 @@ from datasetpreparator.settings import PATH_TO_SC2INFOEXTRACTORGO
 
 
 def multiprocessing_scheduler(
-    processing_arguments: List[SC2InfoExtractorGoArguments], number_of_processes: int
+    processing_arguments: List[SC2InfoExtractorGoArguments],
+    number_of_processes: int,
 ) -> None:
     """
     Responsible for spawning the multiprocessing_client functions.

@@ -100,7 +100,9 @@ class SC2InfoExtractorGoArguments:
 
     @staticmethod
     def get_download_maps_args(
-        processing_input: Path, maps_directory: Path
+        processing_input: Path,
+        maps_directory: Path,
+        n_processes: int,
     ) -> "SC2InfoExtractorGoArguments":
         """
         Creates arguments for downloading the maps using the SC2InfoExtractorGo binary.
@@ -112,6 +114,8 @@ class SC2InfoExtractorGoArguments:
             SC2InfoExtractorGo will recursively search for .SC2Replay files in this directory.
         maps_directory : Path
             Specifies the directory where the maps are stored and will be downloaded to.
+        n_processes : int
+            Number of SC2InfoExtractorGo processes that will be spawned.
 
         Returns
         -------
@@ -123,7 +127,7 @@ class SC2InfoExtractorGoArguments:
             processing_input=processing_input,
             maps_directory=maps_directory,
             only_map_download=True,
-            max_procs=4,
+            max_procs=n_processes,
         )
 
         return arguments

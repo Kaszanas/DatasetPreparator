@@ -11,6 +11,7 @@ def move_files(
     output_path: Path,
     force_overwrite: bool,
     extension: str = ".zip",
+    recursive: bool = True,
 ) -> None:
     """
     Move files from one directory to another.
@@ -24,7 +25,9 @@ def move_files(
     force_overwrite : bool
         Flag that specifies if the user wants to overwrite files or directories without being prompted.
     extension : str, optional
-        Specifies which file extension files will be detected and moved, by default ".zip"
+        Specifies which file extension files will be detected and moved, by default ".zip"\
+    recursive : bool, optional
+        Flag that specifies if the search for files should be recursive, by default True
     """
 
     # Make sure that the output directory exists, and potentially overwrite
@@ -36,7 +39,8 @@ def move_files(
         f"Searching for files with extension {extension} in {str(input_path)}..."
     )
 
-    files = list(input_path.rglob(f"*{extension}"))
+    search_method = input_path.rglob if recursive else input_path.glob
+    files = list(search_method(f"*{extension}"))
 
     logging.info(f"Moving {len(files)} files to {str(output_path)}...")
 

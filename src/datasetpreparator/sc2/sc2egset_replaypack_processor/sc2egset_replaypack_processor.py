@@ -105,6 +105,7 @@ def main(
     sc2infoextractorgo_map_download(
         input_path=replaypacks_input_path,
         maps_directory=maps_path,
+        n_processes=n_processes,
     )
 
     # Main processing
