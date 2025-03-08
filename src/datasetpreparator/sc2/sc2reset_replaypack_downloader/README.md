@@ -4,12 +4,31 @@ Utility script, downloads the contents of SC2ReSet replaypack from a Zenodo repo
 
 # CLI Usage
 
-Please keep in mind that the ```src/sc2reset_replaypack_downloader.py```  contains default flag values and can be customized with the following command line flags:
+Please keep in mind that the ```sc2reset_replaypack_downloader.py``` contains required argument values and can be customized with the following command line interaface:
+```
+Usage: sc2reset_replaypack_downloader.py [OPTIONS]
+
+  Tool used for downloading SC2ReSet: StarCraft II Esport Replaypack Set
+  (https://zenodo.org/doi/10.5281/zenodo.5575796).
+
+Options:
+  --download_path DIRECTORY      Path to which the archives will be
+                                 downloaded.  [required]
+  --unpack_path DIRECTORY        Path to which the archives will be unpacked.
+                                 [required]
+  --n_workers INTEGER            Number of workers used for extracting the
+                                 .zip archives.  [required]
+  --log [INFO|DEBUG|ERROR|WARN]  Log level. Default is WARN.
+  --help                         Show this message and exit.
 ```
 
-```
+# Execute With Docker
 
-## Citation
+## Repository Docker Image
+
+Please refer to the main [README](../../README.md) for the instructions.
+
+# Citation
 
 SC2ReSet replaypack collection was formally introduced in:
 

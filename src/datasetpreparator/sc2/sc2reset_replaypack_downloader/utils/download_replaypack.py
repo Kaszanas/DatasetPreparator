@@ -76,7 +76,7 @@ def download_replaypack(
     if download_filepath.exists():
         md5_checksum = get_md5(file=download_filepath)
         if md5_checksum == replaypack_md5:
-            return download_filepath
+            return download_filepath, True
 
     if not destination_dir.exists():
         destination_dir.mkdir()

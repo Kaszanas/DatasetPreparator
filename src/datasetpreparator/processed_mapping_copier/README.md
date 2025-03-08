@@ -4,17 +4,27 @@ Utility script that enters each of the processed replaypack directories and copi
 
 # CLI Usage
 
-Please keep in mind that the  ```src/processed_mapping_copier.py``` contains default flag values and can be customized with the following command line flags:
+Please keep in mind that the  ```src/processed_mapping_copier.py``` contains required argument values and can be customized with the following command line interaface:
 ```
-usage: processed_mapping_copier.py [-h] [--input_path INPUT_PATH] [--output_path OUTPUT_PATH]
+Usage: processed_mapping_copier.py [OPTIONS]
 
-Tool for copying the processed_mapping.json files that are required to define the StarCraft 2 (SC2) dataset.
+  Tool for copying the auxilliary file of processed_mapping.json to the
+  matching directory after processing the replaypack into a JSON dataset with
+  sc2egset_replaypack_processor.py. This script is required to reproduce
+  SC2EGSet Dataset.
 
-options:
-  -h, --help            show this help message and exit
-  --input_path INPUT_PATH (default = ../../processing/directory_flattener/output)
-                        Please provide input path to the flattened replaypacks that contain
-                        procesed_mapping.json files.
-  --output_path OUTPUT_PATH (default = ../../processing/sc2_replaypack_processor/output)
-                        Please provide output path where processed_mapping.json will be copied.
+Options:
+  --input_path DIRECTORY         Input path to the flattened replaypacks that
+                                 contain procesed_mapping.json files.
+                                 [required]
+  --output_path DIRECTORY        Output path where processed_mapping.json will
+                                 be copied.  [required]
+  --log [INFO|DEBUG|ERROR|WARN]  Log level. Default is WARN.
+  --help                         Show this message and exit.
 ```
+
+# Execute With Docker
+
+## Repository Docker Image
+
+Please refer to the main [README](../../README.md) for the instructions.

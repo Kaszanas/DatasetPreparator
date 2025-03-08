@@ -47,6 +47,7 @@ class JSONMergerTest(unittest.TestCase):
             path_to_json_one=self.path_to_json_one,
             path_to_json_two=self.path_to_json_two,
             output_filepath=self.output_filepath,
+            force_overwrite=True,
         )
 
         # Read merged file:

@@ -4,8 +4,6 @@ services:
     build:
       context: '../'
       dockerfile: './docker/Dockerfile.dev'
-    volumes:
-      - ../:/app
     environment:
       - TEST_WORKSPACE=/app
 volumes:

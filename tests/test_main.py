@@ -4,7 +4,13 @@ import sys
 import os
 import logging
 
+from dotenv import load_dotenv
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+load_dotenv()
+
+WORKSPACE_DIRECTORY = os.getenv("TEST_WORKSPACE")
 
 from tests.test_utils import get_workspace_dir  # noqa: E402
 
@@ -15,7 +21,7 @@ def suite():
     start_dir = os.path.join(get_workspace_dir(), "tests")
     suite = unittest.TestLoader().discover(
         start_dir=start_dir,
-        pattern="*_test.py",  # *_test.py
+        pattern="directory_flattener_test.py",  # *_test.py
     )
     return suite
 

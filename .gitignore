@@ -1,7 +1,9 @@
 /.vscode
 /venv*
 
-/processing
+processing/
+maps/
+profiler/
 
 *.SC2Replay
 *.SC2Map
@@ -34,3 +36,5 @@ ruff_cache/
 
 # PyCharm
 /.idea
+
+.env

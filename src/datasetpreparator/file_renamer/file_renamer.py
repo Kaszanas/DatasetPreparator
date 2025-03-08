@@ -1,5 +1,4 @@
 import logging
-import os
 from pathlib import Path
 
 import click
@@ -23,72 +22,68 @@ def file_renamer(input_path: Path) -> None:
     """
 
     if not input_path.exists():
-        raise FileNotFoundError(f"Input path {input_path.as_posix()} does not exist.")
-
-    if not input_path.is_dir():
-        raise NotADirectoryError(
-            f"Input path {input_path.as_posix()} is not a directory."
+        logging.error(
+            f"Input path {str(input_path)} does not exist. No files will be renamed."
         )
+        return
+    if not input_path.is_dir():
+        logging.error(f"Input path {str(input_path)} is not a directory.")
+        return
 
     if not len(list(input_path.iterdir())) > 0:
-        raise ValueError(f"Input path {input_path.as_posix()} is empty.")
+        logging.error(f"Input path {str(input_path)} is empty. No files to rename.")
+        return
 
-    # TODO: This can be done with iterdir:
-    for directory, _, file_list in os.walk(input_path.as_posix()):
-        for file in file_list:
-            # REVIEW: Can this be done better? Match case statement?
-            if file.endswith(".zip"):
-                os.rename(
-                    os.path.join(directory, file),
-                    os.path.join(directory, os.path.basename(directory) + "_data.zip"),
-                )
-            if file.startswith("package_summary"):
-                os.rename(
-                    os.path.join(directory, file),
-                    os.path.join(
-                        directory, os.path.basename(directory) + "_summary.json"
-                    ),
-                )
-            if file.startswith("processed_mapping"):
-                os.rename(
-                    os.path.join(directory, file),
-                    os.path.join(
-                        directory,
-                        os.path.basename(directory) + "_processed_mapping.json",
-                    ),
-                )
-            if file.startswith("processed_failed"):
-                os.rename(
-                    os.path.join(directory, file),
-                    os.path.join(
-                        directory,
-                        os.path.basename(directory) + "_processed_failed.log",
-                    ),
-                )
-            if file.startswith("main_log"):
-                os.rename(
-                    os.path.join(directory, file),
-                    os.path.join(
-                        directory,
-                        os.path.basename(directory) + "_main_log.log",
-                    ),
-                )
+    all_files = input_path.glob("**/*")
+    for file in all_files:
+        directory = file.parent
+
+        if file.name.endswith(".zip"):
+            new_name = directory.name + "_data.zip"
+            new_path = directory / new_name
+            file.rename(new_path)
+
+        if file.name.startswith("package_summary"):
+            new_name = directory.name + "_summary.json"
+            new_path = directory / new_name
+            file.rename(new_path)
+
+        if file.name.startswith("processed_mapping"):
+            new_name = directory.name + "_processed_mapping.json"
+            new_path = directory / new_name
+            file.rename(new_path)
+
+        if file.name.startswith("processed_failed"):
+            new_name = directory.name + "_processed_failed.log"
+            new_path = directory / new_name
+            file.rename(new_path)
+
+        if file.name.startswith("main_log"):
+            new_name = directory.name + "_main_log.log"
+            new_path = directory / new_name
+            file.rename(new_path)
 
 
 @click.command(
-    help="Tool used for processing StarCraft 2 (SC2) datasets. with https://github.com/Kaszanas/SC2InfoExtractorGo"
+    help="Tool used for renaming auxilliary files (log files) that are produced when creating StarCraft 2 (SC2) datasets with https://github.com/Kaszanas/SC2InfoExtractorGo. Additionally, this tool renames the .zip files so that they carry the original directory name with an added '_data' suffix."
 )
 @click.option(
     "--input_path",
-    type=click.Path(exists=True, dir_okay=True, file_okay=False, resolve_path=True),
+    type=click.Path(
+        exists=True,
+        dir_okay=True,
+        file_okay=False,
+        resolve_path=True,
+        path_type=Path,
+    ),
     required=True,
-    help="Please provide input path to the directory containing the dataset that is going to be processed by packaging into .zip archives.",
+    help="Input path to the directory containing the dataset that is going to be processed by packaging into .zip archives.",
 )
 @click.option(
     "--log",
-    type=click.Choice(["INFO", "DEBUG", "ERROR"], case_sensitive=False),
+    type=click.Choice(["INFO", "DEBUG", "ERROR", "WARN"], case_sensitive=False),
     default="WARN",
-    help="Log level (INFO, DEBUG, ERROR)",
+    help="Log level. Default is WARN.",
 )
 def main(input_path: Path, log: str) -> None:
     numeric_level = getattr(logging, log.upper(), None)

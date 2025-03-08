@@ -50,20 +50,19 @@ def sc2reset_replaypack_downloader(
     # Download replaypacks:
     downloaded_paths: List[Tuple[str, str]] = []
     for replaypack_name, replaypack_url, file_md5 in replaypack_list:
-        for _ in range(2):
-            downloaded_replaypack_path, ok = download_replaypack(
-                destination_dir=download_path,
-                replaypack_name=replaypack_name,
-                replaypack_url=replaypack_url,
-                replaypack_md5=file_md5,
-            )
-            # If the download was succesful, break out of the inner loop:
-            if ok:
-                downloaded_paths.append((replaypack_name, downloaded_replaypack_path))
-                break
-            logging.error(
-                f"Replaypack {replaypack_name} could not be downloaded. Adding to retry list..."
-            )
+        downloaded_replaypack_path, ok = download_replaypack(
+            destination_dir=download_path,
+            replaypack_name=replaypack_name,
+            replaypack_url=replaypack_url,
+            replaypack_md5=file_md5,
+        )
+        # If the download was succesful, add the path to the list of downloaded paths:
+        if ok:
+            downloaded_paths.append((replaypack_name, downloaded_replaypack_path))
+            continue
+        logging.error(
+            f"Replaypack {replaypack_name} could not be downloaded. Adding to retry list..."
+        )
 
     # Unpack replaypacks:
     for replaypack_name, downloaded_replaypack_path in downloaded_paths:
@@ -82,18 +81,26 @@ def sc2reset_replaypack_downloader(
 @click.option(
     "--download_path",
     type=click.Path(
-        exists=False, dir_okay=True, file_okay=False, resolve_path=True, path_type=Path
+        exists=False,
+        dir_okay=True,
+        file_okay=False,
+        resolve_path=True,
+        path_type=Path,
     ),
     required=True,
-    help="Please provide a path to which the archives will be downloaded.",
+    help="Path to which the archives will be downloaded.",
 )
 @click.option(
     "--unpack_path",
     type=click.Path(
-        exists=False, dir_okay=True, file_okay=False, resolve_path=True, path_type=Path
+        exists=False,
+        dir_okay=True,
+        file_okay=False,
+        resolve_path=True,
+        path_type=Path,
     ),
     required=True,
-    help="Please provide a path to which the archives will be unpacked.",
+    help="Path to which the archives will be unpacked.",
 )
 @click.option(
     "--n_workers",
@@ -106,9 +113,9 @@ def sc2reset_replaypack_downloader(
     "--log",
     type=click.Choice(["INFO", "DEBUG", "ERROR", "WARN"], case_sensitive=False),
     default="WARN",
-    help="Log level (INFO, DEBUG, ERROR)",
+    help="Log level. Default is WARN.",
 )
-def main(download_path: Path, unpack_path: Path, n_workers: int, log: str):
+def main(download_path: Path, unpack_path: Path, n_workers: int, log: str) -> None:
     numeric_level = getattr(logging, log.upper(), None)
     if not isinstance(numeric_level, int):
         raise ValueError(f"Invalid log level: {numeric_level}")

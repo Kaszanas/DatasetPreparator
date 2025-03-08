@@ -56,24 +56,36 @@ docker run -it -v .:/app datasetpreparator:devcontainer
 
 ### Local Development
 
-Ready to contribute? Here's how to set up `datasetpreparator` for local development.
+Ready to contribute? Here's how to set up `datasetpreparator` for local development. The code style standards that we use are defined in the `.pre-commit-config.yaml` file.
 
 1. Download a copy of `datasetpreparator` locally.
 2. Install `datasetpreparator` using `poetry`:
 
-    ```console
-      poetry install
-    ```
+```console
+  poetry install
+```
 
-3. Use `git` (or similar) to create a branch for local development and make your changes:
+3. Install the pre-commit hooks:
 
-    ```console
-      git checkout -b name-of-your-bugfix-or-feature
-    ```
+```console
+  poetry run pre-commit install
+```
 
-4. When you're done making changes, check that your changes conform to any code formatting requirements and pass any tests.
+4. Use `git` (or similar) to create a branch for local development and make your changes:
 
-5. Commit your changes and open a pull request.
+```console
+  git checkout -b name-of-your-bugfix-or-feature
+```
+
+5. When you're done making changes, check that your changes conform to any code formatting requirements and pass any tests.
+
+6. Format your commit with `commitizen`:
+
+```console
+  poetry run cz commit
+```
+
+7. Commit your changes (we are using commitizen to check commit messages) and open a pull request.
 
 ## Pull Request Guidelines
 

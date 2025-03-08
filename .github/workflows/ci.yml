@@ -1,26 +1,29 @@
 name: continuous integration (ci)
 
-on: [pull_request, workflow_dispatch]
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - dev
+  workflow_dispatch:
 
 # To successfully find the files that are required for testing:
 env:
   TEST_WORKSPACE: ${{ github.workspace }}
 
 jobs:
-
   pre_commit:
     # Set up operating system
     runs-on: ubuntu-latest
-
     # Define job steps
     steps:
-
       - name: Check-out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: Build Dev Docker Image
         run: |
-          make docker_build_dev
+          make docker_build_devcontainer
 
       - name: Docker Run pre-commit on all files.
         run: |
@@ -37,11 +40,11 @@ jobs:
     # Define job steps
     steps:
       - name: Check-out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: Build Dev Docker Image
         run: |
-          make docker_build_dev PYTHON_VERSION=${{ matrix.python-version }}
+          make docker_build_devcontainer PYTHON_VERSION=${{ matrix.python-version }}
 
       - name: Build Docker Image With Python ${{ matrix.python-version }}
         run: |

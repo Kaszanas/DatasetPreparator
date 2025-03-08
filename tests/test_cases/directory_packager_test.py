@@ -1,7 +1,9 @@
 import unittest
 import zipfile
 
-from datasetpreparator.dir_packager.dir_packager import multiple_dir_packager
+from datasetpreparator.directory_packager.directory_packager import (
+    multiple_dir_packager,
+)
 
 from tests.test_settings import (
     DELETE_SCRIPT_TEST_DIR,
@@ -23,6 +25,7 @@ class TestDirPackagerTest(unittest.TestCase):
         cls.SCRIPT_NAME = "file_packager"
         # Get test directory input and output:
         cls.input_path = create_script_test_input_dir(script_name=cls.SCRIPT_NAME)
+        cls.n_threads = 1
 
         cls.n_dirs = 1
         # Create multiple nested directories:
@@ -36,7 +39,11 @@ class TestDirPackagerTest(unittest.TestCase):
             create_test_text_files(input_path=directory, n_files=cls.n_files)
 
     def test_multiple_dir_packager(self) -> None:
-        archives = multiple_dir_packager(input_path=self.input_path)
+        archives = multiple_dir_packager(
+            input_path=self.input_path,
+            n_threads=self.n_threads,
+            force_overwrite=True,
+        )
 
         # Archive should exists:
         self.assertTrue(archives[0].exists())
