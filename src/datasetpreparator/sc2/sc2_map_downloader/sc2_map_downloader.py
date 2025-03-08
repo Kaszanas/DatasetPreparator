@@ -1,86 +1,12 @@
 import logging
 from pathlib import Path
-from typing import List, Set, Tuple
 
 import click
-import sc2reader
-import requests
 
+from datasetpreparator.sc2.sc2egset_replaypack_processor.utils.download_maps import (
+    sc2infoextractorgo_map_download,
+)
 from datasetpreparator.settings import LOGGING_FORMAT
-from datasetpreparator.utils.user_prompt import user_prompt_overwrite_ok
-
-
-def list_maps_to_download(replay_files: List[Path]) -> Set[Tuple[str, str]]:
-    """
-    Opens replay files and keeps only unique maps.
-
-    Parameters
-    ----------
-    replay_files : List[Path]
-        Specifies a list of the paths to replays for which
-        the unique maps will be detected.
-
-    Returns
-    -------
-    Set[Tuple[str, str]]
-        Returns a set that holds tuples with (map_hash, map_url) for all of
-        the unique maps.
-    """
-
-    replay_map_archive_hashes = set()
-    for replay_filepath in replay_files:
-        replay = sc2reader.load_replay(str(replay_filepath), load_map=True)
-        replay_map_url = replay.map_file.url
-        logging.info(f"Replay map url is: {replay_map_url}")
-        replay_map_hash = replay.map_hash
-
-        # Only download map if not previously donwloaded:
-        if (replay_map_hash, replay_map_url) not in replay_map_archive_hashes:
-            replay_map_archive_hashes.add((replay_map_hash, replay_map_url))
-
-    return replay_map_archive_hashes
-
-
-def download_maps(
-    output_path: Path,
-    hash_set: Set[Tuple[str, str]],
-) -> Path:
-    """
-    Contains logic to try to read and download a map based on the
-    information that is held within .SC2Replay file.
-
-    Parameters
-    ----------
-    output_path : Path
-        Specifies where the final map file will be downloaded.
-    hash_set : Set[Tuple[str, str]]
-        Specifies a set that holds tuples with (map_hash, map_url) for all of
-        the maps that should be downloaded.
-
-    Returns
-    -------
-    Path
-        Returns a Path to the output directory.
-    """
-
-    for map_hash, map_url in hash_set:
-        try:
-            output_filepath = Path(output_path, f"{map_hash}.SC2Map").resolve()
-            if not user_prompt_overwrite_ok(output_filepath):
-                logging.warning(f"Skipping map: hash: {map_hash} url: {map_url}")
-                continue
-            response = requests.get(map_url, allow_redirects=True)
-            with output_filepath.open(mode="wb") as output_map_file:
-                output_map_file.write(response.content)
-        except:  # noqa: E722
-            logging.error(
-                f"Error detected! Cannot process map: hash: {map_hash} url: {map_url}"
-            )
-        finally:
-            logging.warning("Exception handled, continuing...")
-            continue
-
-    return output_path
 
 
 def sc2_map_downloader(input_path: Path, output_path: Path) -> Path:
@@ -96,16 +22,13 @@ def sc2_map_downloader(input_path: Path, output_path: Path) -> Path:
         Specifies the output path where the downloaded maps will be placed.
     """
 
-    glob_pattern = "**/*.SC2Replay"
-    replay_files = input_path.glob(glob_pattern)
-    maps_to_download = list_maps_to_download(replay_files=replay_files)
-
-    output_directory = download_maps(
-        output_path=output_path,
-        hash_set=maps_to_download,
+    sc2infoextractorgo_map_download(
+        input_path=input_path,
+        maps_directory=output_path,
+        n_processes=8,
     )
 
-    return output_directory
+    return output_path
 
 
 @click.command(
@@ -134,6 +57,12 @@ def sc2_map_downloader(input_path: Path, output_path: Path) -> Path:
     ),
     required=True,
     help="Output path where StarCraft 2 (SC2) map files will be downloaded.",
+)
+@click.option(
+    "--n_processes",
+    type=click.INT,
+    default=8,
+    help="Number of processes to use for extracting the map URLs. Default is 8.",
 )
 @click.option(
     "--log",

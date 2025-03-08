@@ -377,7 +377,7 @@ def multiple_directory_flattener(
     type=int,
     default=1,
     required=False,
-    help="Number of processes to use for multiprocessing.",
+    help="Number of threads to use for directory flattening.",
 )
 @click.option(
     "--force_overwrite",
