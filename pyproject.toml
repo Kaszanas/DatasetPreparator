@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "datasetpreparator"
-version = "1.2.0"
+version = "2.0.0"
 description = "Tools for dataset processing."
 authors = ["Andrzej 'Kaszanas' Białecki"]
 license = "MIT License"
@@ -8,7 +8,7 @@ readme = "README.md"
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "1.2.0"
+version = "2.0.0"
 tag_format = "$version"
 
 [tool.poetry.dependencies]
