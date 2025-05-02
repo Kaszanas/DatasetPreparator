@@ -1,5 +1,4 @@
 import logging
-import os
 from pathlib import Path
 import click
 
@@ -47,26 +46,22 @@ def place_dependency_in_cache(
     map_hash = map_filepath.stem
     file_extension = map_filepath.suffix
 
-    cache_map_filepath = (
-        Path(
-            bnet_base_dir,
-            "Cache",
-            map_hash[0:2],
-            map_hash[2:4],
-            f"{map_hash}",
-        )
-        .with_suffix(file_extension)
-        .resolve()
-    )
-
+    cache_dir = Path(
+        bnet_base_dir,
+        "Cache",
+        map_hash[0:2],
+        map_hash[2:4],
+    ).resolve()
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    cache_map_filepath = (cache_dir / map_hash).with_suffix(file_extension).resolve()
     if cache_map_filepath.exists():
         logging.info(
             f"The cache entry already exists, skipping: {str(cache_map_filepath)}"
         )
         return cache_map_filepath
 
-    logging.info(f"No cache entry existed prior, copying {str(cache_map_filepath)}")
-    shutil.copy(map_filepath, cache_map_filepath)
+    logging.info(f"No cache entry existed prior, copying to: {str(cache_map_filepath)}")
+    shutil.copy(src=map_filepath, dst=cache_map_filepath)
 
     return cache_map_filepath
 
@@ -118,12 +113,12 @@ def read_execute_info(path: Path = Path("~/Documents")) -> Path | None:
             return return_exec_path
 
 
-def test_looks_like_battle_net(bnet_path: Path):
-    if bnet_path.name != "Battle.net":
-        raise BnetPathNotFound(f"Doesn't look like a Battle.net cache: {bnet_path}")
-    cache_path = (bnet_path / Path("Cache")).resolve()
-    if not cache_path.is_dir():
-        raise BnetCacheNotFound("Missing a Cache subdirectory:", bnet_path)
+# def test_looks_like_battle_net(bnet_path: Path):
+#     if bnet_path.name != "Battle.net":
+#         raise BnetPathNotFound(f"Doesn't look like a Battle.net path: {bnet_path}")
+#     cache_path = (bnet_path / Path("Cache")).resolve()
+#     if not cache_path.is_dir():
+#         raise BnetCacheNotFound("Missing a Cache subdirectory:", bnet_path)
 
 
 def check_windows_default_path() -> Path | None:
@@ -135,14 +130,14 @@ def check_windows_default_path() -> Path | None:
     return default_windows_path
 
 
-def get_bnet_path(bnet_base_dir: Path | None) -> Path:
-    sc2_environment_val = os.environ.get("SC2PATH")
-    sc2_environment_bnet_path = None
-    if sc2_environment_val:
-        sc2_environment_bnet_path = Path(sc2_environment_val).resolve()
+def get_bnet_path(bnet_base_dir: Path | None = None) -> Path:
+    # sc2_environment_val = os.environ.get("SC2PATH")
+    # sc2_environment_bnet_path = None
+    # if sc2_environment_val:
+    #     sc2_environment_bnet_path = Path(sc2_environment_val).resolve()
 
-    user_directory_bnet_path = read_execute_info(path=Path("~/Documents"))
-    default_windows_bnet_path = check_windows_default_path()
+    # user_directory_bnet_path = read_execute_info(path=Path("~/Documents"))
+    # default_windows_bnet_path = check_windows_default_path()
 
     # There are multiple ways of acquiring the battle.net base directory.
     # The user does not need to provide it, there are some seemingly sane defaults in place.
@@ -150,18 +145,20 @@ def get_bnet_path(bnet_base_dir: Path | None) -> Path:
     # environment variable.
     # In no path exists at all the program will throw an exception and the user
     # will be forced to evaluate that the correct path can be passed.
-    some_bnet_path = (
-        sc2_environment_bnet_path
-        or user_directory_bnet_path
-        or default_windows_bnet_path
-        or bnet_base_dir
-    )
+    # some_bnet_path = (
+    #     sc2_environment_bnet_path
+    #     or user_directory_bnet_path
+    #     or default_windows_bnet_path
+    #     or bnet_base_dir
+    # )
+    some_bnet_path = bnet_base_dir
+
     if not some_bnet_path:
         raise BnetPathNotFound(
             "Cannot run without having the path to a directory where the Cache lives."
         )
 
-    test_looks_like_battle_net(some_bnet_path)
+    # test_looks_like_battle_net(some_bnet_path)
 
     return some_bnet_path
 

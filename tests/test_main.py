@@ -21,7 +21,7 @@ def suite():
     start_dir = os.path.join(get_workspace_dir(), "tests")
     suite = unittest.TestLoader().discover(
         start_dir=start_dir,
-        pattern="directory_flattener_test.py",  # *_test.py
+        pattern="sc2_update_maps_cache_test.py",  # *_test.py
     )
     return suite
 

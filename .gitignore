@@ -6,6 +6,7 @@ maps/
 profiler/
 
 *.SC2Replay
+*.s2ma
 *.SC2Map
 *.zip
 
