@@ -47,13 +47,17 @@ def place_dependency_in_cache(
     map_hash = map_filepath.stem
     file_extension = map_filepath.suffix
 
-    cache_map_filepath = Path(
-        bnet_base_dir,
-        "Cache",
-        map_hash[0:2],
-        map_hash[2:4],
-        f"{map_hash}.{file_extension}",
-    ).resolve()
+    cache_map_filepath = (
+        Path(
+            bnet_base_dir,
+            "Cache",
+            map_hash[0:2],
+            map_hash[2:4],
+            f"{map_hash}",
+        )
+        .with_suffix(file_extension)
+        .resolve()
+    )
 
     if cache_map_filepath.exists():
         logging.info(
