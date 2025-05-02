@@ -12,6 +12,11 @@ from datasetpreparator.sc2.sc2egset_replaypack_processor.utils.download_maps imp
 )
 
 
+class BnetPathNotFound(Exception):
+    def __init__(self, *args):
+        super().__init__(*args)
+
+
 def place_dependency_in_cache(
     bnet_base_dir: Path,
     map_filepath: Path,
