@@ -37,6 +37,7 @@ class SC2UpdateMapsCacheTest(unittest.TestCase):
         # Create example .s2ma files:
         create_test_text_files(
             input_path=cls.test_input_dir,
+            n_files=0,
             filenames=cls.example_map_filenames,
             extension=".s2ma",
         )

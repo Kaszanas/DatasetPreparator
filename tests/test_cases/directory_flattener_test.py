@@ -41,12 +41,14 @@ class DirectoryFlattenerTest(unittest.TestCase):
             create_test_text_files(
                 input_path=directory,
                 n_files=cls.n_nested_files,
+                filenames=[],
                 extension=cls.file_extension,
             )
             # Create additional files that should not be present in the output:
             create_test_text_files(
                 input_path=directory,
                 n_files=cls.n_out_of_distribution_files,
+                filenames=[],
                 extension=".txt",
             )
 
