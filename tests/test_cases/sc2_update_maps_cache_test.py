@@ -3,6 +3,7 @@ from pathlib import Path
 import unittest
 
 from datasetpreparator.sc2.sc2_update_maps_cache.sc2_update_maps_cache import (
+    BnetCacheNotFound,
     BnetPathNotFound,
     place_dependency_in_cache,
     get_bnet_path,
@@ -11,7 +12,6 @@ from tests.test_utils import (
     create_script_test_input_dir,
     create_script_test_output_dir,
     create_test_text_files,
-    delete_script_test_dir,
 )
 
 # NOTE: This test can only be ran from within Docker!
@@ -49,15 +49,22 @@ class SC2UpdateMapsCacheTest(unittest.TestCase):
 
         # Variables for tests that only acquire the Battle.net path:
         cls.SCRIPT_NAME_GET_BNET_MISSING_BNET = "sc2_update_maps_cache/get_bnet"
+        cls.bnet_base_path_no_bnet_dir = create_script_test_output_dir(
+            script_name=cls.SCRIPT_NAME_GET_BNET_MISSING_BNET
+        )
+
         cls.SCRIPT_NAME_GET_BNET_MISSING_CACHE = (
             "sc2_update_maps_cache/get_bnet/Battle.net"
         )
-        cls.get_bnet_test_output_dir = create_script_test_output_dir(
-            script_name=cls.SCRIPT_NAME_GET_BNET
+        cls.bnet_base_path_missing_cache = create_script_test_input_dir(
+            script_name=cls.SCRIPT_NAME_GET_BNET_MISSING_CACHE
         )
 
         cls.SCRIPT_NAME_GET_BNET_CORRECT = (
             "sc2_update_maps_cache/get_bnet/Battle.net/Cache"
+        )
+        cls.bnet_base_path_correct = create_script_test_input_dir(
+            script_name=cls.SCRIPT_NAME_GET_BNET_CORRECT
         )
 
     # REVIEW: What more could be added here to see if the maps were copied correctly?
@@ -93,33 +100,26 @@ class SC2UpdateMapsCacheTest(unittest.TestCase):
         # )
         pass
 
+    def test_get_bnet_path_user_correct(self):
+        bnet_path = get_bnet_path(bnet_base_dir=self.bnet_base_path_correct)
+        self.assertIsInstance(bnet_path, Path)
+
+    def test_get_bnet_path_user_incorrect(self):
+        # Incorrect example the user passed the directory which does not end with "Battle.net"
+        with self.assertRaises(BnetPathNotFound):
+            _ = get_bnet_path(bnet_base_dir=self.bnet_base_path_no_bnet_dir)
+
     def test_get_bnet_path_user_missing_cache_dir(self):
         # By default any directory that is named "Battle.net" will be fine here.
         # The assumption is that the user can pass the right directory to the program.
         # Otherwise the automatically inferred path should be correct.
         # There is a hidden test abstracted out in the function below:
-        with self.assertRaises(BnetPathNotFound):
-            bnet_path = get_bnet_path(
-                bnet_base_dir=self.SCRIPT_NAME_GET_BNET_MISSING_CACHE
-            )
-            self.assertIsInstance(bnet_path, Path)
-
-    def test_get_bnet_path_user_correct(self):
-        create_script_test_input_dir(script_name=self.SCRIPT_NAME_GET_BNET_CORRECT)
-
-        bnet_path = get_bnet_path(bnet_base_dir=self.SCRIPT_NAME_GET_BNET_MISSING_CACHE)
-        self.assertIsInstance(bnet_path, Path)
-
-        delete_script_test_dir(script_name=self.SCRIPT_NAME_GET_BNET_CORRECT)
-
-    def test_get_bnet_path_user_incorrect(self):
-        # Incorrect example the user passed the directory which does not end with "Battle.net"
-        with self.assertRaises(BnetPathNotFound):
-            _ = get_bnet_path(bnet_base_dir=self.SCRIPT_NAME_GET_BNET_MISSING_BNET)
+        with self.assertRaises(BnetCacheNotFound):
+            _ = get_bnet_path(bnet_base_dir=self.bnet_base_path_missing_cache)
 
     def test_get_bnet_path_env_correct(self):
         # Setting the environment variable to be the correct path:
-        os.environ[self.BNET_SC2_ENV_KEY] = self.test_output_dir
+        os.environ[self.BNET_SC2_ENV_KEY] = str(self.bnet_base_path_correct)
         bnet_path = get_bnet_path()
 
         self.assertIsInstance(bnet_path, Path)
