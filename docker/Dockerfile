@@ -62,6 +62,7 @@ COPY /src/datasetpreparator/directory_flattener/directory_flattener.py \
     /src/datasetpreparator/sc2/sc2egset_replaypack_processor/sc2egset_replaypack_processor.py \
     /src/datasetpreparator/sc2/sc2egset_replaypack_processor/sc2egset_pipeline.py \
     /src/datasetpreparator/sc2/sc2reset_replaypack_downloader/sc2reset_replaypack_downloader.py \
+    /src/datasetpreparator/sc2/sc2_update_maps_cache/sc2_update_maps_cache.py \
     /app/
 
 
