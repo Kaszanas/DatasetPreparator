@@ -17,10 +17,15 @@ class BnetPathNotFound(Exception):
         super().__init__(*args)
 
 
+class BnetCacheNotFound(Exception):
+    def __init__(self, *args):
+        super().__init__(*args)
+
+
 def place_dependency_in_cache(
     bnet_base_dir: Path,
     map_filepath: Path,
-) -> None:
+) -> Path:
     """
     Function responsible for copying a matched StarCraft 2 path to its expected
     cache directory within the StarCraft 2 game files.
@@ -31,6 +36,11 @@ def place_dependency_in_cache(
         Path to the battle.net cache directory, where the file will be copied.
     map_filepath : Path
         Path to the map that will be copied.
+
+    Returns
+    -------
+    Path
+        Returns the path to the copied map in the Cache directory.
     """
 
     # SC2InfoExtractor saves maps filenames given by their hash:
@@ -49,10 +59,12 @@ def place_dependency_in_cache(
         logging.info(
             f"The cache entry already exists, skipping: {str(cache_map_filepath)}"
         )
-        return
+        return cache_map_filepath
 
     logging.info(f"No cache entry existed prior, copying {str(cache_map_filepath)}")
     shutil.copy(map_filepath, cache_map_filepath)
+
+    return cache_map_filepath
 
 
 # NOTE: This is Windows only:
@@ -104,10 +116,10 @@ def read_execute_info(path: Path = Path("~/Documents")) -> Path | None:
 
 def test_looks_like_battle_net(bnet_path: Path):
     if bnet_path.name != "Battle.net":
-        raise ValueError(f"Doesn't look like a Battle.net cache: {bnet_path}")
+        raise BnetPathNotFound(f"Doesn't look like a Battle.net cache: {bnet_path}")
     cache_path = (bnet_path / Path("Cache")).resolve()
     if not cache_path.is_dir():
-        raise ValueError("Missing a Cache subdirectory:", bnet_path)
+        raise BnetCacheNotFound("Missing a Cache subdirectory:", bnet_path)
 
 
 def check_windows_default_path() -> Path | None:
@@ -141,7 +153,7 @@ def get_bnet_path(bnet_base_dir: Path | None) -> Path:
         or bnet_base_dir
     )
     if not some_bnet_path:
-        raise Exception(
+        raise BnetPathNotFound(
             "Cannot run without having the path to a directory where the Cache lives."
         )
 
