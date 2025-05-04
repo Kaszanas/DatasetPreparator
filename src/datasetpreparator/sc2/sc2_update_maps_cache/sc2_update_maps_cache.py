@@ -175,8 +175,8 @@ def get_bnet_path(bnet_base_dir: Path | None = None) -> Path:
         resolve_path=True,
         path_type=Path,
     ),
-    help="Path to the directory containing the replays for which the maps should be downloaded and placed in the Battle.net cache.",
-    required=True,
+    help="Specifies if the program should attempt to download the maps/dependencies for replays. If this argument is not provided only the existing maps from the --maps_path will be copied to fill in the cache. Path to the directory containing the replays for which the maps should be downloaded and placed in the Battle.net cache.",
+    required=False,
 )
 @click.option(
     "--maps_path",
@@ -232,11 +232,12 @@ def sc2_update_maps_cache(
 
     # Step 1 Download the maps using SC2ExtractorGo. This process omits downloading
     # any maps that already exist, in theory this should be efficient:
-    sc2infoextractorgo_map_download(
-        input_path=replays_path,
-        maps_directory=maps_path,
-        n_processes=n_processes,
-    )
+    if replays_path:
+        sc2infoextractorgo_map_download(
+            input_path=replays_path,
+            maps_directory=maps_path,
+            n_processes=n_processes,
+        )
 
     # Populate all of the maps to the cache directory.
     all_map_files = list(maps_path.rglob("*.s2ma"))
