@@ -168,13 +168,25 @@ def get_bnet_path(bnet_base_dir: Path | None = None) -> Path:
 )
 @click.option(
     "--replays_path",
-    type=click.Path(exists=True, file_okay=False, dir_okay=True, resolve_path=True),
+    type=click.Path(
+        exists=True,
+        file_okay=False,
+        dir_okay=True,
+        resolve_path=True,
+        path_type=Path,
+    ),
     help="Path to the directory containing the replays for which the maps should be downloaded and placed in the Battle.net cache.",
     required=True,
 )
 @click.option(
     "--maps_path",
-    type=click.Path(exists=True, file_okay=False, dir_okay=True, resolve_path=True),
+    type=click.Path(
+        exists=True,
+        file_okay=False,
+        dir_okay=True,
+        resolve_path=True,
+        path_type=Path,
+    ),
     help="Path to the directory where the StarCraft 2 maps will be downloaded. These files will be moved to the Battle.net cache.",
     required=True,
 )
