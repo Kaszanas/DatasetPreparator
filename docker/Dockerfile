@@ -12,7 +12,8 @@ WORKDIR /app
 # Copying the replay parsing tool:
 # sc2egset_replaypack_processor requires the .exe file to be in the same directory as the script:
 COPY --from=extractor /app/SC2InfoExtractorGo /app/SC2InfoExtractorGo
-COPY --from=extractor /app/maps/ /app//processing/maps/
+COPY --from=extractor /sc2reset_maps_mods/maps/ /app/processing/maps/
+COPY --from=extractor /sc2reset_maps_mods/other_dependencies/ /app/processing/other_dependencies/
 
 # Ensure the executable has the right permissions
 RUN chmod +x /app/SC2InfoExtractorGo
@@ -63,6 +64,7 @@ COPY /src/datasetpreparator/directory_flattener/directory_flattener.py \
     /src/datasetpreparator/sc2/sc2egset_replaypack_processor/sc2egset_pipeline.py \
     /src/datasetpreparator/sc2/sc2reset_replaypack_downloader/sc2reset_replaypack_downloader.py \
     /src/datasetpreparator/sc2/sc2_update_maps_cache/sc2_update_maps_cache.py \
+    /src/datasetpreparator/sc2/sc2_move_maps/sc2_move_maps.py \
     /app/
 
 
