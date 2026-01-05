@@ -65,7 +65,7 @@ The following steps were used to prepare the SC2ReSet and SC2EGSet datasets:
 Each of the scripts has its usage described in their respective `README.md` files, you can find the detailed description of the available tools below.
 
 #### CLI Usage; Generic scripts
-1. [Directory Packager (dir_packager): README](src/datasetpreparator/dir_packager/README.md)
+1. [Directory Packager (dir_packager): README](src/datasetpreparator/directory_packager/README.md)
 2. [Directory Flattener (directory_flattener): README](src/datasetpreparator/directory_flattener/README.md)
 3. [File Renamer (file_renamer): README](src/datasetpreparator/file_renamer/README.md)
 4. [JSON Merger (json_merger): README](src/datasetpreparator/json_merger/README.md)
