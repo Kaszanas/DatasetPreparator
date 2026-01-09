@@ -254,14 +254,18 @@ def main(
     initialize_logging(log=log)
     # This input will be flattened:
     replaypacks_input_path = Path(input_path).resolve()
-    create_directory(directory=replaypacks_input_path, created_warning=True)
+    if create_directory(directory=replaypacks_input_path):
+        logging.error(
+            f"Input path {str(replaypacks_input_path)} was just created. You should fill it with files before proceeding."
+        )
+        return
 
     # Create output directory if it does not exist:
     output_path = Path(output_path).resolve()
-    create_directory(directory=output_path, created_warning=False)
+    create_directory(directory=output_path)
 
     maps_output_path = Path(maps_path).resolve()
-    create_directory(directory=maps_output_path, created_warning=False)
+    create_directory(directory=maps_output_path)
     directory_flattener_output_path = Path(output_path, "directory_flattener").resolve()
 
     # TODO: Recreate the entire pipeline for SC2ReSet and SC2EGSet:

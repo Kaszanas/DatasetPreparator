@@ -89,7 +89,11 @@ def main(
 
     replaypacks_input_path = input_path.resolve()
     logging.info(f"Input path: {str(replaypacks_input_path)}")
-    create_directory(directory=replaypacks_input_path, created_warning=True)
+    if create_directory(directory=replaypacks_input_path):
+        logging.error(
+            f"Input path {str(replaypacks_input_path)} was just created. You should fill it with files before proceeding."
+        )
+        return
 
     output_path = output_path.resolve()
     create_directory(directory=output_path)

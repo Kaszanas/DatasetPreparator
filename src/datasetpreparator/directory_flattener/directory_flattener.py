@@ -401,7 +401,7 @@ def main(
     force_overwrite: bool,
 ) -> None:
     initialize_logging(log=log)
-    create_directory(directory=output_path, created_warning=True)
+    create_directory(directory=output_path)
 
     multiple_directory_flattener(
         input_path=input_path,

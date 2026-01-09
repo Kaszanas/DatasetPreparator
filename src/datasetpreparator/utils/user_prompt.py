@@ -59,7 +59,7 @@ def user_prompt_overwrite_ok(path: Path, force_overwrite: bool) -> bool:
     return user_prompt_overwrite_ok(path, force_overwrite)
 
 
-def create_directory(directory: Path, created_warning: bool = False) -> bool:
+def create_directory(directory: Path) -> bool:
     """
     Creates a directory at the specified path without prompting the user for confirmation.
 
@@ -67,8 +67,6 @@ def create_directory(directory: Path, created_warning: bool = False) -> bool:
     ----------
     directory : Path
         The path where the directory should be created.
-    created_warning : bool
-        If True, displays a warning message when the directory is created.
 
     Returns
     -------
@@ -78,11 +76,5 @@ def create_directory(directory: Path, created_warning: bool = False) -> bool:
 
     if not directory.exists():
         directory.mkdir(parents=True, exist_ok=True)
-        if created_warning:
-            logging.error(
-                f"Directory was created at: {str(directory.resolve())}"
-                "Please fill it with the required files and re-run the tool."
-            )
         return True
-
     return False

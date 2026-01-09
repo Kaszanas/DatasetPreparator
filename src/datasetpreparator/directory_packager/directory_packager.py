@@ -151,7 +151,11 @@ def dir_packager(arguments: DirectoryPackagerArguments) -> Path:
 def main(input_path: Path, log: str, n_threads: int, force_overwrite: bool):
     initialize_logging(log=log)
 
-    create_directory(directory=input_path, created_warning=True)
+    if create_directory(directory=input_path):
+        logging.error(
+            f"Input path {str(input_path)} was just created. You should fill it with files before proceeding."
+        )
+        return
 
     multiple_dir_packager(
         input_path=input_path,

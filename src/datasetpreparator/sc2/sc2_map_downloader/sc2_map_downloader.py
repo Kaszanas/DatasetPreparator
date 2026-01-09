@@ -72,9 +72,12 @@ def sc2_map_downloader(input_path: Path, output_path: Path) -> Path:
     help="Log level. Default is WARN.",
 )
 def main(input_path: Path, output_path: Path, log: str) -> None:
-    input_path = Path(input_path).resolve()
-    create_directory(directory=input_path, created_warning=True)
-    output_path = Path(output_path).resolve()
+    if create_directory(directory=input_path):
+        logging.error(
+            f"Input path {str(input_path)} was just created. You should fill it with files before proceeding."
+        )
+        return
+
     create_directory(directory=output_path)
 
     initialize_logging(log=log)

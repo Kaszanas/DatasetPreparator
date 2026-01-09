@@ -224,7 +224,11 @@ def sc2_update_maps_cache(
 ) -> None:
     initialize_logging(log=log)
 
-    create_directory(directory=replays_path, created_warning=True)
+    if create_directory(directory=replays_path):
+        logging.warning(
+            f"The replays path {str(replays_path)} was just created. You should fill it with files before proceeding."
+        )
+        return
 
     # Step 0 Check if the Battle.net directory was passed, and if not try to detect it automatically:
     bnet_path = get_bnet_path(bnet_base_dir=bnet_base_dir)

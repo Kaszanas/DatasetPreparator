@@ -1,3 +1,4 @@
+import logging
 import shutil
 from pathlib import Path
 
@@ -78,8 +79,13 @@ def processed_mapping_copier(input_path: Path, output_path: Path) -> None:
 )
 def main(input_path: Path, output_path: Path, log: str) -> None:
     initialize_logging(log=log)
+    if create_directory(directory=input_path):
+        logging.error(
+            f"Input path {str(input_path)} was just created. It should be filled with files before proceeding."
+        )
+        return
 
-    create_directory(directory=output_path, created_warning=True)
+    create_directory(directory=output_path)
 
     processed_mapping_copier(input_path=input_path, output_path=output_path)
 
