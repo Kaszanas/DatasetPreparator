@@ -122,10 +122,10 @@ def directory_flatten(
         new_path_and_filename = Path(dir_output_path, unique_filename).with_suffix(
             original_extension
         )
-        logging.debug(f"New path and filename! {new_path_and_filename.as_posix()}")
+        logging.debug(f"New path and filename! {str(new_path_and_filename)}")
 
         current_file = Path(root_directory, file).resolve()
-        logging.debug(f"Current file: {current_file.as_posix()}")
+        logging.debug(f"Current file: {str(current_file)}")
 
         # Copying files:
         if not current_file.exists():
@@ -133,12 +133,10 @@ def directory_flatten(
             continue
 
         shutil.copy(current_file, new_path_and_filename)
-        logging.debug(f"File copied to {new_path_and_filename.as_posix()}")
+        logging.debug(f"File copied to {str(new_path_and_filename)}")
 
         # Finding the relative path from the root directory to the file:
-        dir_structure_mapping[new_path_and_filename.name] = (
-            root_dir_name_and_file.as_posix()
-        )
+        dir_structure_mapping[new_path_and_filename.name] = str(root_dir_name_and_file)
 
     return dir_structure_mapping
 

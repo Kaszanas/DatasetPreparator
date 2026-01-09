@@ -1,7 +1,7 @@
 import logging
+import zipfile
 from pathlib import Path
 from typing import List
-import zipfile
 
 
 def unpack_chunk(zip_path: Path, filenames: List[str], output_extract_path: Path):
@@ -41,7 +41,7 @@ def unpack_chunk(zip_path: Path, filenames: List[str], output_extract_path: Path
     with zipfile.ZipFile(zip_path, "r") as zip_file:
         for filename in filenames:
             try:
-                zip_file.extract(filename, output_extract_path.as_posix())
+                zip_file.extract(filename, str(output_extract_path))
             except zipfile.error as e:
                 logging.error(
                     f"zipfile error was raised: {e}",

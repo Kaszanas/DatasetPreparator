@@ -84,7 +84,7 @@ def main(input_path: Path, output_path: Path, log: str) -> None:
         output_path=output_path,
     )
 
-    logging.info(f"Finished downloading maps to: {output_dir.as_posix()}")
+    logging.info(f"Finished downloading maps to: {str(output_dir)}")
 
 
 if __name__ == "__main__":
