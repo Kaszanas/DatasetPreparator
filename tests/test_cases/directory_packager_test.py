@@ -36,7 +36,11 @@ class TestDirPackagerTest(unittest.TestCase):
         cls.n_files = 5
         for directory in nested_dirs:
             # Create multiple files in the directory:
-            create_test_text_files(input_path=directory, n_files=cls.n_files)
+            create_test_text_files(
+                input_path=directory,
+                n_files=cls.n_files,
+                filenames=[],
+            )
 
     def test_multiple_dir_packager(self) -> None:
         archives = multiple_dir_packager(

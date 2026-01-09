@@ -1,9 +1,10 @@
 import logging
+import shutil
 from pathlib import Path
 
-from datasetpreparator.utils.user_prompt import user_prompt_overwrite_ok
 from tqdm import tqdm
-import shutil
+
+from datasetpreparator.utils.user_prompt import user_prompt_overwrite_ok
 
 
 def move_files(
@@ -41,6 +42,11 @@ def move_files(
 
     search_method = input_path.rglob if recursive else input_path.glob
     files = list(search_method(f"*{extension}"))
+    if not files:
+        logging.warning(
+            f"No files with extension {extension} found in {str(input_path)}."
+        )
+        return
 
     logging.info(f"Moving {len(files)} files to {str(output_path)}...")
 

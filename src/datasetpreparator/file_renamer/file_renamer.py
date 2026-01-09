@@ -3,7 +3,8 @@ from pathlib import Path
 
 import click
 
-from datasetpreparator.settings import LOGGING_FORMAT
+from datasetpreparator.utils.logging import initialize_logging
+from datasetpreparator.utils.user_prompt import create_directory
 
 
 def file_renamer(input_path: Path) -> None:
@@ -70,7 +71,7 @@ def file_renamer(input_path: Path) -> None:
 @click.option(
     "--input_path",
     type=click.Path(
-        exists=True,
+        exists=False,
         dir_okay=True,
         file_okay=False,
         resolve_path=True,
@@ -86,10 +87,12 @@ def file_renamer(input_path: Path) -> None:
     help="Log level. Default is WARN.",
 )
 def main(input_path: Path, log: str) -> None:
-    numeric_level = getattr(logging, log.upper(), None)
-    if not isinstance(numeric_level, int):
-        raise ValueError(f"Invalid log level: {numeric_level}")
-    logging.basicConfig(format=LOGGING_FORMAT, level=numeric_level)
+    initialize_logging(log=log)
+
+    if create_directory(directory=input_path):
+        logging.error(
+            f"Input path {str(input_path)} was just created. You should fill it with files before proceeding."
+        )
 
     file_renamer(input_path=input_path)
 

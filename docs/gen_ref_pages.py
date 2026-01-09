@@ -1,6 +1,7 @@
 """Generate the code reference pages and navigation."""
 
 from pathlib import Path
+
 import mkdocs_gen_files
 
 nav = mkdocs_gen_files.Nav()
@@ -21,7 +22,7 @@ for path in sorted(Path(src_path).rglob("*.py")):
     elif parts[-1] == "__main__":
         continue
 
-    nav[parts] = doc_path.as_posix()
+    nav[parts] = str(doc_path)
 
     with mkdocs_gen_files.open(full_doc_path, "w") as fd:
         ident = ".".join(parts)

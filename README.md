@@ -136,7 +136,7 @@ Please see **[CONTRIBUTING.md](https://github.com/Kaszanas/SC2DatasetPreparator/
   month     = {jun},
   year      = {2022},
   publisher = {Zenodo},
-  version   = {1.2.0},
+  version   = {2.0.1},
   doi       = {10.5281/zenodo.5296664},
   url       = {https://doi.org/10.5281/zenodo.5296664}
 }

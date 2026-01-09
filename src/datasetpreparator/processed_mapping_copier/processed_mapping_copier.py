@@ -1,10 +1,11 @@
 import logging
-from pathlib import Path
 import shutil
+from pathlib import Path
 
 import click
 
-from datasetpreparator.settings import LOGGING_FORMAT
+from datasetpreparator.utils.logging import initialize_logging
+from datasetpreparator.utils.user_prompt import create_directory
 
 
 def processed_mapping_copier(input_path: Path, output_path: Path) -> None:
@@ -61,7 +62,7 @@ def processed_mapping_copier(input_path: Path, output_path: Path) -> None:
 @click.option(
     "--output_path",
     type=click.Path(
-        exists=True,
+        exists=False,
         dir_okay=True,
         file_okay=False,
         resolve_path=True,
@@ -77,10 +78,14 @@ def processed_mapping_copier(input_path: Path, output_path: Path) -> None:
     help="Log level. Default is WARN.",
 )
 def main(input_path: Path, output_path: Path, log: str) -> None:
-    numeric_level = getattr(logging, log.upper(), None)
-    if not isinstance(numeric_level, int):
-        raise ValueError(f"Invalid log level: {numeric_level}")
-    logging.basicConfig(format=LOGGING_FORMAT, level=numeric_level)
+    initialize_logging(log=log)
+    if create_directory(directory=input_path):
+        logging.error(
+            f"Input path {str(input_path)} was just created. It should be filled with files before proceeding."
+        )
+        return
+
+    create_directory(directory=output_path)
 
     processed_mapping_copier(input_path=input_path, output_path=output_path)
 

@@ -1,17 +1,19 @@
-from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import json
 import logging
 import shutil
+from concurrent.futures import ThreadPoolExecutor
 from multiprocessing import freeze_support
 from pathlib import Path
-from typing import Dict, List, Tuple
 
 import click
 from tqdm import tqdm
 
-from datasetpreparator.settings import LOGGING_FORMAT
-from datasetpreparator.utils.user_prompt import user_prompt_overwrite_ok
+from datasetpreparator.utils.logging import initialize_logging
+from datasetpreparator.utils.user_prompt import (
+    create_directory,
+    user_prompt_overwrite_ok,
+)
 
 
 class MultiprocessFlattenArguments:
@@ -19,7 +21,7 @@ class MultiprocessFlattenArguments:
         self,
         dir_output_path: Path,
         maybe_dir: Path,
-        files_with_extension: List[Path],
+        files_with_extension: list[Path],
     ):
         self.dir_output_path = dir_output_path
         self.maybe_dir = maybe_dir
@@ -31,7 +33,7 @@ class DirectoryCreationArguments:
         self,
         dir_output_path: Path,
         maybe_dir: Path,
-        files_with_extension: List[Path],
+        files_with_extension: list[Path],
         force_overwrite: bool,
     ):
         self.dir_output_path = dir_output_path
@@ -84,23 +86,23 @@ def calculate_file_hash(file_path: Path) -> str:
 
 def directory_flatten(
     root_directory: Path,
-    list_of_files: List[Path],
+    list_of_files: list[Path],
     dir_output_path: Path,
-) -> Dict[str, str]:
+) -> dict[str, str]:
     """
     Flattens a single directory and copies the contents
     to the specified output directory.
 
     Parameters
     ----------
-    list_of_files : List[Path]
-        List of files which were detected to be moved.
+    list_of_files : list[Path]
+        list of files which were detected to be moved.
     dir_output_path : Path
         Path to the output directory where the files will be copied.
 
     Returns
     -------
-    Dict[str, str]
+    dict[str, str]
         Returns a directory mapping from the current unique filename
         to the previous path relative to the root of the not-flattened directory.
     """
@@ -122,10 +124,10 @@ def directory_flatten(
         new_path_and_filename = Path(dir_output_path, unique_filename).with_suffix(
             original_extension
         )
-        logging.debug(f"New path and filename! {new_path_and_filename.as_posix()}")
+        logging.debug(f"New path and filename! {str(new_path_and_filename)}")
 
         current_file = Path(root_directory, file).resolve()
-        logging.debug(f"Current file: {current_file.as_posix()}")
+        logging.debug(f"Current file: {str(current_file)}")
 
         # Copying files:
         if not current_file.exists():
@@ -133,33 +135,31 @@ def directory_flatten(
             continue
 
         shutil.copy(current_file, new_path_and_filename)
-        logging.debug(f"File copied to {new_path_and_filename.as_posix()}")
+        logging.debug(f"File copied to {str(new_path_and_filename)}")
 
         # Finding the relative path from the root directory to the file:
-        dir_structure_mapping[
-            new_path_and_filename.name
-        ] = root_dir_name_and_file.as_posix()
+        dir_structure_mapping[new_path_and_filename.name] = str(root_dir_name_and_file)
 
     return dir_structure_mapping
 
 
 def multiprocess_directory_flattener(
-    directories_to_process: List[MultiprocessFlattenArguments],
+    directories_to_process: list[MultiprocessFlattenArguments],
     n_processes: int,
-) -> List[Path]:
+) -> list[Path]:
     """
     Multiprocesses the directory flattening.
 
     Parameters
     ----------
-    directories_to_process : List[MultiprocessFlattenArguments]
-        List of the arguments corresponding to the directories that will be processed.
+    directories_to_process : list[MultiprocessFlattenArguments]
+        list of the arguments corresponding to the directories that will be processed.
     n_processes : int
         Number of processes that will be spawned.
 
     Returns
     -------
-    List[Path]
+    list[Path]
         Returns a list of paths to the output directories.
     """
 
@@ -245,7 +245,7 @@ def multiple_directory_flattener(
     file_extension: str,
     n_threads: int,
     force_overwrite: bool,
-) -> Tuple[bool, List[Path]]:
+) -> tuple[bool, list[Path]]:
     """
     Provides the main logic for "directory flattening".
     Iterates all of the directories found in the input path, and
@@ -274,7 +274,7 @@ def multiple_directory_flattener(
 
     Returns
     -------
-    Tuple[bool, List[Path]]
+    tuple[bool, list[Path]]
         Returns a tuple where the first element signifies if the processing was ok,
         and a list of paths to the output directories which were flattened.
     """
@@ -344,7 +344,7 @@ def multiple_directory_flattener(
 @click.option(
     "--input_path",
     type=click.Path(
-        exists=True,
+        exists=False,
         dir_okay=True,
         file_okay=False,
         resolve_path=True,
@@ -400,10 +400,8 @@ def main(
     log: str,
     force_overwrite: bool,
 ) -> None:
-    numeric_level = getattr(logging, log.upper(), None)
-    if not isinstance(numeric_level, int):
-        raise ValueError(f"Invalid log level: {numeric_level}")
-    logging.basicConfig(format=LOGGING_FORMAT, level=numeric_level)
+    initialize_logging(log=log)
+    create_directory(directory=output_path)
 
     multiple_directory_flattener(
         input_path=input_path,

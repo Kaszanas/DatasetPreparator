@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import List, Tuple
+
 import click
 
 from datasetpreparator.sc2.sc2reset_replaypack_downloader.available_replaypacks import (
@@ -12,15 +12,15 @@ from datasetpreparator.sc2.sc2reset_replaypack_downloader.utils.download_replayp
 from datasetpreparator.sc2.sc2reset_replaypack_downloader.utils.unpack_zipfile import (
     unpack_zipfile,
 )
-
-from datasetpreparator.settings import LOGGING_FORMAT
+from datasetpreparator.utils.logging import initialize_logging
+from datasetpreparator.utils.user_prompt import create_directory
 
 
 def sc2reset_replaypack_downloader(
     download_path: Path,
     unpack_path: Path,
     n_workers: int,
-    replaypack_list: List[Tuple[str, str, str]] = SC2RESET_REPLAYPACKS,
+    replaypack_list: list[tuple[str, str, str]] = SC2RESET_REPLAYPACKS,
 ) -> None:
     """
     Downloads and unpacks SC2ReSet: StarCraft II Esport Replaypack Set
@@ -36,7 +36,7 @@ def sc2reset_replaypack_downloader(
         Specifies the path to which the archives will be unpacked.
     n_workers : int
         Specifies the number of workers used for extracting the .zip archives.
-    replaypack_list : List[Tuple[str, str, str]]
+    replaypack_list : list[tuple[str, str, str]]
         Specifies the list of replaypacks to be downloaded. By default each of
         the tuples is (replaypack_name, replaypack_url, archive_md5).
     """
@@ -48,7 +48,7 @@ def sc2reset_replaypack_downloader(
         return
 
     # Download replaypacks:
-    downloaded_paths: List[Tuple[str, str]] = []
+    downloaded_paths: list[tuple[str, str]] = []
     for replaypack_name, replaypack_url, file_md5 in replaypack_list:
         downloaded_replaypack_path, ok = download_replaypack(
             destination_dir=download_path,
@@ -116,14 +116,16 @@ def sc2reset_replaypack_downloader(
     help="Log level. Default is WARN.",
 )
 def main(download_path: Path, unpack_path: Path, n_workers: int, log: str) -> None:
-    numeric_level = getattr(logging, log.upper(), None)
-    if not isinstance(numeric_level, int):
-        raise ValueError(f"Invalid log level: {numeric_level}")
-    logging.basicConfig(format=LOGGING_FORMAT, level=numeric_level)
+    initialize_logging(log=log)
+
+    download_path = download_path.resolve()
+    create_directory(directory=download_path)
+    unpack_path = unpack_path.resolve()
+    create_directory(directory=unpack_path)
 
     sc2reset_replaypack_downloader(
-        download_path=download_path.resolve(),
-        unpack_path=unpack_path.resolve(),
+        download_path=download_path,
+        unpack_path=unpack_path,
         n_workers=n_workers,
     )
 

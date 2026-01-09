@@ -2,15 +2,17 @@ import logging
 from concurrent.futures import ThreadPoolExecutor
 from multiprocessing import freeze_support
 from pathlib import Path
-from typing import List
 from zipfile import ZIP_BZIP2, ZipFile
 
 import click
 from tqdm import tqdm
 from tqdm.contrib.logging import logging_redirect_tqdm
 
-from datasetpreparator.settings import LOGGING_FORMAT
-from datasetpreparator.utils.user_prompt import user_prompt_overwrite_ok
+from datasetpreparator.utils.logging import initialize_logging
+from datasetpreparator.utils.user_prompt import (
+    create_directory,
+    user_prompt_overwrite_ok,
+)
 
 
 class DirectoryPackagerArguments:
@@ -23,7 +25,7 @@ def multiple_dir_packager(
     input_path: Path,
     n_threads: int,
     force_overwrite: bool,
-) -> List[Path]:
+) -> list[Path]:
     """
     Packages the specified directory into a .zip archive.
 
@@ -39,13 +41,17 @@ def multiple_dir_packager(
 
     Returns
     -------
-    List[Path]
+    list[Path]
         Returns a list of Paths to packaged archives.
     """
 
     dirs_to_package = []
 
     directory_contents = list(input_path.iterdir())
+    if not directory_contents:
+        logging.error(f"The input path {str(input_path)} is empty!")
+        return []
+
     for directory in directory_contents:
         logging.debug(f"Processing directory: {str(directory)}")
 
@@ -117,7 +123,7 @@ def dir_packager(arguments: DirectoryPackagerArguments) -> Path:
 @click.option(
     "--input_path",
     type=click.Path(
-        exists=True,
+        exists=False,
         dir_okay=True,
         file_okay=False,
         resolve_path=True,
@@ -147,10 +153,13 @@ def dir_packager(arguments: DirectoryPackagerArguments) -> Path:
     help="Log level. Default is WARN.",
 )
 def main(input_path: Path, log: str, n_threads: int, force_overwrite: bool):
-    numeric_level = getattr(logging, log.upper(), None)
-    if not isinstance(numeric_level, int):
-        raise ValueError(f"Invalid log level: {numeric_level}")
-    logging.basicConfig(format=LOGGING_FORMAT, level=numeric_level)
+    initialize_logging(log=log)
+
+    if create_directory(directory=input_path):
+        logging.error(
+            f"Input path {str(input_path)} was just created. You should fill it with files before proceeding."
+        )
+        return
 
     multiple_dir_packager(
         input_path=input_path,
