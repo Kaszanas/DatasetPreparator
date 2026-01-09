@@ -48,6 +48,10 @@ def multiple_dir_packager(
     dirs_to_package = []
 
     directory_contents = list(input_path.iterdir())
+    if not directory_contents:
+        logging.error(f"The input path {str(input_path)} is empty!")
+        return []
+
     for directory in directory_contents:
         logging.debug(f"Processing directory: {str(directory)}")
 
