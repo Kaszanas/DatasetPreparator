@@ -264,7 +264,10 @@ def create_nested_test_directories(input_path: Path, n_dirs: int) -> List[Path]:
 
 
 def create_test_text_files(
-    input_path: Path, n_files: int, extension: str = ".SC2Replay"
+    input_path: Path,
+    n_files: int,
+    filenames: List[str],
+    extension: str = ".SC2Replay",
 ):
     """
     Creates example text files with a specified extension.
@@ -274,17 +277,32 @@ def create_test_text_files(
     input_path : Path
         Specifies the input path where the test files will be created.
     n_files : int
-        Number of files which will be created.
+        Number of files which will be created. If a list of filenames is passed
+        this argument is not used.
+    filenames : List[str]
+        List of filenames to use.
     extension : str
         Extension which will be used to create the test files.
     """
 
-    for i in range(n_files):
-        example_file = Path(input_path, f"example_file_{i}").with_suffix(extension)
+    # Filenames were not passed so we can create n_files:
+    if not filenames:
+        for i in range(n_files):
+            example_file = Path(input_path, f"example_file_{i}").with_suffix(extension)
+            create_file(filepath=example_file)
 
-        if not example_file.exists():
-            with example_file.open(mode="w", encoding="utf-8") as ef:
-                ef.write(f"Example Content {i}")
+    # User passed the filenames so we create them from the list
+    for filename in filenames:
+        filepath = Path(input_path, filename).with_suffix(extension)
+        create_file(filepath=filepath)
+
+
+def create_file(filepath: Path) -> Path:
+    if not filepath.exists():
+        with filepath.open(mode="w", encoding="utf-8") as ef:
+            ef.write("Example Content")
+
+    return filepath
 
 
 def create_test_json_files(

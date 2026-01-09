@@ -209,6 +209,19 @@ package_sc2egset_dataset_dev: ## Packages the SC2EGSet dataset using the devcont
 		python3 directory_packager.py \
 		--input_path ./processing/output/sc2egset_replaypack_processor
 
+.PHONY: sc2_update_maps_cache
+sc2_update_maps_cache: ## Updates the maps cache using the SC2InfoExtractorGo tool.
+	@echo "Updating the maps cache."
+	@make docker_build_devcontainer
+	@echo "Using the dev branch Docker image: $(DEVCONTAINER)"
+	docker run --rm \
+		-v ".\processing:/app/processing" \
+		$(DEVCONTAINER) \
+		python3 sc2_update_maps_cache.py \
+		--replays_path ./processing/input/directory_flattener \
+		--maps_path ./processing/maps \
+		--n_processes 12 \
+
 
 ###################
 #### LOCAL ########

@@ -136,9 +136,9 @@ def directory_flatten(
         logging.debug(f"File copied to {new_path_and_filename.as_posix()}")
 
         # Finding the relative path from the root directory to the file:
-        dir_structure_mapping[
-            new_path_and_filename.name
-        ] = root_dir_name_and_file.as_posix()
+        dir_structure_mapping[new_path_and_filename.name] = (
+            root_dir_name_and_file.as_posix()
+        )
 
     return dir_structure_mapping
 
