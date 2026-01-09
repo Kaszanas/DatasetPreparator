@@ -1,10 +1,10 @@
 from pathlib import Path
 from typing import Tuple
 
-from datasetpreparator.sc2.sc2reset_replaypack_downloader.utils.get_md5 import get_md5
 from datasetpreparator.sc2.sc2reset_replaypack_downloader.utils.download_file import (
     download_file,
 )
+from datasetpreparator.sc2.sc2reset_replaypack_downloader.utils.get_md5 import get_md5
 
 
 def download_replaypack(
@@ -78,11 +78,9 @@ def download_replaypack(
         if md5_checksum == replaypack_md5:
             return download_filepath, True
 
-    if not destination_dir.exists():
-        destination_dir.mkdir()
-
     downloaded_replaypach_archive = download_file(
-        file_url=replaypack_url, download_filepath=download_filepath
+        file_url=replaypack_url,
+        download_filepath=download_filepath,
     )
 
     md5_checksum = get_md5(file=download_filepath)

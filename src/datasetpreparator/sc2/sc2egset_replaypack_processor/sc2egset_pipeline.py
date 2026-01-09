@@ -28,7 +28,10 @@ from datasetpreparator.sc2.sc2egset_replaypack_processor.utils.replaypack_proces
     ReplaypackProcessorArguments,
 )
 from datasetpreparator.utils.logging import initialize_logging
-from datasetpreparator.utils.user_prompt import user_prompt_overwrite_ok
+from datasetpreparator.utils.user_prompt import (
+    create_directory,
+    user_prompt_overwrite_ok,
+)
 
 
 def prepare_sc2reset(
@@ -249,14 +252,14 @@ def main(
     log: str,
 ) -> None:
     initialize_logging(log=log)
-
-    # Create output directory if it does not exist:
-    if user_prompt_overwrite_ok(path=output_path, force_overwrite=force_overwrite):
-        output_path.mkdir(exist_ok=True)
-
     # This input will be flattened:
     replaypacks_input_path = Path(input_path).resolve()
+    create_directory(directory=replaypacks_input_path, without_warning=False)
+
+    # Create output directory if it does not exist:
     output_path = Path(output_path).resolve()
+    if user_prompt_overwrite_ok(path=output_path, force_overwrite=force_overwrite):
+        output_path.mkdir(exist_ok=True, parents=True)
 
     maps_output_path = Path(maps_path).resolve()
     directory_flattener_output_path = Path(output_path, "directory_flattener").resolve()

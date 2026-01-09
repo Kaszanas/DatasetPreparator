@@ -1,18 +1,21 @@
-from concurrent.futures import ProcessPoolExecutor
 import math
+import zipfile
+from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 from typing import List
-import zipfile
+
+import tqdm
 
 from datasetpreparator.sc2.sc2reset_replaypack_downloader.utils.unpack_chunk import (
     unpack_chunk,
 )
 
-import tqdm
-
 
 def unpack_zipfile(
-    destination_dir: Path, destination_subdir: Path, zip_path: Path, n_workers: int
+    destination_dir: Path,
+    destination_subdir: Path,
+    zip_path: Path,
+    n_workers: int,
 ) -> str:
     """
     Helper function that unpacks the content of .zip archive.

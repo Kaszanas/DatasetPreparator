@@ -14,6 +14,7 @@ from datasetpreparator.sc2.sc2reset_replaypack_downloader.utils.unpack_zipfile i
     unpack_zipfile,
 )
 from datasetpreparator.utils.logging import initialize_logging
+from datasetpreparator.utils.user_prompt import create_directory
 
 
 def sc2reset_replaypack_downloader(
@@ -118,9 +119,14 @@ def sc2reset_replaypack_downloader(
 def main(download_path: Path, unpack_path: Path, n_workers: int, log: str) -> None:
     initialize_logging(log=log)
 
+    download_path = download_path.resolve()
+    create_directory(directory=download_path)
+    unpack_path = unpack_path.resolve()
+    create_directory(directory=unpack_path)
+
     sc2reset_replaypack_downloader(
-        download_path=download_path.resolve(),
-        unpack_path=unpack_path.resolve(),
+        download_path=download_path,
+        unpack_path=unpack_path,
         n_workers=n_workers,
     )
 

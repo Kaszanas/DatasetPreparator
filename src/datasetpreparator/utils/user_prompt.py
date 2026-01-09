@@ -59,23 +59,30 @@ def user_prompt_overwrite_ok(path: Path, force_overwrite: bool) -> bool:
     return user_prompt_overwrite_ok(path, force_overwrite)
 
 
-def create_directory(directory: Path, force_overwrite: bool) -> None:
+def create_directory(directory: Path, without_warning: bool = True) -> bool:
     """
-    Creates a directory at the specified path, prompting the user for confirmation if the
-    directory already exists and may be overwritten.
+    Creates a directory at the specified path without prompting the user for confirmation.
 
     Parameters
     ----------
     directory : Path
         The path where the directory should be created.
-    force_overwrite : bool
-        Flag that specifies if the user wants to overwrite the directory without being prompted.
+    without_warning : bool
+        If True, suppresses the warning message when the directory is created.
+
+    Returns
+    -------
+    bool
+        Returns True if the directory was created, False if it already existed.
     """
 
-    if user_prompt_overwrite_ok(path=directory, force_overwrite=force_overwrite):
+    if not directory.exists():
         directory.mkdir(parents=True, exist_ok=True)
-        logging.error(
-            f"Directory was created at: {str(directory.resolve())}"
-            "Please fill it with the required files and re-run the tool."
-        )
-        return
+        if not without_warning:
+            logging.error(
+                f"Directory was created at: {str(directory.resolve())}"
+                "Please fill it with the required files and re-run the tool."
+            )
+        return True
+
+    return False
