@@ -9,7 +9,7 @@ import click
 from tqdm import tqdm
 from tqdm.contrib.logging import logging_redirect_tqdm
 
-from datasetpreparator.settings import LOGGING_FORMAT
+from datasetpreparator.utils.logging import initialize_logging
 from datasetpreparator.utils.user_prompt import user_prompt_overwrite_ok
 
 
@@ -147,10 +147,7 @@ def dir_packager(arguments: DirectoryPackagerArguments) -> Path:
     help="Log level. Default is WARN.",
 )
 def main(input_path: Path, log: str, n_threads: int, force_overwrite: bool):
-    numeric_level = getattr(logging, log.upper(), None)
-    if not isinstance(numeric_level, int):
-        raise ValueError(f"Invalid log level: {numeric_level}")
-    logging.basicConfig(format=LOGGING_FORMAT, level=numeric_level)
+    initialize_logging(log=log)
 
     multiple_dir_packager(
         input_path=input_path,

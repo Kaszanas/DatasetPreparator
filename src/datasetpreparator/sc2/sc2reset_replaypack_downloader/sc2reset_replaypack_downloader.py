@@ -1,6 +1,7 @@
 import logging
 from pathlib import Path
 from typing import List, Tuple
+
 import click
 
 from datasetpreparator.sc2.sc2reset_replaypack_downloader.available_replaypacks import (
@@ -12,8 +13,8 @@ from datasetpreparator.sc2.sc2reset_replaypack_downloader.utils.download_replayp
 from datasetpreparator.sc2.sc2reset_replaypack_downloader.utils.unpack_zipfile import (
     unpack_zipfile,
 )
-
-from datasetpreparator.settings import LOGGING_FORMAT
+from datasetpreparator.utils.logging import initialize_logging
+from datasetpreparator.utils.user_prompt import create_directory
 
 
 def sc2reset_replaypack_downloader(
@@ -116,14 +117,16 @@ def sc2reset_replaypack_downloader(
     help="Log level. Default is WARN.",
 )
 def main(download_path: Path, unpack_path: Path, n_workers: int, log: str) -> None:
-    numeric_level = getattr(logging, log.upper(), None)
-    if not isinstance(numeric_level, int):
-        raise ValueError(f"Invalid log level: {numeric_level}")
-    logging.basicConfig(format=LOGGING_FORMAT, level=numeric_level)
+    initialize_logging(log=log)
+
+    download_path = download_path.resolve()
+    create_directory(directory=download_path)
+    unpack_path = unpack_path.resolve()
+    create_directory(directory=unpack_path)
 
     sc2reset_replaypack_downloader(
-        download_path=download_path.resolve(),
-        unpack_path=unpack_path.resolve(),
+        download_path=download_path,
+        unpack_path=unpack_path,
         n_workers=n_workers,
     )
 

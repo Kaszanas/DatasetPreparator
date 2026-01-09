@@ -12,8 +12,10 @@ from datasetpreparator.sc2.sc2egset_replaypack_processor.utils.multiprocess impo
 from datasetpreparator.sc2.sc2egset_replaypack_processor.utils.replaypack_processor_args import (
     ReplaypackProcessorArguments,
 )
-from datasetpreparator.settings import LOGGING_FORMAT
-from datasetpreparator.utils.user_prompt import user_prompt_overwrite_ok
+from datasetpreparator.utils.logging import initialize_logging
+from datasetpreparator.utils.user_prompt import (
+    create_directory,
+)
 
 
 @click.command(
@@ -82,23 +84,19 @@ def main(
     force_overwrite: bool,
     log: str,
 ) -> None:
-    numeric_level = getattr(logging, log.upper(), None)
-    if not isinstance(numeric_level, int):
-        raise ValueError(f"Invalid log level: {numeric_level}")
-    logging.basicConfig(format=LOGGING_FORMAT, level=numeric_level)
+    initialize_logging(log=log)
 
     replaypacks_input_path = input_path.resolve()
     logging.info(f"Input path: {str(replaypacks_input_path)}")
+    create_directory(directory=replaypacks_input_path, created_warning=False)
+
     output_path = output_path.resolve()
     logging.info(f"Output path: {str(output_path)}")
     maps_path = maps_path.resolve()
     logging.info(f"Maps path: {str(maps_path)}")
-    if user_prompt_overwrite_ok(path=maps_path, force_overwrite=force_overwrite):
-        maps_path.mkdir(exist_ok=True)
-
+    create_directory(directory=maps_path)
     # Create output directory if it does not exist:
-    if user_prompt_overwrite_ok(path=output_path, force_overwrite=force_overwrite):
-        output_path.mkdir(exist_ok=True)
+    create_directory(directory=output_path)
 
     # Pre-processing, downloading maps and flattening directories:
     logging.info("Downloading maps...")

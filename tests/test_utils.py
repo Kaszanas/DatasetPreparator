@@ -4,7 +4,6 @@ import shutil
 from pathlib import Path
 from typing import List
 
-
 from tests.test_settings import TEST_DIR_NAME, TEST_FILES_NAME, TEST_WORKSPACE
 
 
@@ -66,10 +65,10 @@ def delete_script_test_dir(script_name: str) -> None:
     script_test_dir = get_script_test_dir(script_name=script_name)
 
     if not script_test_dir.exists():
-        logging.info(f"Did not detect {script_test_dir.as_posix()} to exist")
+        logging.info(f"Did not detect {str(script_test_dir)} to exist")
         return
 
-    shutil.rmtree(script_test_dir.as_posix())
+    shutil.rmtree(str(script_test_dir))
 
 
 def create_script_test_input_dir(script_name: str) -> Path:
@@ -136,7 +135,7 @@ def delete_script_test_input(script_name: str) -> None:
     """
 
     test_dir = get_script_test_input_dir(script_name=script_name)
-    logging.info(f"Successfully set {test_dir.as_posix()=}")
+    logging.info(f"Successfully set {str(test_dir)=}")
 
     if not test_dir.exists():
         logging.info("Did not detect test_output to exist, exiting function")
@@ -146,7 +145,7 @@ def delete_script_test_input(script_name: str) -> None:
         f"Detected that test_output exists, \
             performing removal by calling shutil.rmtree({test_dir})"
     )
-    shutil.rmtree(test_dir.as_posix())
+    shutil.rmtree(str(test_dir))
 
 
 def create_script_test_output_dir(script_name: str) -> Path:
@@ -222,7 +221,7 @@ def delete_script_test_output(script_name: str) -> None:
     """
 
     test_dir = get_script_test_output_dir(script_name=script_name)
-    logging.info(f"Successfully set {test_dir.as_posix()=}")
+    logging.info(f"Successfully set {str(test_dir)=}")
 
     if not test_dir.exists():
         logging.info("Did not detect test_output to exist, exiting function")
@@ -232,7 +231,7 @@ def delete_script_test_output(script_name: str) -> None:
         f"Detected that test_output exists, \
             performing removal by calling shutil.rmtree({test_dir})"
     )
-    shutil.rmtree(test_dir.as_posix())
+    shutil.rmtree(str(test_dir))
 
 
 def create_nested_test_directories(input_path: Path, n_dirs: int) -> List[Path]:
