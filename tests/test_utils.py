@@ -2,7 +2,6 @@ import json
 import logging
 import shutil
 from pathlib import Path
-from typing import List
 
 from tests.test_settings import TEST_DIR_NAME, TEST_FILES_NAME, TEST_WORKSPACE
 
@@ -234,7 +233,7 @@ def delete_script_test_output(script_name: str) -> None:
     shutil.rmtree(str(test_dir))
 
 
-def create_nested_test_directories(input_path: Path, n_dirs: int) -> List[Path]:
+def create_nested_test_directories(input_path: Path, n_dirs: int) -> list[Path]:
     """
     Created multiple nested directories for testing.
 
@@ -247,7 +246,7 @@ def create_nested_test_directories(input_path: Path, n_dirs: int) -> List[Path]:
 
     Returns
     -------
-    List[Path]
+    list[Path]
         Returns the list of created directories.
     """
     created_nested_dirs = []
@@ -265,7 +264,7 @@ def create_nested_test_directories(input_path: Path, n_dirs: int) -> List[Path]:
 def create_test_text_files(
     input_path: Path,
     n_files: int,
-    filenames: List[str],
+    filenames: list[str],
     extension: str = ".SC2Replay",
 ):
     """
@@ -278,8 +277,8 @@ def create_test_text_files(
     n_files : int
         Number of files which will be created. If a list of filenames is passed
         this argument is not used.
-    filenames : List[str]
-        List of filenames to use.
+    filenames : list[str]
+        list of filenames to use.
     extension : str
         Extension which will be used to create the test files.
     """
@@ -309,7 +308,7 @@ def create_test_json_files(
     test_key: str = "test_key",
     test_key_other: str = "test_key_other",
     test_key_content: str = "test_key_data",
-) -> List[Path]:
+) -> list[Path]:
     """
     Creates JSON files for test purposes.
 
@@ -324,7 +323,7 @@ def create_test_json_files(
 
     Returns
     -------
-    List[Path]
+    list[Path]
         Returns a list of paths to tje JSON files that were created.
     """
 

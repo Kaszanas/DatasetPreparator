@@ -1,7 +1,6 @@
 import json
 import logging
 from pathlib import Path
-from typing import Dict
 
 import click
 
@@ -9,7 +8,7 @@ from datasetpreparator.utils.logging import initialize_logging
 from datasetpreparator.utils.user_prompt import user_prompt_overwrite_ok
 
 
-def merge_files(path_to_json_one: Path, path_to_json_two: Path) -> Dict[str, str]:
+def merge_files(path_to_json_one: Path, path_to_json_two: Path) -> dict[str, str]:
     """
     Exposes the logic to merge two json files by loading their contents from supplied paths.
 
@@ -22,7 +21,7 @@ def merge_files(path_to_json_one: Path, path_to_json_two: Path) -> Dict[str, str
 
     Returns
     -------
-    Dict[str, str]
+    dict[str, str]
         Returns a merged dictionary.
     """
 
@@ -41,7 +40,7 @@ def merge_files(path_to_json_one: Path, path_to_json_two: Path) -> Dict[str, str
     return result_dict
 
 
-def save_output(output_filepath: Path, output_dict: Dict[str, str]) -> Path:
+def save_output(output_filepath: Path, output_dict: dict[str, str]) -> Path:
     """
     Exposes the logic for saving a dict to a .json file.
 
@@ -50,7 +49,7 @@ def save_output(output_filepath: Path, output_dict: Dict[str, str]) -> Path:
     output_filepath : Path
         Speciifies the full output filepath which will be used, \
         this includes the filename.
-    output_dict : Dict[str, str]
+    output_dict : dict[str, str]
         Specifies the Python dictionary which will be serialized into a JSON.
 
     Returns

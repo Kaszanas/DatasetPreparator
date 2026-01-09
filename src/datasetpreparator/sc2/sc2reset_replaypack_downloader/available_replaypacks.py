@@ -1,7 +1,4 @@
-from typing import List, Tuple
-
-
-SC2RESET_REPLAYPACKS: List[Tuple[str, str, str]] = [
+SC2RESET_REPLAYPACKS: list[tuple[str, str, str]] = [
     (
         "2016_IEM_10_Taipei",
         "https://zenodo.org/record/14963356/files/2016_IEM_10_Taipei.zip?download=1",
