@@ -8,6 +8,7 @@ from datasetpreparator.sc2.sc2egset_replaypack_processor.utils.download_maps imp
     sc2infoextractorgo_map_download,
 )
 from datasetpreparator.utils.logging import initialize_logging
+from datasetpreparator.utils.user_prompt import create_directory
 
 
 class BnetPathNotFound(Exception):
@@ -168,7 +169,7 @@ def get_bnet_path(bnet_base_dir: Path | None = None) -> Path:
 @click.option(
     "--replays_path",
     type=click.Path(
-        exists=True,
+        exists=False,
         file_okay=False,
         dir_okay=True,
         resolve_path=True,
@@ -222,6 +223,8 @@ def sc2_update_maps_cache(
     log: str,
 ) -> None:
     initialize_logging(log=log)
+
+    create_directory(directory=replays_path, created_warning=True)
 
     # Step 0 Check if the Battle.net directory was passed, and if not try to detect it automatically:
     bnet_path = get_bnet_path(bnet_base_dir=bnet_base_dir)

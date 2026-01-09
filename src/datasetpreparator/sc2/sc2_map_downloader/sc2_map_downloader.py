@@ -73,7 +73,7 @@ def sc2_map_downloader(input_path: Path, output_path: Path) -> Path:
 )
 def main(input_path: Path, output_path: Path, log: str) -> None:
     input_path = Path(input_path).resolve()
-    create_directory(directory=input_path, created_warning=False)
+    create_directory(directory=input_path, created_warning=True)
     output_path = Path(output_path).resolve()
     create_directory(directory=output_path)
 

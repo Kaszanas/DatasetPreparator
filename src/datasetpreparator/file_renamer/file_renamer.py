@@ -4,6 +4,7 @@ from pathlib import Path
 import click
 
 from datasetpreparator.utils.logging import initialize_logging
+from datasetpreparator.utils.user_prompt import create_directory
 
 
 def file_renamer(input_path: Path) -> None:
@@ -70,7 +71,7 @@ def file_renamer(input_path: Path) -> None:
 @click.option(
     "--input_path",
     type=click.Path(
-        exists=True,
+        exists=False,
         dir_okay=True,
         file_okay=False,
         resolve_path=True,
@@ -87,6 +88,8 @@ def file_renamer(input_path: Path) -> None:
 )
 def main(input_path: Path, log: str) -> None:
     initialize_logging(log=log)
+
+    create_directory(directory=input_path, created_warning=True)
 
     file_renamer(input_path=input_path)
 

@@ -24,7 +24,7 @@ from datasetpreparator.utils.user_prompt import (
 @click.option(
     "--input_path",
     type=click.Path(
-        exists=True,
+        exists=False,
         dir_okay=True,
         file_okay=False,
         resolve_path=True,
@@ -48,6 +48,7 @@ from datasetpreparator.utils.user_prompt import (
 @click.option(
     "--maps_path",
     type=click.Path(
+        exists=False,
         dir_okay=True,
         file_okay=False,
         resolve_path=True,
@@ -88,15 +89,16 @@ def main(
 
     replaypacks_input_path = input_path.resolve()
     logging.info(f"Input path: {str(replaypacks_input_path)}")
-    create_directory(directory=replaypacks_input_path, created_warning=False)
+    create_directory(directory=replaypacks_input_path, created_warning=True)
 
     output_path = output_path.resolve()
-    logging.info(f"Output path: {str(output_path)}")
-    maps_path = maps_path.resolve()
-    logging.info(f"Maps path: {str(maps_path)}")
-    create_directory(directory=maps_path)
-    # Create output directory if it does not exist:
     create_directory(directory=output_path)
+    logging.info(f"Output path: {str(output_path)}")
+
+    maps_path = maps_path.resolve()
+    create_directory(directory=maps_path)
+    logging.info(f"Maps path: {str(maps_path)}")
+    # Create output directory if it does not exist:
 
     # Pre-processing, downloading maps and flattening directories:
     logging.info("Downloading maps...")

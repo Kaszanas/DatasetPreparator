@@ -202,7 +202,7 @@ def prepare_sc2egset(
 @click.option(
     "--output_path",
     type=click.Path(
-        exists=True,
+        exists=False,
         dir_okay=True,
         file_okay=False,
         resolve_path=True,
@@ -214,7 +214,7 @@ def prepare_sc2egset(
 @click.option(
     "--maps_path",
     type=click.Path(
-        exists=True,
+        exists=False,
         dir_okay=True,
         file_okay=False,
         resolve_path=True,
@@ -261,6 +261,7 @@ def main(
     create_directory(directory=output_path, created_warning=False)
 
     maps_output_path = Path(maps_path).resolve()
+    create_directory(directory=maps_output_path, created_warning=False)
     directory_flattener_output_path = Path(output_path, "directory_flattener").resolve()
 
     # TODO: Recreate the entire pipeline for SC2ReSet and SC2EGSet:

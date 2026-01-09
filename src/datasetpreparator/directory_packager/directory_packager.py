@@ -9,7 +9,10 @@ from tqdm import tqdm
 from tqdm.contrib.logging import logging_redirect_tqdm
 
 from datasetpreparator.utils.logging import initialize_logging
-from datasetpreparator.utils.user_prompt import user_prompt_overwrite_ok
+from datasetpreparator.utils.user_prompt import (
+    create_directory,
+    user_prompt_overwrite_ok,
+)
 
 
 class DirectoryPackagerArguments:
@@ -116,7 +119,7 @@ def dir_packager(arguments: DirectoryPackagerArguments) -> Path:
 @click.option(
     "--input_path",
     type=click.Path(
-        exists=True,
+        exists=False,
         dir_okay=True,
         file_okay=False,
         resolve_path=True,
@@ -147,6 +150,8 @@ def dir_packager(arguments: DirectoryPackagerArguments) -> Path:
 )
 def main(input_path: Path, log: str, n_threads: int, force_overwrite: bool):
     initialize_logging(log=log)
+
+    create_directory(directory=input_path, created_warning=True)
 
     multiple_dir_packager(
         input_path=input_path,

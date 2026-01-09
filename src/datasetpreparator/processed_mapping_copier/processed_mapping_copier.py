@@ -4,6 +4,7 @@ from pathlib import Path
 import click
 
 from datasetpreparator.utils.logging import initialize_logging
+from datasetpreparator.utils.user_prompt import create_directory
 
 
 def processed_mapping_copier(input_path: Path, output_path: Path) -> None:
@@ -60,7 +61,7 @@ def processed_mapping_copier(input_path: Path, output_path: Path) -> None:
 @click.option(
     "--output_path",
     type=click.Path(
-        exists=True,
+        exists=False,
         dir_okay=True,
         file_okay=False,
         resolve_path=True,
@@ -77,6 +78,8 @@ def processed_mapping_copier(input_path: Path, output_path: Path) -> None:
 )
 def main(input_path: Path, output_path: Path, log: str) -> None:
     initialize_logging(log=log)
+
+    create_directory(directory=output_path, created_warning=True)
 
     processed_mapping_copier(input_path=input_path, output_path=output_path)
 
