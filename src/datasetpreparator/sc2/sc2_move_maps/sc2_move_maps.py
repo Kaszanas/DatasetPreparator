@@ -1,19 +1,17 @@
 import logging
 import shutil
 from pathlib import Path
-from typing import List
 
 import click
-
-from datasetpreparator.settings import LOGGING_FORMAT
-
 from tqdm import tqdm
+
+from datasetpreparator.utils.logging import initialize_logging
 
 
 def sc2_move_maps(
     maps_path: Path,
     maps_path_installation_directory: Path,
-) -> List[Path]:
+) -> list[Path]:
     all_map_files = list(maps_path.rglob("*.s2ma"))
 
     copied_files = []
@@ -77,10 +75,7 @@ def sc2_move_maps(
     help="Log level. Default is WARN.",
 )
 def main(sc2_installation_directory: Path, maps_path: Path, log: str):
-    numeric_level = getattr(logging, log.upper(), None)
-    if not isinstance(numeric_level, int):
-        raise ValueError(f"Invalid log level: {numeric_level}")
-    logging.basicConfig(format=LOGGING_FORMAT, level=numeric_level)
+    initialize_logging(log=log)
 
     maps_path_installation_directory = (sc2_installation_directory / "Maps").resolve()
     if not maps_path_installation_directory.exists():

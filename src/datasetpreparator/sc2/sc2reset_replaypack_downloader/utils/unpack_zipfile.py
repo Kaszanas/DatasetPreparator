@@ -1,18 +1,20 @@
-from concurrent.futures import ProcessPoolExecutor
 import math
-from pathlib import Path
-from typing import List
 import zipfile
+from concurrent.futures import ProcessPoolExecutor
+from pathlib import Path
+
+import tqdm
 
 from datasetpreparator.sc2.sc2reset_replaypack_downloader.utils.unpack_chunk import (
     unpack_chunk,
 )
 
-import tqdm
-
 
 def unpack_zipfile(
-    destination_dir: Path, destination_subdir: Path, zip_path: Path, n_workers: int
+    destination_dir: Path,
+    destination_subdir: Path,
+    zip_path: Path,
+    n_workers: int,
 ) -> str:
     """
     Helper function that unpacks the content of .zip archive.
@@ -65,7 +67,7 @@ def unpack_zipfile(
     if n_workers <= 0:
         raise Exception("Number of workers cannot be equal or less than zero!")
 
-    file_list: List[str] = []
+    file_list: list[str] = []
     path_to_extract = Path(destination_dir, destination_subdir)
     with zipfile.ZipFile(zip_path, "r") as zip_file:
         # Checking the existence of the extraction output directory

@@ -1,14 +1,13 @@
 import logging
-from pathlib import Path
-import click
-
-from datasetpreparator.settings import LOGGING_FORMAT
-
 import shutil
+from pathlib import Path
+
+import click
 
 from datasetpreparator.sc2.sc2egset_replaypack_processor.utils.download_maps import (
     sc2infoextractorgo_map_download,
 )
+from datasetpreparator.utils.logging import initialize_logging
 
 
 class BnetPathNotFound(Exception):
@@ -222,10 +221,7 @@ def sc2_update_maps_cache(
     n_processes: int,
     log: str,
 ) -> None:
-    numeric_level = getattr(logging, log.upper(), None)
-    if not isinstance(numeric_level, int):
-        raise ValueError(f"Invalid log level: {numeric_level}")
-    logging.basicConfig(format=LOGGING_FORMAT, level=numeric_level)
+    initialize_logging(log=log)
 
     # Step 0 Check if the Battle.net directory was passed, and if not try to detect it automatically:
     bnet_path = get_bnet_path(bnet_base_dir=bnet_base_dir)
