@@ -5,7 +5,7 @@ from typing import Dict
 
 import click
 
-from datasetpreparator.settings import LOGGING_FORMAT
+from datasetpreparator.utils.logging import initialize_logging
 from datasetpreparator.utils.user_prompt import user_prompt_overwrite_ok
 
 
@@ -165,10 +165,7 @@ def main(
     log: str,
     force_overwrite: bool,
 ) -> None:
-    numeric_level = getattr(logging, log.upper(), None)
-    if not isinstance(numeric_level, int):
-        raise ValueError(f"Invalid log level: {numeric_level}")
-    logging.basicConfig(format=LOGGING_FORMAT, level=numeric_level)
+    initialize_logging(log=log)
 
     json_merger(
         path_to_json_one=path_to_json_one,

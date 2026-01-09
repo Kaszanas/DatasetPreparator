@@ -6,7 +6,8 @@ import click
 from datasetpreparator.sc2.sc2egset_replaypack_processor.utils.download_maps import (
     sc2infoextractorgo_map_download,
 )
-from datasetpreparator.settings import LOGGING_FORMAT
+from datasetpreparator.utils.logging import initialize_logging
+from datasetpreparator.utils.user_prompt import create_directory
 
 
 def sc2_map_downloader(input_path: Path, output_path: Path) -> Path:
@@ -37,7 +38,7 @@ def sc2_map_downloader(input_path: Path, output_path: Path) -> Path:
 @click.option(
     "--input_path",
     type=click.Path(
-        exists=True,
+        exists=False,
         dir_okay=True,
         file_okay=False,
         resolve_path=True,
@@ -49,7 +50,7 @@ def sc2_map_downloader(input_path: Path, output_path: Path) -> Path:
 @click.option(
     "--output_path",
     type=click.Path(
-        exists=True,
+        exists=False,
         dir_okay=True,
         file_okay=False,
         resolve_path=True,
@@ -72,15 +73,15 @@ def sc2_map_downloader(input_path: Path, output_path: Path) -> Path:
 )
 def main(input_path: Path, output_path: Path, log: str) -> None:
     input_path = Path(input_path).resolve()
+    create_directory(directory=input_path, force_overwrite=True)
     output_path = Path(output_path).resolve()
+    create_directory(directory=output_path, force_overwrite=True)
 
-    numeric_level = getattr(logging, log.upper(), None)
-    if not isinstance(numeric_level, int):
-        raise ValueError(f"Invalid log level: {numeric_level}")
-    logging.basicConfig(format=LOGGING_FORMAT, level=numeric_level)
+    initialize_logging(log=log)
 
     output_dir = sc2_map_downloader(
-        input_path=input_path.resolve(), output_path=output_path.resolve()
+        input_path=input_path.resolve(),
+        output_path=output_path.resolve(),
     )
 
     logging.info(f"Finished donwloading maps to: {output_dir.as_posix()}")

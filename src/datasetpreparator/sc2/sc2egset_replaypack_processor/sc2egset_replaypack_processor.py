@@ -12,7 +12,7 @@ from datasetpreparator.sc2.sc2egset_replaypack_processor.utils.multiprocess impo
 from datasetpreparator.sc2.sc2egset_replaypack_processor.utils.replaypack_processor_args import (
     ReplaypackProcessorArguments,
 )
-from datasetpreparator.settings import LOGGING_FORMAT
+from datasetpreparator.utils.logging import initialize_logging
 from datasetpreparator.utils.user_prompt import user_prompt_overwrite_ok
 
 
@@ -82,10 +82,7 @@ def main(
     force_overwrite: bool,
     log: str,
 ) -> None:
-    numeric_level = getattr(logging, log.upper(), None)
-    if not isinstance(numeric_level, int):
-        raise ValueError(f"Invalid log level: {numeric_level}")
-    logging.basicConfig(format=LOGGING_FORMAT, level=numeric_level)
+    initialize_logging(log=log)
 
     replaypacks_input_path = input_path.resolve()
     logging.info(f"Input path: {str(replaypacks_input_path)}")

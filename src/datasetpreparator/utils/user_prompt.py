@@ -1,5 +1,5 @@
-from pathlib import Path
 import logging
+from pathlib import Path
 
 
 def user_prompt_overwrite_ok(path: Path, force_overwrite: bool) -> bool:
@@ -57,3 +57,25 @@ def user_prompt_overwrite_ok(path: Path, force_overwrite: bool) -> bool:
     )
     print("Invalid input, please type 'y' or 'n'.")
     return user_prompt_overwrite_ok(path, force_overwrite)
+
+
+def create_directory(directory: Path, force_overwrite: bool) -> None:
+    """
+    Creates a directory at the specified path, prompting the user for confirmation if the
+    directory already exists and may be overwritten.
+
+    Parameters
+    ----------
+    directory : Path
+        The path where the directory should be created.
+    force_overwrite : bool
+        Flag that specifies if the user wants to overwrite the directory without being prompted.
+    """
+
+    if user_prompt_overwrite_ok(path=directory, force_overwrite=force_overwrite):
+        directory.mkdir(parents=True, exist_ok=True)
+        logging.error(
+            f"Directory was created at: {str(directory.resolve())}"
+            "Please fill it with the required files and re-run the tool."
+        )
+        return

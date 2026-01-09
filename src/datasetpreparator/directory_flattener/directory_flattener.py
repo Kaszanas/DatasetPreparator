@@ -1,8 +1,8 @@
-from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import json
 import logging
 import shutil
+from concurrent.futures import ThreadPoolExecutor
 from multiprocessing import freeze_support
 from pathlib import Path
 from typing import Dict, List, Tuple
@@ -10,7 +10,7 @@ from typing import Dict, List, Tuple
 import click
 from tqdm import tqdm
 
-from datasetpreparator.settings import LOGGING_FORMAT
+from datasetpreparator.utils.logging import initialize_logging
 from datasetpreparator.utils.user_prompt import user_prompt_overwrite_ok
 
 
@@ -400,10 +400,7 @@ def main(
     log: str,
     force_overwrite: bool,
 ) -> None:
-    numeric_level = getattr(logging, log.upper(), None)
-    if not isinstance(numeric_level, int):
-        raise ValueError(f"Invalid log level: {numeric_level}")
-    logging.basicConfig(format=LOGGING_FORMAT, level=numeric_level)
+    initialize_logging(log=log)
 
     multiple_directory_flattener(
         input_path=input_path,

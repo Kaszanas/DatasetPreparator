@@ -1,10 +1,9 @@
-import logging
-from pathlib import Path
 import shutil
+from pathlib import Path
 
 import click
 
-from datasetpreparator.settings import LOGGING_FORMAT
+from datasetpreparator.utils.logging import initialize_logging
 
 
 def processed_mapping_copier(input_path: Path, output_path: Path) -> None:
@@ -77,10 +76,7 @@ def processed_mapping_copier(input_path: Path, output_path: Path) -> None:
     help="Log level. Default is WARN.",
 )
 def main(input_path: Path, output_path: Path, log: str) -> None:
-    numeric_level = getattr(logging, log.upper(), None)
-    if not isinstance(numeric_level, int):
-        raise ValueError(f"Invalid log level: {numeric_level}")
-    logging.basicConfig(format=LOGGING_FORMAT, level=numeric_level)
+    initialize_logging(log=log)
 
     processed_mapping_copier(input_path=input_path, output_path=output_path)
 
