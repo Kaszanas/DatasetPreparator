@@ -80,8 +80,8 @@ def main(input_path: Path, output_path: Path, log: str) -> None:
     initialize_logging(log=log)
 
     output_dir = sc2_map_downloader(
-        input_path=input_path.resolve(),
-        output_path=output_path.resolve(),
+        input_path=input_path,
+        output_path=output_path,
     )
 
     logging.info(f"Finished downloading maps to: {output_dir.as_posix()}")
