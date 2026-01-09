@@ -73,7 +73,7 @@ def sc2_map_downloader(input_path: Path, output_path: Path) -> Path:
 )
 def main(input_path: Path, output_path: Path, log: str) -> None:
     input_path = Path(input_path).resolve()
-    create_directory(directory=input_path, without_warning=False)
+    create_directory(directory=input_path, created_warning=False)
     output_path = Path(output_path).resolve()
     create_directory(directory=output_path)
 
@@ -84,7 +84,7 @@ def main(input_path: Path, output_path: Path, log: str) -> None:
         output_path=output_path.resolve(),
     )
 
-    logging.info(f"Finished donwloading maps to: {output_dir.as_posix()}")
+    logging.info(f"Finished downloading maps to: {output_dir.as_posix()}")
 
 
 if __name__ == "__main__":

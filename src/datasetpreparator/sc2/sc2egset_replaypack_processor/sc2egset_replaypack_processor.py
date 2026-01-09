@@ -88,7 +88,7 @@ def main(
 
     replaypacks_input_path = input_path.resolve()
     logging.info(f"Input path: {str(replaypacks_input_path)}")
-    create_directory(directory=replaypacks_input_path, without_warning=False)
+    create_directory(directory=replaypacks_input_path, created_warning=False)
 
     output_path = output_path.resolve()
     logging.info(f"Output path: {str(output_path)}")

@@ -254,7 +254,7 @@ def main(
     initialize_logging(log=log)
     # This input will be flattened:
     replaypacks_input_path = Path(input_path).resolve()
-    create_directory(directory=replaypacks_input_path, without_warning=False)
+    create_directory(directory=replaypacks_input_path, created_warning=False)
 
     # Create output directory if it does not exist:
     output_path = Path(output_path).resolve()
