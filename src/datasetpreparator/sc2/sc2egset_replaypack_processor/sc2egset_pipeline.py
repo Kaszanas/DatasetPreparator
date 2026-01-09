@@ -190,7 +190,7 @@ def prepare_sc2egset(
 @click.option(
     "--input_path",
     type=click.Path(
-        exists=True,
+        exists=False,
         dir_okay=True,
         file_okay=False,
         resolve_path=True,
