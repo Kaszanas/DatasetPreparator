@@ -3,7 +3,6 @@ import shutil
 import subprocess
 from multiprocessing import Pool
 from pathlib import Path
-from typing import List
 
 from tqdm import tqdm
 
@@ -16,7 +15,7 @@ from datasetpreparator.settings import PATH_TO_SC2INFOEXTRACTORGO
 
 
 def multiprocessing_scheduler(
-    processing_arguments: List[SC2InfoExtractorGoArguments],
+    processing_arguments: list[SC2InfoExtractorGoArguments],
     number_of_processes: int,
 ) -> None:
     """
@@ -24,7 +23,7 @@ def multiprocessing_scheduler(
 
     Parameters
     ----------
-    processing_arguments : List[Tuple[str, str]]
+    processing_arguments : list[SC2InfoExtractorGoArguments]
         Processing arguments holds a list of input and output directories \
         for the https://github.com/Kaszanas/SC2InfoExtractorGo
     number_of_processes : int

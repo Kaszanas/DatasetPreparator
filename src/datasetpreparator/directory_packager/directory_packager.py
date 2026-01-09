@@ -2,7 +2,6 @@ import logging
 from concurrent.futures import ThreadPoolExecutor
 from multiprocessing import freeze_support
 from pathlib import Path
-from typing import List
 from zipfile import ZIP_BZIP2, ZipFile
 
 import click
@@ -23,7 +22,7 @@ def multiple_dir_packager(
     input_path: Path,
     n_threads: int,
     force_overwrite: bool,
-) -> List[Path]:
+) -> list[Path]:
     """
     Packages the specified directory into a .zip archive.
 
@@ -39,7 +38,7 @@ def multiple_dir_packager(
 
     Returns
     -------
-    List[Path]
+    list[Path]
         Returns a list of Paths to packaged archives.
     """
 

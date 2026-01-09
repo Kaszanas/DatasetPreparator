@@ -2,7 +2,6 @@ import math
 import zipfile
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
-from typing import List
 
 import tqdm
 
@@ -68,7 +67,7 @@ def unpack_zipfile(
     if n_workers <= 0:
         raise Exception("Number of workers cannot be equal or less than zero!")
 
-    file_list: List[str] = []
+    file_list: list[str] = []
     path_to_extract = Path(destination_dir, destination_subdir)
     with zipfile.ZipFile(zip_path, "r") as zip_file:
         # Checking the existence of the extraction output directory

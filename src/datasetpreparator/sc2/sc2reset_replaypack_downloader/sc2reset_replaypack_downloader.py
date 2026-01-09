@@ -1,6 +1,5 @@
 import logging
 from pathlib import Path
-from typing import List, Tuple
 
 import click
 
@@ -21,7 +20,7 @@ def sc2reset_replaypack_downloader(
     download_path: Path,
     unpack_path: Path,
     n_workers: int,
-    replaypack_list: List[Tuple[str, str, str]] = SC2RESET_REPLAYPACKS,
+    replaypack_list: list[tuple[str, str, str]] = SC2RESET_REPLAYPACKS,
 ) -> None:
     """
     Downloads and unpacks SC2ReSet: StarCraft II Esport Replaypack Set
@@ -37,7 +36,7 @@ def sc2reset_replaypack_downloader(
         Specifies the path to which the archives will be unpacked.
     n_workers : int
         Specifies the number of workers used for extracting the .zip archives.
-    replaypack_list : List[Tuple[str, str, str]]
+    replaypack_list : list[tuple[str, str, str]]
         Specifies the list of replaypacks to be downloaded. By default each of
         the tuples is (replaypack_name, replaypack_url, archive_md5).
     """
@@ -49,7 +48,7 @@ def sc2reset_replaypack_downloader(
         return
 
     # Download replaypacks:
-    downloaded_paths: List[Tuple[str, str]] = []
+    downloaded_paths: list[tuple[str, str]] = []
     for replaypack_name, replaypack_url, file_md5 in replaypack_list:
         downloaded_replaypack_path, ok = download_replaypack(
             destination_dir=download_path,

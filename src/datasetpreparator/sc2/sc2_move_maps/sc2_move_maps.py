@@ -1,7 +1,6 @@
 import logging
 import shutil
 from pathlib import Path
-from typing import List
 
 import click
 from tqdm import tqdm
@@ -12,7 +11,7 @@ from datasetpreparator.utils.logging import initialize_logging
 def sc2_move_maps(
     maps_path: Path,
     maps_path_installation_directory: Path,
-) -> List[Path]:
+) -> list[Path]:
     all_map_files = list(maps_path.rglob("*.s2ma"))
 
     copied_files = []

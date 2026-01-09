@@ -1,5 +1,4 @@
 from pathlib import Path
-from typing import Tuple
 
 from datasetpreparator.sc2.sc2reset_replaypack_downloader.utils.download_file import (
     download_file,
@@ -12,7 +11,7 @@ def download_replaypack(
     replaypack_name: str,
     replaypack_url: str,
     replaypack_md5: str,
-) -> Tuple[Path, bool]:
+) -> tuple[Path, bool]:
     """
     Exposes logic for downloading a single StarCraft II replaypack from an url.
 
@@ -31,7 +30,7 @@ def download_replaypack(
 
     Returns
     -------
-    Tuple[Path, bool]
+    tuple[Path, bool]
         Returns the path to the downloaded .zip archive of a replaypack. The second element
         of the tuple is a boolean value indicating whether the file was downloaded or not.
 

@@ -1,10 +1,9 @@
 import logging
 import zipfile
 from pathlib import Path
-from typing import List
 
 
-def unpack_chunk(zip_path: Path, filenames: List[str], output_extract_path: Path):
+def unpack_chunk(zip_path: Path, filenames: list[str], output_extract_path: Path):
     """
     Helper function for unpacking a chunk of files from an archive.
 
@@ -12,7 +11,7 @@ def unpack_chunk(zip_path: Path, filenames: List[str], output_extract_path: Path
     ----------
     zip_path : Path
         Specifies the path to the archive file that will be extracted.
-    filenames : List[str]
+    filenames : list[str]
         Specifies a list of the filenames which are within the archive\
         and will be extracted.
     output_extract_path : Path
